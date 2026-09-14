@@ -88,6 +88,17 @@ case ":$PATH:" in
   *) PATH="$HOME/.local/bin:$PATH"; export PATH ;;
 esac
 
+# uv follows whatever package index the machine is configured with. A corporate
+# proxy on a machine that is not on that network (Cloud Shell images carry one)
+# refuses every download and the sync fails before the lab runs a line. PyPI
+# has everything this lab needs, so a failed sync is tried again there.
+uv_sync() {
+    if uv sync "$@"; then return 0; fi
+    echo "  the configured package index did not answer; trying PyPI directly"
+    env -u UV_INDEX_URL -u UV_EXTRA_INDEX_URL -u UV_INDEX -u PIP_INDEX_URL -u PIP_EXTRA_INDEX_URL \
+        UV_DEFAULT_INDEX=https://pypi.org/simple uv sync "$@"
+}
+
 need_uv() {
   command -v uv >/dev/null 2>&1 && return 0
   echo "uv is not on PATH (looked in $HOME/.local/bin)."
@@ -99,12 +110,12 @@ need_uv() {
 # venv built from the old one would then run the wrong ADK.
 if [ ! -d .venv ]; then
   need_uv || exit 1
-  uv sync
+  uv_sync
   touch .venv/.synced
 elif [ ! -f .venv/.synced ] || [ uv.lock -nt .venv/.synced ] || [ pyproject.toml -nt .venv/.synced ]; then
   echo "the dependency lock changed since the last sync; running uv sync"
   if need_uv; then
-    uv sync
+    uv_sync
     touch .venv/.synced
   else
     echo "carrying on with the venv as it is; it may not match uv.lock"

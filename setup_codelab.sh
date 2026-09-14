@@ -64,7 +64,18 @@ command -v uv >/dev/null 2>&1 || die \
 tick "uv $(uv --version 2>/dev/null | awk '{print $2}')"
 
 [ -d .venv ] || uv venv >/dev/null
-uv sync
+# uv follows whatever package index the machine is configured with. A corporate
+# proxy on a machine that is not on that network (Cloud Shell images carry one)
+# refuses every download and the sync fails before the lab runs a line. PyPI
+# has everything this lab needs, so a failed sync is tried again there.
+uv_sync() {
+    if uv sync "$@"; then return 0; fi
+    echo "  the configured package index did not answer; trying PyPI directly"
+    env -u UV_INDEX_URL -u UV_EXTRA_INDEX_URL -u UV_INDEX -u PIP_INDEX_URL -u PIP_EXTRA_INDEX_URL \
+        UV_DEFAULT_INDEX=https://pypi.org/simple uv sync "$@"
+}
+
+uv_sync
 [ -x .venv/bin/python ] || die \
     "uv sync finished but .venv/bin/python is missing." \
     "Clear the env and let uv rebuild it:" \
