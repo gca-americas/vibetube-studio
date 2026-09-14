@@ -401,7 +401,8 @@ async def _load_app(app: str):
     # pydantic prints the ADK message on a "Value error, ..." line and then a
     # docs footer; the message is the part worth showing.
     said = [l for l in lines if l.startswith("Value error,")]
-    msg = said[-1].removeprefix("Value error,").strip() if said else (lines[-1] if lines else text)
+    meaningful = [l for l in lines if not l.startswith("For further information visit")]
+    msg = said[-1].removeprefix("Value error,").strip() if said else (meaningful[-1] if meaningful else text)
     return {"ok": False, "error": msg[:600]}
 
 

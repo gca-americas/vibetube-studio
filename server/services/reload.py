@@ -25,7 +25,7 @@ from agent.platform import config
 #: from the others at import time (`from .desk import render_desk`): reloading
 #: desk alone leaves graph holding the old function, and a stage app that takes
 #: its nodes from graph would then run code the student has already replaced.
-AGENT_MODULES = ("agent.trends", "agent.cleanup_tools", "agent.schemas", "agent.desk",
+AGENT_MODULES = ("agent.trends", "agent.cleanup_tools", "agent.desk",
                  "agent.deliver", "agent.graph")
 
 
@@ -92,9 +92,12 @@ def reload_agent_modules(edited: str | None = None) -> None:
     """Re-execute the production modules in place, the edited one first and
     graph last, so every `from .x import y` binds the new objects. In place,
     not evicted: run_state and the live map keep their module handles."""
-    order = list(AGENT_MODULES)
-    if edited in order:
-        order.remove(edited); order.insert(0, edited)
+    order = [m for m in AGENT_MODULES if m != "agent.graph"]
+    if edited and edited in order:
+        order.remove(edited)
+        order.insert(0, edited)
+    if "agent.graph" in AGENT_MODULES:
+        order.append("agent.graph")
     for name in order:
         mod = sys.modules.get(name)
         if mod is not None:
