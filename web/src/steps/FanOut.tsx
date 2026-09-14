@@ -876,28 +876,6 @@ function HumanInTheLoop() {
         </section>
       </In>
 
-      <In delay={0.25}>
-        <EditPanel
-          label="Edit 1 of 2"
-          title="Add direction_gate to the workflow."
-          intro={<>Only the edge list of the stage 2 app is shown. Append the gate to the last chain, after propose_directions.</>}
-          pill={status ? (gateWired ? "gate in the chain ✓" : `chain: ${status.chain.length ? status.chain.join(" → ") : "none"}`) : "…"}
-          ok={gateWired}
-          hint={hintA}
-          setHint={setHintA}
-          hint1={<>One more name at the end of the third tuple, after <code className="font-mono">propose_directions</code>. The comma before it matters.</>}
-          hint2={`root_agent = Workflow(
-    name="stage2_direction",
-    description="research -> 3 candidates in state -> the human door",
-    edges=[(START, scan_trends, join_research),
-           (START, read_backlog, join_research),
-           (join_research, propose_directions, direction_gate)])`}
-          path="stage2_direction/agent.py"
-          symbol="root_agent"
-          pattern={/propose_directions\)\]\)|direction_gate\)\]\)/}
-          onSaved={check}
-        />
-      </In>
 
       <In delay={0.4}>
         <section className="rounded-3xl border border-hairline bg-card p-6">
@@ -928,7 +906,7 @@ function HumanInTheLoop() {
             </div>
             <SchemaFigure />
           </div>
-          <p className="mt-5 text-sm text-fg-muted">The property, for edit 2:</p>
+          <p className="mt-5 text-sm text-fg-muted">The property, for edit 1:</p>
           <CopyBlock text={SCHEMA_PROPERTIES} />
         </section>
       </In>
@@ -968,9 +946,9 @@ function HumanInTheLoop() {
         </section>
       </In>
 
-      <In delay={0.5}>
+      <In delay={0.25}>
         <EditPanel
-          label="Edit 2 of 2"
+          label="Edit 1 of 2"
           title="Make direction_gate wait for a person."
           intro={
             <>
@@ -1002,6 +980,29 @@ function HumanInTheLoop() {
           path="agent/graph.py"
           symbol="direction_gate"
           pattern={/TODO: GATE_INPUT|yield RequestInput|"pick": \{|payload=/}
+          onSaved={check}
+        />
+      </In>
+
+      <In delay={0.5}>
+        <EditPanel
+          label="Edit 2 of 2"
+          title="Add direction_gate to the workflow."
+          intro={<>Only the edge list of the stage 2 app is shown. Append the gate to the last chain, after propose_directions.</>}
+          pill={status ? (gateWired ? "gate in the chain ✓" : `chain: ${status.chain.length ? status.chain.join(" → ") : "none"}`) : "…"}
+          ok={gateWired}
+          hint={hintA}
+          setHint={setHintA}
+          hint1={<>One more name at the end of the third tuple, after <code className="font-mono">propose_directions</code>. The comma before it matters.</>}
+          hint2={`root_agent = Workflow(
+    name="stage2_direction",
+    description="research -> 3 candidates in state -> the human door",
+    edges=[(START, scan_trends, join_research),
+           (START, read_backlog, join_research),
+           (join_research, propose_directions, direction_gate)])`}
+          path="stage2_direction/agent.py"
+          symbol="root_agent"
+          pattern={/propose_directions\)\]\)|direction_gate\)\]\)/}
           onSaved={check}
         />
       </In>
@@ -1052,10 +1053,10 @@ function HumanInTheLoop() {
       <In delay={0.6}>
         <VerifyPanel checking={checking} onCheck={check} intro="Read from the two files and the stage2_direction sessions in runs/sessions.db.">
           <CheckRow ok={gateWired} label="direction_gate is in the chain">
-            {status ? (gateWired ? status.chain.join(" → ") : "Edit 1 above.") : "…"}
+            {status ? (gateWired ? status.chain.join(" → ") : "Edit 2 above.") : "…"}
           </CheckRow>
           <CheckRow ok={hasInput} label="direction_gate yields a RequestInput">
-            {status ? (hasInput ? "Found in the function body." : "Edit 2 above.") : "…"}
+            {status ? (hasInput ? "Found in the function body." : "Edit 1 above.") : "…"}
           </CheckRow>
           <CheckRow ok={!!status && status.asked > 0} label="The graph suspended">
             {status ? `${status.asked} adk_request_input call${status.asked === 1 ? "" : "s"} in the sessions` : "…"}
