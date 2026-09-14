@@ -141,7 +141,7 @@ fi
 # ones are the student's and are left alone.
 for f in stage0_prompt/agent.py stage1_fanout/agent.py stage2_direction/agent.py stage3_router/agent.py stage4_memory/agent.py stage5_rag/agent.py stage6_video/agent.py agent/graph.py agent/deliver.py; do
   if [ ! -f "$f" ]; then
-    cp "starter/$f" "$f"
+    mkdir -p "$(dirname "$f")" && cp "starter/$f" "$f"
     echo "put $f in place from starter/"
   fi
 done

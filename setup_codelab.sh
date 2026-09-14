@@ -260,6 +260,7 @@ load_dotenv(".env", override=True)
 if os.environ.get("STUDIO_VERTEX", "").lower() in ("1", "true"):
     os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
     os.environ.pop("GOOGLE_API_KEY", None)
+import logging; logging.getLogger("google_genai.models").setLevel(logging.ERROR)   # an advisory about function calling we do not use
 from google import genai
 model = os.environ.get("STUDIO_MODEL", "gemini-3-flash-preview")
 client = genai.Client()          # keep a reference: a temporary client is closed before the call returns
@@ -278,7 +279,7 @@ say "5 · Starting state"
 placed=0
 for f in stage0_prompt/agent.py stage1_fanout/agent.py stage2_direction/agent.py stage3_router/agent.py stage4_memory/agent.py stage5_rag/agent.py stage6_video/agent.py agent/graph.py agent/deliver.py; do
     if [ ! -f "$f" ]; then
-        cp "starter/$f" "$f"
+        mkdir -p "$(dirname "$f")" && cp "starter/$f" "$f"
         placed=$((placed + 1))
     fi
 done
