@@ -147,6 +147,7 @@ Three checks keep the registry, the pages, the codelab, and the app in agreement
 
 ```bash
 python checks/verify_holes.py    # every hole round-trips (carve then fill) and starter/ is in sync
+python checks/verify_reload.py   # a save-time reload keeps every schema class and stage app as it was
 python checks/verify_pastes.py   # every <!-- code: HOLE --> block in CODELAB.md equals the registry's answer
 python checks/verify_app.py      # vibestudio/server/agent/ equals the finished lab agent (--sync to copy)
 ```
