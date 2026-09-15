@@ -151,7 +151,7 @@ ask() {
     printf '%s' "${reply:-$default}"
 }
 
-EVENT_DEFAULT="$(env_get VIBETUBE_EVENT)"; [ -n "$EVENT_DEFAULT" ] || EVENT_DEFAULT="sandbox"
+EVENT_DEFAULT="$(env_get VIBETUBE_EVENT)"; [ -n "$EVENT_DEFAULT" ] || EVENT_DEFAULT="GoogleNYC"
 NAME_DEFAULT="$(env_get VIBETUBE_NAME)"
 if [ -z "$NAME_DEFAULT" ]; then
     ACCOUNT="$(gcloud config get-value account 2>/dev/null || true)"
