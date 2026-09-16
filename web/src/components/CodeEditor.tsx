@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRunEvents } from "../lib/api";
 import { Check, Loader2, RotateCcw, Save } from "lucide-react";
 import { tint } from "../steps/colors";
 
@@ -75,21 +76,51 @@ export function CodeEditor({
   const taRef = useRef<HTMLTextAreaElement>(null);
 
   const [loadError, setLoadError] = useState<string | null>(null);
+  // the file changed on disk while this editor holds unsaved edits: what is there now
+  const [onDisk, setOnDisk] = useState<{ content: string; validation: Validation } | null>(null);
+  const known = useRef({ code: "", original: "" });
+  known.current = { code, original };
+
+  const fetchFile = useCallback(async () => {
+    const r = await fetch(`/api/code?path=${encodeURIComponent(path)}${symbol ? `&symbol=${encodeURIComponent(symbol)}` : ""}`, { cache: "no-store" });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok || typeof d.content !== "string") throw new Error(d.detail || `${r.status} from /api/code`);
+    return d as { content: string; validation: Validation };
+  }, [path, symbol]);
+
+  const adopt = (d: { content: string; validation: Validation }) => {
+    setCode(d.content);
+    setOriginal(d.content);
+    setValidation(d.validation);
+    setOnDisk(null);
+    setState("saved");
+  };
 
   useEffect(() => {
-    fetch(`/api/code?path=${encodeURIComponent(path)}${symbol ? `&symbol=${encodeURIComponent(symbol)}` : ""}`)
-      .then(async (r) => {
-        const d = await r.json().catch(() => ({}));
-        if (!r.ok || typeof d.content !== "string") {
-          throw new Error(d.detail || `${r.status} from /api/code`);
-        }
-        setCode(d.content);
-        setOriginal(d.content);
-        setValidation(d.validation);
+    fetchFile()
+      .then((d) => {
+        adopt(d);
         setLoadError(null);
       })
       .catch((e: Error) => setLoadError(`Could not load ${path}: ${e.message}. Restart the server (scripts/start.sh) if it predates this build.`));
-  }, [path, symbol]);
+  }, [fetchFile, path]);
+
+  // Other things write this file too: the catch-up bar, the skeleton button, a
+  // rescue in a terminal. The server marks every such write; when it does,
+  // the editor takes the file as it is now, unless it holds unsaved edits, in
+  // which case it says so and lets the person choose.
+  const { snapshot } = useRunEvents();
+  useEffect(() => {
+    if (!snapshot) return;
+    fetchFile()
+      .then((d) => {
+        const { code: c, original: o } = known.current;
+        if (d.content === o) return;                 // nothing new on disk
+        if (c === o) adopt(d);                        // no unsaved edits: show the file as it is
+        else setOnDisk(d);                            // unsaved edits: do not clobber them
+      })
+      .catch(() => undefined);
+  }, [snapshot?.updated_at, fetchFile]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const save = async (content: string) => {
     setState("saving");
@@ -106,7 +137,10 @@ export function CodeEditor({
     }
     setValidation(d.validation);
     setState(d.validation.valid ? "saved" : "invalid");
-    if (d.validation.valid) onSaved?.(content, d.validation);
+    if (d.validation.valid) {
+      setOriginal(content);
+      onSaved?.(content, d.validation);
+    }
   };
 
   const onChange = (v: string) => {
@@ -149,6 +183,16 @@ export function CodeEditor({
           {symbol && <span className="text-fg"> · {symbol}</span>}
         </span>
         <div className="flex items-center gap-3">
+          {onDisk && (
+            <button
+              onClick={() => adopt(onDisk)}
+              className="flex items-center gap-1 rounded-md border px-2 py-0.5 font-bold"
+              style={{ borderColor: "var(--vibe-amber)", color: "var(--vibe-amber)" }}
+              title="Something else wrote this file. Show it as it is now; your unsaved edits here are dropped."
+            >
+              <RotateCcw size={11} /> changed on disk · reload
+            </button>
+          )}
           <span className="flex items-center gap-1.5">
             {state === "saving" && <Loader2 size={12} className="animate-spin" />}
             {state === "saved" && <Check size={12} className="text-vibe-green" />}
@@ -156,11 +200,14 @@ export function CodeEditor({
           </span>
           <button
             onClick={() => {
-              setCode(original);
-              save(original);
+              if (onDisk) adopt(onDisk);
+              else {
+                setCode(original);
+                setState("saved");
+              }
             }}
             className="flex items-center gap-1 hover:text-fg"
-            title="Restore the file as it was loaded"
+            title="Drop unsaved edits and show the file as it is saved"
           >
             <RotateCcw size={12} /> reset
           </button>
