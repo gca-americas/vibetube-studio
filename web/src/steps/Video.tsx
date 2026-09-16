@@ -3,7 +3,6 @@ import { Link, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, Download, RefreshCw } from "lucide-react";
 import { In, StepHeader } from "../components/shared";
-import { CatchUp } from "../components/CatchUp";
 import { DoneBanner } from "../components/DoneBanner";
 import { LoadCheck } from "../components/LoadCheck";
 import { api, useRunEvents } from "../lib/api";
@@ -809,8 +808,6 @@ function TheDesk() {
         title="End-to-end execution and out-of-band delivery."
         blurb="Wire render_desk and store_video into the workflow topology. Execution proceeds through script generation into video submission, automatically suspending upon receiving the pending receipt until an external delivery worker dispatches the completion event."
       />
-
-      <CatchUp needs={["GATE_INPUT", "PERSIST_STATE", "POLICY_ROUTE", "VIDEO_TOOL", "DELIVER_RESPONSE"]} color={AMBER} />
 
       <In delay={0.2}>
         <section className="rounded-3xl border border-hairline bg-card p-6">

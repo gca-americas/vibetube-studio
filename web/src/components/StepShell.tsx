@@ -2,10 +2,11 @@ import { useEffect } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { STEPS } from "../steps/registry";
 import { TopNav } from "./TopNav";
+import { CatchUp } from "./CatchUp";
 
 /** Chrome around one step: nav + roadmap on top, the scene, Back/Next below. */
 export function StepShell() {
-  const { slug } = useParams();
+  const { slug, part } = useParams();
   const navigate = useNavigate();
   const index = STEPS.findIndex((s) => s.slug === slug);
 
@@ -30,7 +31,10 @@ export function StepShell() {
     <>
       <TopNav activeSlug={step.slug} />
       <main className="flex flex-1 flex-col">
-        <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 md:px-8 md:py-10">{step.element}</div>
+        <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 md:px-8 md:py-10">
+          <CatchUp page={part ? `${step.slug}/${part}` : step.slug} color={step.color} />
+          {step.element}
+        </div>
 
         <div className="flex items-center justify-center gap-3 px-6 pb-8 pt-2">
           {prev ? (

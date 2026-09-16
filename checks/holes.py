@@ -148,3 +148,34 @@ HOLES = {
 # codelab section aliases for rescue
 SECTIONS = {"s0": ["TOOLS"], "s1a": ["FANOUT_JOIN", "FANOUT_EDGES"], "s1b": ["PROPOSER", "GATE_INPUT", "STAGE2_EDGES"],
             "s2": ["PERSIST_STATE", "POLICY_ROUTE", "QUARANTINE", "ROUTER_EDGES", "EDGES"], "s5": ["MEMORY_RECALL", "MEMORY_REMEMBER"], "s6": ["RAG_NODE"], "s7": ["VIDEO_TOOL", "DELIVER_RESPONSE", "VIDEO_EDGES"]}
+
+
+# The page each shipped hole is made on, as slug/part of the workbench, and a
+# short name for it. The catch-up bar at the top of every page fills the holes
+# of every earlier page from this; carve.py's SHIP_HOLES is the order.
+PAGE = {
+    "TOOLS": "single-prompt/c",
+    "FANOUT_JOIN": "fan-out/b", "FANOUT_EDGES": "fan-out/b",
+    "PROPOSER": "fan-out/c", "STAGE2_EDGES": "fan-out/c",
+    "GATE_INPUT": "fan-out/d",
+    "PERSIST_STATE": "policy-gate/a",
+    "POLICY_ROUTE": "policy-gate/b", "ROUTER_EDGES": "policy-gate/b",
+    "QUARANTINE": "policy-gate/c",
+    "MEMORY_RECALL": "memory/b", "MEMORY_REMEMBER": "memory/b",
+    "RAG_NODE": "rag/b",
+    "VIDEO_TOOL": "video/a", "DELIVER_RESPONSE": "video/a",
+    "VIDEO_EDGES": "video/b",
+}
+LABEL = {
+    "TOOLS": "the two research tools on the agent",
+    "FANOUT_JOIN": "the JoinNode", "FANOUT_EDGES": "the two reader chains",
+    "PROPOSER": "the propose_directions agent", "STAGE2_EDGES": "the chain from the join through the gate",
+    "GATE_INPUT": "the RequestInput in direction_gate",
+    "PERSIST_STATE": "the state write in persist_direction",
+    "POLICY_ROUTE": "the route in policy_check", "ROUTER_EDGES": "the dict target after policy_check",
+    "QUARANTINE": "the quarantine task agent",
+    "MEMORY_RECALL": "before_model_callback on propose_directions", "MEMORY_REMEMBER": "after_agent_callback on the scripter",
+    "RAG_NODE": "read_feedback in the fan-out",
+    "VIDEO_TOOL": "the LongRunningFunctionTool wrapper", "DELIVER_RESPONSE": "the FunctionResponse in agent/deliver.py",
+    "VIDEO_EDGES": "the chain to render_desk and store_video",
+}

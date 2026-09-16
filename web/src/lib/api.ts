@@ -67,6 +67,7 @@ export const api = {
   holes: () => get<Record<string, string>>("/api/lab/holes"),
   version: () => get<{ running: string; head: string; stale: boolean; subject: string }>("/api/lab/version"),
   workerLog: (verb: "bank" | "rag" | "deliver" | "deploy") => get<{ verb: string; lines: string[] }>(`/api/lab/worker/${verb}/log`),
+  holesPlan: () => get<{ name: string; page: string; label: string; state: string }[]>("/api/lab/holes/plan"),
   fillHoles: (names: string[]) => post<{ filled: string[] }>("/api/lab/holes/fill", { names }),
   quarantineSkeleton: () => post<{ ok: boolean; state: string; detail?: string }>("/api/lab/quarantine/skeleton"),
   getCode: (path: string) => get<{ content: string; validation?: { valid: boolean; message: string }; symbol?: string; span?: number[] }>(`/api/code?path=${encodeURIComponent(path)}`),

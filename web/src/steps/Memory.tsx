@@ -3,7 +3,6 @@ import { Link, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, RefreshCw } from "lucide-react";
 import { In, StepHeader } from "../components/shared";
-import { CatchUp } from "../components/CatchUp";
 import { DoneBanner } from "../components/DoneBanner";
 import { LoadCheck } from "../components/LoadCheck";
 import { api, useRunEvents } from "../lib/api";
@@ -974,8 +973,6 @@ function TheCallbacks() {
         title="Agent lifecycle callbacks."
         blurb="ADK lifecycle callbacks inject programmatic logic at deterministic points during execution, wrapping agent turns, individual LLM inference calls, and tool invocations. Callbacks enable memory injection and persistence without altering core workflow routing."
       />
-
-      <CatchUp needs={["GATE_INPUT", "PERSIST_STATE", "POLICY_ROUTE"]} color={PURPLE} />
 
       <In delay={0.05}>
         <section className="rounded-3xl border border-hairline bg-card p-6">

@@ -12,6 +12,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 from checks.holes import HOLES  # noqa: E402
 from scripts.carve import SHIP_HOLES  # noqa: E402
+from checks.holes import LABEL, PAGE  # noqa: E402
 
 
 def _read(rel: str) -> str:
@@ -68,6 +69,10 @@ def main() -> int:
             names = " + ".join(n for n, _, _ in items)
             print(f"  \u2713 {rel}: {names} round-trip; starter/ matches")
     print()
+    for name in SHIP_HOLES:
+        if name not in PAGE or name not in LABEL:
+            print(f"  \u2717 {name}: no page or label in checks/holes.py (the catch-up bar needs both)")
+            fails.append(name)
     if fails:
         print(f"HOLES VERIFY: {len(fails)} FAILURE(S): {fails}")
         return 1

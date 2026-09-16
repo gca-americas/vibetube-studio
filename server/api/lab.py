@@ -1002,6 +1002,18 @@ async def worker_log(verb: str):
     return {"verb": verb, "lines": [l for l in text.splitlines() if l.strip()]}
 
 
+@router.get("/holes/plan")
+async def holes_plan():
+    """Every shipped hole in lab order, with the page it belongs to, its
+    name for a person, and whether it is open or filled. The catch-up bar
+    at the top of each page fills the ones from earlier pages."""
+    from checks.holes import HOLES, LABEL, PAGE
+    from scripts.carve import SHIP_HOLES
+    state = await holes_status()
+    return [{"name": n, "page": PAGE[n], "label": LABEL[n], "state": state.get(n, "unknown")}
+            for n in SHIP_HOLES if n in HOLES]
+
+
 @router.post("/holes/fill")
 async def holes_fill(body: dict):
     """Write the registry's answer into the file for each named hole: what

@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowRight, RefreshCw } from "lucide-react";
 import { In, StepHeader } from "../components/shared";
-import { CatchUp } from "../components/CatchUp";
 import { LoadCheck } from "../components/LoadCheck";
 import { api, useRunEvents } from "../lib/api";
 import type { Stage3Status } from "../lib/types";
@@ -237,8 +236,6 @@ function StateNode() {
         blurb="Downstream nodes require the candidate selected at the approval gate. Session state provides cross-node data persistence across the workflow execution lifecycle."
       />
 
-      <CatchUp needs={["GATE_INPUT"]} color={RED} />
-
       <In delay={0.05}>
         <section className="rounded-3xl border border-hairline bg-card p-6">
           <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">The graph so far</p>
@@ -413,8 +410,6 @@ function RouterNode() {
         title="Deterministic conditional routing."
         blurb="Router nodes introduce deterministic control flow without incurring LLM inference costs. By evaluating payloads against explicit policy rules, the router directs execution branches conditionally via dictionary edge mapping."
       />
-
-      <CatchUp needs={["GATE_INPUT", "PERSIST_STATE"]} color={RED} />
 
       <In delay={0.1}>
         <section className="rounded-3xl border border-hairline bg-card p-6">
@@ -821,8 +816,6 @@ function TaskNode() {
         title="Autonomous remediation in task mode."
         blurb="Unlike single-turn agents that return immediate structured responses, task-mode agents run autonomous tool-use loops until explicit completion criteria are met. When policy violations occur, quarantine iterates with analysis tools until the payload is sanitized."
       />
-
-      <CatchUp needs={["GATE_INPUT", "PERSIST_STATE", "POLICY_ROUTE"]} color={RED} />
 
       <In delay={0.1}>
         <section className="rounded-3xl border border-hairline bg-card p-6">

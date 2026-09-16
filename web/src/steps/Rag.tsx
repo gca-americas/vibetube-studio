@@ -3,7 +3,6 @@ import { Link, useParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, RefreshCw } from "lucide-react";
 import { In, StepHeader } from "../components/shared";
-import { CatchUp } from "../components/CatchUp";
 import { DoneBanner } from "../components/DoneBanner";
 import { LoadCheck } from "../components/LoadCheck";
 import { api, useRunEvents } from "../lib/api";
@@ -1066,8 +1065,6 @@ function TheReader() {
         title="Expanding the research fan-out."
         blurb="Integrate semantic corpus retrieval directly into the parallel execution fan-out. By appending read_feedback as a third concurrent reader node, the join synchronizes structured feedback alongside trends and backlog data before direction synthesis."
       />
-
-      <CatchUp needs={["GATE_INPUT", "PERSIST_STATE", "POLICY_ROUTE"]} color={CYAN} />
 
       <In delay={0.1}>
         <section className="rounded-3xl border border-hairline bg-card p-6">
