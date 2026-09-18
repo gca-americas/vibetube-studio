@@ -151,7 +151,13 @@ ask() {
     printf '%s' "${reply:-$default}"
 }
 
-EVENT_DEFAULT="$(env_get VIBETUBE_EVENT)"; [ -n "$EVENT_DEFAULT" ] || EVENT_DEFAULT="GoogleNYC"
+EVENT_FILE="$HOME/vibetube_event.txt"
+EVENT_DEFAULT=""
+if [ -f "$EVENT_FILE" ]; then
+    EVENT_DEFAULT="$(tr -d '[:space:]' < "$EVENT_FILE" || true)"
+fi
+[ -n "$EVENT_DEFAULT" ] || EVENT_DEFAULT="$(env_get VIBETUBE_EVENT)"
+[ -n "$EVENT_DEFAULT" ] || EVENT_DEFAULT="sandbox"
 NAME_DEFAULT="$(env_get VIBETUBE_NAME)"
 if [ -z "$NAME_DEFAULT" ]; then
     ACCOUNT="$(gcloud config get-value account 2>/dev/null || true)"
@@ -231,6 +237,7 @@ keep_extra() {
 } > .env.tmp
 mv .env.tmp .env
 tick "wrote .env — GEAP via ADC on $PROJECT, no API key anywhere"
+printf '%s\n' "$VIBETUBE_EVENT" > "$HOME/vibetube_event.txt"
 
 # Veo is regional and this lab renders for real: confirm the model is served
 # where .env points. A metadata GET, no render, no cost.
