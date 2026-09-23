@@ -200,15 +200,23 @@ export function CodeEditor({
             {state === "saved" ? "saved" : state === "saving" ? "saving" : state === "invalid" ? "not saved" : "unsaved"}
           </span>
           <button
-            onClick={() => {
-              if (onDisk) adopt(onDisk);
-              else {
-                setCode(original);
+            onClick={async () => {
+              // the block as the lab shipped it, from starter/, written to the file
+              if (timer.current) clearTimeout(timer.current);
+              setState("saving");
+              try {
+                const r = await fetch("/api/code/reset", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ path, symbol }) });
+                const d = await r.json().catch(() => ({}));
+                if (!r.ok || typeof d.content !== "string") throw new Error(d.detail || `${r.status} from /api/code/reset`);
+                adopt(d);
+                if (d.validation?.valid) onSaved?.(d.content, d.validation);
+              } catch (e) {
+                setLoadError(`Could not reset ${path}: ${(e as Error).message}`);
                 setState("saved");
               }
             }}
             className="flex items-center gap-1 hover:text-fg"
-            title="Drop unsaved edits and show the file as it is saved"
+            title="Put this block back as the lab shipped it, TODO line and all. Your edits to it are gone."
           >
             <RotateCcw size={12} /> reset
           </button>

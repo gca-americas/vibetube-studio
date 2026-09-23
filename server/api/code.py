@@ -11,6 +11,8 @@ from fastapi import APIRouter, HTTPException
 
 from agent.platform import config
 
+from pydantic import BaseModel
+
 from ..schemas import CodeFile, CodeWrite
 from ..services import reload as agent_reload
 from ..services.events import bus
@@ -127,6 +129,50 @@ async def read(path: str, symbol: str | None = None) -> CodeFile:
             raise HTTPException(404, f"{symbol} not found at top level of {path}")
         return CodeFile(path=path, content=_slice(content, span), validation=v, symbol=symbol, span=list(span))
     return CodeFile(path=path, content=content, validation=v)
+
+
+class CodeReset(BaseModel):
+    path: str
+    symbol: str | None = None
+
+
+@router.post("/reset", response_model=CodeFile)
+async def reset(body: CodeReset) -> CodeFile:
+    """Put the block back as the lab shipped it: the same top-level symbol's
+    lines from starter/<path>, spliced over the live file. Without a symbol,
+    the whole file. When the live file no longer parses or has lost the
+    symbol, the whole shipped file is restored, and the answer says so."""
+    editable, _ = FILES.get(body.path, (False, ""))
+    p = _resolve(body.path)
+    if not editable:
+        raise HTTPException(403, f"{body.path} is read-only in this lab")
+    shipped = config.ROOT / "starter" / body.path
+    if not shipped.exists():
+        raise HTTPException(404, f"no shipped version of {body.path}")
+    fresh_full = shipped.read_text()
+    note = ""
+    if body.symbol:
+        s_span = symbol_span(fresh_full, body.symbol)
+        if s_span is None:
+            raise HTTPException(404, f"{body.symbol} is not in the shipped {body.path}")
+        fresh = _slice(fresh_full, s_span)
+        current = p.read_text()
+        c_span = symbol_span(current, body.symbol)
+        if c_span is None:
+            new_full = fresh_full
+            note = f"the file no longer parsed or had lost {body.symbol}; the whole file is back as shipped"
+        else:
+            new_full = _splice(current, c_span, fresh)
+    else:
+        fresh, new_full = fresh_full, fresh_full
+    _write(p, new_full)
+    agent_reload.after_save(body.path)
+    bus.mark_dirty()
+    v = validate(body.path, new_full)
+    if note:
+        v = {**v, "message": note}
+    span = symbol_span(new_full, body.symbol) if body.symbol else None
+    return CodeFile(path=body.path, content=fresh, validation=v, symbol=body.symbol, span=list(span) if span else None)
 
 
 @router.post("", response_model=CodeFile)
