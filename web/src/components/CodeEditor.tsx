@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRunEvents } from "../lib/api";
-import { Check, Loader2, RotateCcw, Save } from "lucide-react";
+import { RefreshCw, Check, Loader2, RotateCcw, Save } from "lucide-react";
 import { tint } from "../steps/colors";
 
 /**
@@ -78,6 +78,7 @@ export function CodeEditor({
   const [loadError, setLoadError] = useState<string | null>(null);
   // the file changed on disk while this editor holds unsaved edits: what is there now
   const [onDisk, setOnDisk] = useState<{ content: string; validation: Validation } | null>(null);
+  const [reloading, setReloading] = useState(false);
   const known = useRef({ code: "", original: "" });
   known.current = { code, original };
 
@@ -210,6 +211,24 @@ export function CodeEditor({
             title="Drop unsaved edits and show the file as it is saved"
           >
             <RotateCcw size={12} /> reset
+          </button>
+          <button
+            onClick={async () => {
+              // read the file again from disk, whatever this editor thinks it holds
+              setReloading(true);
+              try {
+                adopt(await fetchFile());
+                setLoadError(null);
+              } catch (e) {
+                setLoadError(`Could not reload ${path}: ${(e as Error).message}`);
+              } finally {
+                setReloading(false);
+              }
+            }}
+            className="flex items-center gap-1 hover:text-fg"
+            title="Read the file from disk again. Unsaved edits here are dropped."
+          >
+            <RefreshCw size={12} className={reloading ? "animate-spin" : ""} /> reload
           </button>
           <button onClick={() => save(code)} className="flex items-center gap-1 hover:text-fg" title="Save now">
             <Save size={12} /> save
