@@ -78,7 +78,7 @@ cd ~/vibe-studio-lab
 During setup, you will be prompted for the following details:
 
 - **Google Cloud project ID**: When prompted by `setup_project.sh`, press **Enter** to create a fresh project automatically. If you prefer to use an existing project (such as a pre-assigned project), enter your project ID and ensure the spelling is correct with billing active.
-- **Event code**: Enter the room code provided by your instructor. If you did not receive one, check with a teaching assistant or a neighbor. If you are completing this lab at home, press **Enter** to accept the default `sandbox` room.
+- **Event code**: Enter the room code provided by your instructor. If you did not receive one, check with a teaching assistant or a neighbor. If you are completing this lab at home, press **Enter** to accept the default `UBC` room.
 - **Channel display name**: Enter your name or preferred channel handle when prompted by `setup_codelab.sh`, or press **Enter** to accept the default generated from your Google account.
 
 Run the two setup scripts in order:
