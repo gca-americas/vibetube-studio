@@ -955,7 +955,7 @@ async def quarantine_skeleton():
     if span is None:
         return {"ok": False, "state": "missing", "detail": "quarantine is not defined in stage3_router/agent.py; paste the complete node from the hints"}
     _write(p, _splice(src, span, QUARANTINE_SKELETON + "\n"))
-    agent_reload.after_save(rel)
+    agent_reload.after_save_report(rel)
     bus.mark_dirty()
     return {"ok": True, "state": "skeleton"}
 
@@ -1031,7 +1031,7 @@ async def holes_fill(body: dict):
         if anchor not in src:
             continue
         _write(p, src.replace(anchor, snippet, 1))
-        agent_reload.after_save(rel)
-        filled.append(name)
+        err = agent_reload.after_save_report(rel)
+        filled.append(name + (f" (saved, but {err})" if err else ""))
     bus.mark_dirty()
     return {"filled": filled}

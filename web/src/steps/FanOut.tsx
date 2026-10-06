@@ -1589,7 +1589,7 @@ export function RunPanel({
               {inspector.up ? "adk web ready" : "adk web unavailable"}
             </span>
           )}
-          <button onClick={() => setOpen((o) => !o)} className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white transition-transform hover:scale-[1.03]" style={{ background: BLUE }}>
+          <button onClick={() => { window.dispatchEvent(new Event("vibe:sync")); setOpen((o) => !o); }} className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white transition-transform hover:scale-[1.03]" style={{ background: BLUE }}>
             <TerminalSquare size={16} />
             {open ? "Hide adk web" : "Open adk web"}
           </button>

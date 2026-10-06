@@ -16,6 +16,7 @@ export function LoadCheck({ app, intro }: { app: string; intro?: string }) {
   const [asking, setAsking] = useState("");   // "" · "loading" · "verifying"
 
   const run = async () => {
+    window.dispatchEvent(new Event("vibe:sync"));   // the editors first: what is on disk is what gets checked
     setAsking("loading");
     setLoad(null);
     setLoaded(null);

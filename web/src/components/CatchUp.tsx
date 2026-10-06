@@ -16,7 +16,8 @@ function pageIndex(page: string): number {
   for (const s of STEPS) {
     const parts = s.parts?.map((p) => p.id) ?? [""];
     for (const p of parts) {
-      if (s.slug === slug && (p === (part ?? "") || (!s.parts && !part))) return i;
+      // a step opened at its slug alone is on its first part
+      if (s.slug === slug && (!part || p === part)) return i;
       i++;
     }
   }

@@ -79,22 +79,39 @@ export const api = {
  * whenever anything under runs/ changes, plus worker log lines. The browser's
  * EventSource reconnects on its own if the connection drops.
  */
+/** One event stream for the whole page. Browsers allow six connections to a
+ *  host at a time, and the embedded adk web frame shares them; a stream per
+ *  listening component used them all on the pages with two editors, and the
+ *  save request then waited forever. Every listener shares this one. */
+type Listener = { onLog: (verb: string, line: string) => void; onSnapshot: (s: RunSnapshot) => void; onConn: (c: boolean) => void };
+let stream: EventSource | null = null;
+const listeners = new Set<Listener>();
+let lastSnapshot: RunSnapshot | null = null;
+let streamUp = false;
+
+function ensureStream() {
+  if (stream) return;
+  stream = new EventSource("/api/lab/events");
+  stream.onopen = () => { streamUp = true; listeners.forEach((l) => l.onConn(true)); };
+  stream.onerror = () => { streamUp = false; listeners.forEach((l) => l.onConn(false)); };
+  stream.onmessage = (m) => {
+    const evt = JSON.parse(m.data) as RunEvent;
+    if (evt.type === "snapshot") { lastSnapshot = evt.data; listeners.forEach((l) => l.onSnapshot(evt.data)); }
+    else if (evt.type === "log") listeners.forEach((l) => l.onLog(evt.verb, evt.line));
+  };
+}
+
 export function useRunEvents(onLog?: (verb: string, line: string) => void) {
-  const [snapshot, setSnapshot] = useState<RunSnapshot | null>(null);
-  const [connected, setConnected] = useState(false);
+  const [snapshot, setSnapshot] = useState<RunSnapshot | null>(lastSnapshot);
+  const [connected, setConnected] = useState(streamUp);
   const onLogRef = useRef(onLog);
   onLogRef.current = onLog;
 
   useEffect(() => {
-    const es = new EventSource("/api/lab/events");
-    es.onopen = () => setConnected(true);
-    es.onerror = () => setConnected(false);
-    es.onmessage = (m) => {
-      const evt = JSON.parse(m.data) as RunEvent;
-      if (evt.type === "snapshot") setSnapshot(evt.data);
-      else if (evt.type === "log") onLogRef.current?.(evt.verb, evt.line);
-    };
-    return () => es.close();
+    ensureStream();
+    const l: Listener = { onLog: (v, line) => onLogRef.current?.(v, line), onSnapshot: setSnapshot, onConn: setConnected };
+    listeners.add(l);
+    return () => { listeners.delete(l); };
   }, []);
 
   return { snapshot, connected };

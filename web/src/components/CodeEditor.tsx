@@ -16,6 +16,8 @@ interface Validation {
   valid: boolean;
   message: string;
   line?: number | null;
+  /** The file is saved and parses, but importing it failed with this. */
+  import_error?: string;
 }
 
 /** Identical text metrics for the highlighted layer and the textarea. */
@@ -109,19 +111,32 @@ export function CodeEditor({
   // Other things write this file too: the catch-up bar, the skeleton button, a
   // rescue in a terminal. The server marks every such write; when it does,
   // the editor takes the file as it is now, unless it holds unsaved edits, in
-  // which case it says so and lets the person choose.
-  const { snapshot } = useRunEvents();
-  useEffect(() => {
-    if (!snapshot) return;
+  // which case it says so and lets the person choose. The same check runs
+  // when a page opens adk web or runs the load check (the "vibe:sync" event),
+  // so what the person is about to run is what they are looking at.
+  const syncWithDisk = useCallback(() => {
     fetchFile()
       .then((d) => {
         const { code: c, original: o } = known.current;
         if (d.content === o) return;                 // nothing new on disk
+        if (d.content === c) {                        // the disk already holds what is shown (a save whose answer was lost)
+          setOriginal(d.content);
+          setOnDisk(null);
+          return;
+        }
         if (c === o) adopt(d);                        // no unsaved edits: show the file as it is
         else setOnDisk(d);                            // unsaved edits: do not clobber them
       })
       .catch(() => undefined);
-  }, [snapshot?.updated_at, fetchFile]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [fetchFile]); // eslint-disable-line react-hooks/exhaustive-deps
+  const { snapshot } = useRunEvents();
+  useEffect(() => {
+    if (snapshot) syncWithDisk();
+  }, [snapshot?.updated_at, syncWithDisk]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    window.addEventListener("vibe:sync", syncWithDisk);
+    return () => window.removeEventListener("vibe:sync", syncWithDisk);
+  }, [syncWithDisk]);
 
   const save = async (content: string) => {
     setState("saving");
@@ -289,8 +304,10 @@ export function CodeEditor({
         className="flex items-center gap-2 border-t border-hairline px-3 py-1.5 font-mono text-[11px]"
         style={{ color: validation?.valid === false ? "var(--color-vibe-red)" : "var(--fg-muted)" }}
       >
-        <span className={`h-1.5 w-1.5 rounded-full ${validation?.valid === false ? "bg-vibe-red" : "bg-vibe-green"}`} />
-        {validation ? `${validation.message}${validation.line ? ` (line ${validation.line})` : ""}` : "loading"}
+        <span className={`h-1.5 w-1.5 rounded-full ${validation?.valid === false || validation?.import_error ? "bg-vibe-red" : "bg-vibe-green"}`} />
+        {validation?.import_error
+          ? <span className="text-vibe-red">saved, but the file does not import: {validation.import_error} · adk web will show the same error until it is fixed</span>
+          : validation ? `${validation.message}${validation.line ? ` (line ${validation.line})` : ""}` : "loading"}
         {validation?.valid === false && <span>· the file on disk was not changed</span>}
       </div>
     </div>

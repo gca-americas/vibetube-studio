@@ -121,10 +121,34 @@ def evict(apps: list[str] | None = None) -> list[str]:
 
 def after_save(rel_path: str) -> list[str]:
     """Reload the edited production module and its dependants in place, then
-    drop every stage app from the dev UI's caches. Returns the apps evicted."""
+    drop every stage app from the dev UI's caches. Returns the apps evicted.
+    Raises what the import raised; callers that answer a page use
+    after_save_report instead."""
     if rel_path.startswith("agent/") and rel_path.endswith(".py"):
         reload_agent_modules(rel_path[:-3].replace("/", "."))
     return evict()
+
+
+def after_save_report(rel_path: str) -> str | None:
+    """after_save for a request handler: the file is already written, and a
+    module that no longer imports must not turn the save into a 500 that
+    leaves the page and the disk disagreeing. The caches are still dropped,
+    so adk web re-imports and shows the same error. Returns the error as one
+    line, or None."""
+    import logging, traceback
+    try:
+        after_save(rel_path)
+        return None
+    except Exception as e:
+        logging.getLogger("vibestudio.reload").warning("%s does not import after the save:\n%s", rel_path, traceback.format_exc())
+        try:
+            evict()
+        except Exception:
+            pass
+        tb = traceback.extract_tb(e.__traceback__)
+        where = next((f for f in reversed(tb) if f.filename.endswith(rel_path.split("/")[-1])), None)
+        line = f" (line {where.lineno})" if where else ""
+        return f"{type(e).__name__}: {e}{line}"
 
 
 def note_runner(app: str, runner) -> None:

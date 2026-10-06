@@ -99,6 +99,30 @@ def _write(p, content: str) -> None:
             pass
 
 
+def _stray_lines(block: str, symbol: str) -> str | None:
+    """A message when a block holds code outside its symbol, else None. Blank
+    lines and comments around the symbol are fine; a statement is not."""
+    try:
+        tree = ast.parse(block)
+    except SyntaxError:
+        return None                       # validate() reports syntax on its own
+    lines = block.splitlines()
+    own = symbol_span(block, symbol)
+    if own is None:
+        return f"this editor holds `{symbol}` alone; keep that name"
+    del tree
+    # anything but blank lines outside the symbol's own lines, comments included:
+    # a comment above the def is harmless to Python and still vanishes from view
+    outside = [i for i, l in enumerate(lines, 1) if l.strip() and (i < own[0] or i > own[1])]
+    if not outside:
+        return None
+    first = outside[0]
+    shown = lines[first - 1].strip()
+    where = "above" if first < own[0] else "below"
+    return (f"line {first} is {where} `{symbol}` and would be written into the file where this editor cannot show it: "
+            f"`{shown[:60]}`. Keep this block to `{symbol}` alone; an import belongs at the top of the file.")
+
+
 def _slice(content: str, span: tuple[int, int]) -> str:
     lines = content.splitlines(keepends=True)
     return "".join(lines[span[0] - 1 : span[1]])
@@ -166,9 +190,11 @@ async def reset(body: CodeReset) -> CodeFile:
     else:
         fresh, new_full = fresh_full, fresh_full
     _write(p, new_full)
-    agent_reload.after_save(body.path)
+    err = agent_reload.after_save_report(body.path)
     bus.mark_dirty()
     v = validate(body.path, new_full)
+    if err:
+        v = {**v, "import_error": err}
     if note:
         v = {**v, "message": note}
     span = symbol_span(new_full, body.symbol) if body.symbol else None
@@ -190,6 +216,14 @@ async def write(body: CodeWrite) -> CodeFile:
         if span is None:
             return CodeFile(path=body.path, content=body.content, symbol=body.symbol,
                             validation={"valid": False, "message": f"{body.symbol} not found in the file on disk"})
+        # The editor shows one block. Anything typed above or below that block
+        # would be written into the file where no editor shows it: an import
+        # that does not exist, say, breaking every later save with the broken
+        # line out of sight. The block has to be the symbol and nothing else.
+        stray = _stray_lines(body.content, body.symbol)
+        if stray is not None:
+            return CodeFile(path=body.path, content=body.content, symbol=body.symbol,
+                            validation={"valid": False, "message": stray})
         new_full = _splice(current, span, body.content)
         v = validate(body.path, new_full)
         if not v["valid"]:
@@ -201,8 +235,10 @@ async def write(body: CodeWrite) -> CodeFile:
             return CodeFile(path=body.path, content=body.content, symbol=body.symbol,
                             validation={"valid": False, "message": f"the edit removed `{body.symbol}`; keep its name"})
         _write(p, new_full)
-        agent_reload.after_save(body.path)
+        err = agent_reload.after_save_report(body.path)
         bus.mark_dirty()
+        if err:
+            v = {**v, "import_error": err}
         return CodeFile(path=body.path, content=body.content, validation=v, symbol=body.symbol, span=list(span))
     v = validate(body.path, body.content)
     if not v["valid"]:
@@ -210,6 +246,8 @@ async def write(body: CodeWrite) -> CodeFile:
         # a file the running graph imports
         return CodeFile(path=body.path, content=body.content, validation=v)
     _write(p, body.content)
-    agent_reload.after_save(body.path)
+    err = agent_reload.after_save_report(body.path)
     bus.mark_dirty()            # the live map re-imports graph.py on mtime
+    if err:
+        v = {**v, "import_error": err}
     return CodeFile(path=body.path, content=body.content, validation=v)
