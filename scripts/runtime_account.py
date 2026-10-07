@@ -21,7 +21,11 @@ import subprocess
 import sys
 import time
 
-ROLES = ("roles/aiplatform.user", "roles/cloudbuild.builds.builder", "roles/logging.logWriter", "roles/cloudtrace.agent")
+# builds.builder already carries storage.objects.* and the Artifact Registry
+# upload permissions; the two explicit roles after it say so in the IAM page
+# and hold if the builder role ever narrows.
+ROLES = ("roles/aiplatform.user", "roles/cloudbuild.builds.builder", "roles/storage.objectUser",
+         "roles/artifactregistry.writer", "roles/logging.logWriter", "roles/cloudtrace.agent")
 
 
 def _g(*args: str, timeout: int = 60) -> tuple[int, str]:

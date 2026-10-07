@@ -1057,7 +1057,7 @@ gcloud run deploy vibestudio --source vibestudio \
 - **Session affinity**: Directs requests from the same user to the same container instance, preserving local session state across iterative steps.
 - **Observability**: Cloud Trace integration records distributed spans for every node, LLM call, and tool execution, accessible in the Google Cloud Console under Trace Explorer.
 
-The build and the service run as the project's default compute service account. Setup granted it the roles it needs (`roles/aiplatform.user`, `roles/cloudbuild.builds.builder`, `roles/logging.logWriter`, `roles/cloudtrace.agent`); in a project managed by an organisation that account starts with none, and without them the deploy fails with `PERMISSION_DENIED`. If it does, a project Owner runs `./setup_codelab.sh` again, or the `gcloud projects add-iam-policy-binding` lines it prints.
+The build and the service run as the project's default compute service account. Setup granted it the roles it needs (`roles/aiplatform.user`, `roles/cloudbuild.builds.builder`, `roles/storage.objectUser`, `roles/artifactregistry.writer`, `roles/logging.logWriter`, `roles/cloudtrace.agent`); in a project managed by an organisation that account starts with none, and without them the deploy fails with `PERMISSION_DENIED`. If it does, a project Owner runs `./setup_codelab.sh` again, or the `gcloud projects add-iam-policy-binding` lines it prints.
 
 Click the **Deploy** button in the workbench to execute the deployment script. When the build completes, the terminal displays the live service URL.
 
