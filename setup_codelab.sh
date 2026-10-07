@@ -131,6 +131,39 @@ enable_api cloudbuild.googleapis.com "Cloud Build, builds the container in step 
 enable_api artifactregistry.googleapis.com "Artifact Registry, holds the image in step 9"
 enable_api cloudtrace.googleapis.com "Cloud Trace, the app's traces"
 
+# Step 9 builds and runs the app as the project's default compute service
+# account. In a project managed by an organisation that account is created
+# with no roles at all (the org policy iam.automaticIamGrantsForDefaultServiceAccounts
+# withholds the Editor role it used to get), so the build cannot push its
+# image and the service cannot call Vertex AI: PERMISSION_DENIED at step 9,
+# on some machines and not others. These grants are idempotent.
+RUNTIME_ROLES="roles/aiplatform.user roles/cloudbuild.builds.builder roles/logging.logWriter roles/cloudtrace.agent"
+PROJECT_NUMBER="$(gcloud projects describe "$PROJECT" --format='value(projectNumber)' 2>/dev/null || true)"
+if [ -n "$PROJECT_NUMBER" ]; then
+    RUNTIME_SA="${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
+    held="$(gcloud projects get-iam-policy "$PROJECT" --flatten='bindings[].members' --filter="bindings.members:$RUNTIME_SA" --format='value(bindings.role)' 2>/dev/null || true)"
+    missing=""
+    for role in $RUNTIME_ROLES; do
+        case " $held " in *" $role "*|*"roles/editor"*|*"roles/owner"*) ;; *) missing="$missing $role" ;; esac
+    done
+    if [ -z "$missing" ]; then
+        tick "runtime account $RUNTIME_SA has the roles step 9 needs"
+    else
+        failed=""
+        for role in $missing; do
+            gcloud projects add-iam-policy-binding "$PROJECT" --member="serviceAccount:$RUNTIME_SA" --role="$role" --condition=None -q >/dev/null 2>&1 || failed="$failed $role"
+        done
+        if [ -z "$failed" ]; then
+            tick "runtime account $RUNTIME_SA granted:$missing"
+        else
+            warn "could not grant$failed to $RUNTIME_SA (a project Owner can). Until then step 9 fails with PERMISSION_DENIED. An Owner runs:"
+            for role in $failed; do warn "  gcloud projects add-iam-policy-binding $PROJECT --member=serviceAccount:$RUNTIME_SA --role=$role"; done
+        fi
+    fi
+else
+    warn "could not read the project number; step 9's account roles were not checked"
+fi
+
 # ── 3 · the room: the only two questions ────────────────────────────────────
 say "2 · The room"
 

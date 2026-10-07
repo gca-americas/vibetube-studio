@@ -106,6 +106,20 @@ for label, cache, lock, step in (("Memory Bank", "memorybank.json", ".memorybank
     else:
         print(f"  - {label}: not created yet (step {step} creates it)")
 
+# step 9 runs as the default compute account; in an organisation's project it may hold nothing
+try:
+    import subprocess
+    _proj = os.environ.get("GOOGLE_CLOUD_PROJECT") or ""
+    _num = subprocess.run(["gcloud", "projects", "describe", _proj, "--format=value(projectNumber)"], capture_output=True, text=True, timeout=20).stdout.strip() if _proj else ""
+    if _num:
+        _sa = f"{_num}-compute@developer.gserviceaccount.com"
+        _held = subprocess.run(["gcloud", "projects", "get-iam-policy", _proj, "--flatten=bindings[].members", f"--filter=bindings.members:{_sa}", "--format=value(bindings.role)"], capture_output=True, text=True, timeout=30).stdout.split()
+        _need = ["roles/aiplatform.user", "roles/cloudbuild.builds.builder", "roles/logging.logWriter", "roles/cloudtrace.agent"]
+        _missing = [] if ("roles/editor" in _held or "roles/owner" in _held) else [r for r in _need if r not in _held]
+        tick(f"step 9 runtime account {_sa} has its roles", not _missing, "missing " + " ".join(_missing) + " · ./setup_codelab.sh grants them (needs a project Owner)")
+except Exception:
+    pass
+
 port = os.environ.get("PORT", "4600")
 try:
     with urllib.request.urlopen(f"http://localhost:{port}/api/lab/inspector", timeout=3) as r:

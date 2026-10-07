@@ -52,6 +52,42 @@ def cached(name: str) -> str:
         return ""
 
 
+RUNTIME_ROLES = ("roles/aiplatform.user", "roles/cloudbuild.builds.builder", "roles/logging.logWriter", "roles/cloudtrace.agent")
+
+
+def ensure_runtime_account(project: str) -> str | None:
+    """The default compute service account builds and runs the service. In an
+    organisation's project it starts with no roles, so the build cannot push
+    its image and the service cannot call Vertex AI. Grant what is missing,
+    idempotently; say what a project Owner has to run when we cannot."""
+    def g(*args: str) -> str:
+        r = subprocess.run(["gcloud", *args], capture_output=True, text=True)
+        return r.stdout.strip() if r.returncode == 0 else ""
+    number = g("projects", "describe", project, "--format=value(projectNumber)")
+    if not number:
+        print("  runtime account: could not read the project number; roles not checked"); return None
+    sa = f"{number}-compute@developer.gserviceaccount.com"
+    held = g("projects", "get-iam-policy", project, "--flatten=bindings[].members", f"--filter=bindings.members:{sa}", "--format=value(bindings.role)").split()
+    if "roles/editor" in held or "roles/owner" in held:
+        print(f"  runtime account: {sa} (editor)"); return sa
+    missing = [r for r in RUNTIME_ROLES if r not in held]
+    if not missing:
+        print(f"  runtime account: {sa} has its roles"); return sa
+    failed = []
+    for role in missing:
+        r = subprocess.run(["gcloud", "projects", "add-iam-policy-binding", project, f"--member=serviceAccount:{sa}", f"--role={role}", "--condition=None", "-q"], capture_output=True, text=True)
+        if r.returncode != 0:
+            failed.append(role)
+    if failed:
+        print(f"  runtime account: {sa} lacks {' '.join(failed)} and this account cannot grant them; the deploy will fail with PERMISSION_DENIED.")
+        print("  A project Owner runs:")
+        for role in failed:
+            print(f"    gcloud projects add-iam-policy-binding {project} --member=serviceAccount:{sa} --role={role}")
+    else:
+        print(f"  runtime account: {sa} granted {' '.join(missing)}")
+    return sa
+
+
 def main() -> int:
     sys.stdout.reconfigure(line_buffering=True)      # the page streams this output
     ap = argparse.ArgumentParser(description="deploy the Vibe Studio app to Cloud Run")
@@ -75,11 +111,13 @@ def main() -> int:
     vars_ = {k: v for k, v in vars_.items() if v}
     for k in ("VIBETUBE_URL", "VIBETUBE_EVENT", "VIBETUBE_NAME", "VIBETUBE_PROJECT"):
         print(f"  {k}: {vars_.get(k) or '(not in .env; the app\'s profile drawer can set it)'}")
+    runtime_sa = ensure_runtime_account(project)
     # gcloud splits on commas unless a custom delimiter is declared: ^|^ makes | the separator
     env_arg = "^|^" + "|".join(f"{k}={v}" for k, v in vars_.items())
     cmd = ["gcloud", "run", "deploy", a.service, "--source", str(HERE), "--project", project, "--region", a.region,
            "--labels", "dev-tutorial-codelab=vibetube",
            "--allow-unauthenticated", "--memory", "2Gi", "--cpu", "2", "--timeout", "3600",
+           *(["--service-account", runtime_sa] if runtime_sa else []),
            "--concurrency", "40", "--max-instances", "1", "--min-instances", "1", "--session-affinity",
            "--set-env-vars", env_arg, "--quiet"]
     print(f"── deploying {a.service} to Cloud Run · project {project} · region {a.region} ──")
@@ -99,6 +137,7 @@ def main() -> int:
             url = m.group(0)
     code = proc.wait()
     if code != 0:
+        print("deploy failed. If the output says PERMISSION_DENIED on artifactregistry, storage, logging or aiplatform, the runtime account above lacks a role; the grants it needs are printed above it.")
         print(f"deploy failed (gcloud exited {code}). Common causes: the Cloud Run and Cloud Build APIs are off "
               f"(gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com --project {project}), "
               "or the account cannot deploy.")
