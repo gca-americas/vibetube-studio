@@ -8,15 +8,12 @@ project managed by an organisation the account is created with no roles,
 since the org policy iam.automaticIamGrantsForDefaultServiceAccounts withholds
 the Editor role it used to get. Either way step 9 ends in PERMISSION_DENIED.
 
-resolve(project) returns the account to use, creating one when it must:
-  1. the default compute account, if it exists;
-  2. else enable compute.googleapis.com, which creates it, and wait for it;
-  3. else the lab's own vibestudio-runner@<project>, created here.
-ensure_roles(project, sa) grants what is missing, idempotently.
+resolve(project) returns the default compute account, enabling the Compute
+Engine API first when the account does not exist yet, since that is what
+creates it. ensure_roles(project, sa) grants what is missing, idempotently.
 
-Run: python scripts/runtime_account.py <project> [--check] [--dedicated]
+Run: python scripts/runtime_account.py <project> [--check]
   --check      report, grant nothing
-  --dedicated  skip the default account and use vibestudio-runner (testing)
 """
 from __future__ import annotations
 
@@ -25,7 +22,6 @@ import sys
 import time
 
 ROLES = ("roles/aiplatform.user", "roles/cloudbuild.builds.builder", "roles/logging.logWriter", "roles/cloudtrace.agent")
-DEDICATED = "vibestudio-runner"
 
 
 def _g(*args: str, timeout: int = 60) -> tuple[int, str]:
@@ -40,40 +36,26 @@ def exists(project: str, sa: str) -> bool:
     return _g("iam", "service-accounts", "describe", sa, "--project", project, "--format=value(email)")[0] == 0
 
 
-def resolve(project: str, create: bool = True, dedicated: bool = False, say=print) -> str | None:
-    """The account to build and run as, or None when nothing can be found or made."""
+def resolve(project: str, create: bool = True, say=print) -> str | None:
+    """The default compute account, or None when the project has none."""
     code, number = _g("projects", "describe", project, "--format=value(projectNumber)")
     if code != 0 or not number:
         say(f"  runtime account: cannot read project {project} ({number[:80]})"); return None
-    default = f"{number}-compute@developer.gserviceaccount.com"
-    if not dedicated:
-        if exists(project, default):
-            say(f"  runtime account: {default}"); return default
-        if not create:
-            say(f"  runtime account: {default} does not exist (the Compute Engine API was never enabled, or it was deleted)"); return None
-        say(f"  runtime account: {default} does not exist; enabling the Compute Engine API, which creates it")
-        code, out = _g("services", "enable", "compute.googleapis.com", "--project", project, "-q", timeout=240)
-        if code == 0:
-            for _ in range(12):
-                if exists(project, default):
-                    say(f"  runtime account: {default} (created with the Compute Engine API)"); return default
-                time.sleep(5)
-        say(f"  runtime account: still no {default}; using the lab's own account instead")
-    sa = f"{DEDICATED}@{project}.iam.gserviceaccount.com"
+    sa = f"{number}-compute@developer.gserviceaccount.com"
     if exists(project, sa):
         say(f"  runtime account: {sa}"); return sa
     if not create:
-        say(f"  runtime account: {sa} does not exist"); return None
-    code, out = _g("iam", "service-accounts", "create", DEDICATED, "--project", project,
-                   "--display-name", "Vibe Studio runtime (step 9)",
-                   "--description", "builds and runs the Vibe Studio app on Cloud Run")
-    if code != 0:
-        say(f"  runtime account: could not create {sa}: {out[:160]}"); return None
-    for _ in range(12):                              # a new account takes a moment to be bindable
-        if exists(project, sa):
-            break
-        time.sleep(5)
-    say(f"  runtime account: {sa} (created)"); return sa
+        say(f"  runtime account: {sa} does not exist (the Compute Engine API was never enabled, or the account was deleted)"); return None
+    say(f"  runtime account: {sa} does not exist; enabling the Compute Engine API, which creates it")
+    code, out = _g("services", "enable", "compute.googleapis.com", "--project", project, "-q", timeout=240)
+    if code == 0:
+        for _ in range(12):
+            if exists(project, sa):
+                say(f"  runtime account: {sa} (created with the Compute Engine API)"); return sa
+            time.sleep(5)
+    say(f"  runtime account: still no {sa}. If it was deleted in the last 30 days an Owner can undelete it:")
+    say(f"    gcloud beta iam service-accounts undelete <unique id>   (gcloud logging read for its deletion shows the id)")
+    return None
 
 
 def held_roles(project: str, sa: str) -> list[str]:
@@ -113,8 +95,8 @@ def ensure_roles(project: str, sa: str, grant: bool = True, say=print) -> list[s
 def main(argv: list[str]) -> int:
     if not argv or argv[0].startswith("-"):
         print(__doc__); return 2
-    project = argv[0]; check = "--check" in argv; dedicated = "--dedicated" in argv
-    sa = resolve(project, create=not check, dedicated=dedicated)
+    project = argv[0]; check = "--check" in argv
+    sa = resolve(project, create=not check)
     if not sa:
         return 1
     print(f"RUNTIME_SA={sa}")

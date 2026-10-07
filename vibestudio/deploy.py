@@ -87,13 +87,12 @@ def main() -> int:
     vars_ = {k: v for k, v in vars_.items() if v}
     for k in ("VIBETUBE_URL", "VIBETUBE_EVENT", "VIBETUBE_NAME", "VIBETUBE_PROJECT"):
         print(f"  {k}: {vars_.get(k) or '(not in .env; the app\'s profile drawer can set it)'}")
-    runtime_sa = ensure_runtime_account(project)
+    ensure_runtime_account(project)
     # gcloud splits on commas unless a custom delimiter is declared: ^|^ makes | the separator
     env_arg = "^|^" + "|".join(f"{k}={v}" for k, v in vars_.items())
     cmd = ["gcloud", "run", "deploy", a.service, "--source", str(HERE), "--project", project, "--region", a.region,
            "--labels", "dev-tutorial-codelab=vibetube",
            "--allow-unauthenticated", "--memory", "2Gi", "--cpu", "2", "--timeout", "3600",
-           *(["--service-account", runtime_sa, "--build-service-account", f"projects/{project}/serviceAccounts/{runtime_sa}"] if runtime_sa else []),
            "--concurrency", "40", "--max-instances", "1", "--min-instances", "1", "--session-affinity",
            "--set-env-vars", env_arg, "--quiet"]
     print(f"── deploying {a.service} to Cloud Run · project {project} · region {a.region} ──")

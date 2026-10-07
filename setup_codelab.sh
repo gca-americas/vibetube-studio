@@ -131,11 +131,11 @@ enable_api cloudbuild.googleapis.com "Cloud Build, builds the container in step 
 enable_api artifactregistry.googleapis.com "Artifact Registry, holds the image in step 9"
 enable_api cloudtrace.googleapis.com "Cloud Trace, the app's traces"
 
-# Step 9 builds and runs the app as a service account. scripts/runtime_account.py
-# finds the project's default compute account, creates the lab's own when the
-# project has none, and grants the roles the build and the service need; in a
-# project managed by an organisation the default account starts with none and
-# step 9 fails with PERMISSION_DENIED. Idempotent; a second run changes nothing.
+# Step 9 builds and runs the app as the project's default compute service
+# account. scripts/runtime_account.py makes sure it exists (enabling the
+# Compute Engine API creates it) and grants the roles the build and the
+# service need; in a project managed by an organisation it starts with none
+# and step 9 fails with PERMISSION_DENIED. Idempotent; a second run changes nothing.
 if out="$(.venv/bin/python scripts/runtime_account.py "$PROJECT" 2>&1)"; then
     tick "step 9 runs as $(printf '%s\n' "$out" | sed -n 's/^RUNTIME_SA=//p') with its roles"
 else

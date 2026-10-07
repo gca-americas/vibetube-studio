@@ -106,7 +106,7 @@ for label, cache, lock, step in (("Memory Bank", "memorybank.json", ".memorybank
     else:
         print(f"  - {label}: not created yet (step {step} creates it)")
 
-# step 9's account: found, or the lab's own; in an organisation's project it may hold nothing
+# step 9's account, the default compute account; in an organisation's project it may hold nothing
 try:
     from scripts.runtime_account import ensure_roles, resolve
     _proj = os.environ.get("GOOGLE_CLOUD_PROJECT") or ""
@@ -114,7 +114,7 @@ try:
     _sa = resolve(_proj, create=False, say=_said.append) if _proj else None
     _missing = ensure_roles(_proj, _sa, grant=False, say=_said.append) if _sa else []
     tick(f"step 9 runtime account {_sa or 'not found'} has its roles", bool(_sa) and not _missing,
-         ("missing " + " ".join(_missing) + " · " if _missing else "") + "./setup_codelab.sh finds or creates the account and grants the roles (needs a project Owner)")
+         ("missing " + " ".join(_missing) + " · " if _missing else "") + "./setup_codelab.sh grants the roles (needs a project Owner)")
 except Exception:
     pass
 
