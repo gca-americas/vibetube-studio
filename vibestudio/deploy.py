@@ -52,39 +52,15 @@ def cached(name: str) -> str:
         return ""
 
 
-RUNTIME_ROLES = ("roles/aiplatform.user", "roles/cloudbuild.builds.builder", "roles/logging.logWriter", "roles/cloudtrace.agent")
-
-
 def ensure_runtime_account(project: str) -> str | None:
-    """The default compute service account builds and runs the service. In an
-    organisation's project it starts with no roles, so the build cannot push
-    its image and the service cannot call Vertex AI. Grant what is missing,
-    idempotently; say what a project Owner has to run when we cannot."""
-    def g(*args: str) -> str:
-        r = subprocess.run(["gcloud", *args], capture_output=True, text=True)
-        return r.stdout.strip() if r.returncode == 0 else ""
-    number = g("projects", "describe", project, "--format=value(projectNumber)")
-    if not number:
-        print("  runtime account: could not read the project number; roles not checked"); return None
-    sa = f"{number}-compute@developer.gserviceaccount.com"
-    held = g("projects", "get-iam-policy", project, "--flatten=bindings[].members", f"--filter=bindings.members:{sa}", "--format=value(bindings.role)").split()
-    if "roles/editor" in held or "roles/owner" in held:
-        print(f"  runtime account: {sa} (editor)"); return sa
-    missing = [r for r in RUNTIME_ROLES if r not in held]
-    if not missing:
-        print(f"  runtime account: {sa} has its roles"); return sa
-    failed = []
-    for role in missing:
-        r = subprocess.run(["gcloud", "projects", "add-iam-policy-binding", project, f"--member=serviceAccount:{sa}", f"--role={role}", "--condition=None", "-q"], capture_output=True, text=True)
-        if r.returncode != 0:
-            failed.append(role)
-    if failed:
-        print(f"  runtime account: {sa} lacks {' '.join(failed)} and this account cannot grant them; the deploy will fail with PERMISSION_DENIED.")
-        print("  A project Owner runs:")
-        for role in failed:
-            print(f"    gcloud projects add-iam-policy-binding {project} --member=serviceAccount:{sa} --role={role}")
-    else:
-        print(f"  runtime account: {sa} granted {' '.join(missing)}")
+    """scripts/runtime_account.py: the account found or made, with its roles."""
+    sys.path.insert(0, str(HERE.parent))
+    from scripts.runtime_account import ensure_roles, resolve
+    sa = resolve(project)
+    if sa:
+        missing = ensure_roles(project, sa)
+        if missing:
+            print("  the deploy will fail with PERMISSION_DENIED until those are granted")
     return sa
 
 
@@ -117,7 +93,7 @@ def main() -> int:
     cmd = ["gcloud", "run", "deploy", a.service, "--source", str(HERE), "--project", project, "--region", a.region,
            "--labels", "dev-tutorial-codelab=vibetube",
            "--allow-unauthenticated", "--memory", "2Gi", "--cpu", "2", "--timeout", "3600",
-           *(["--service-account", runtime_sa] if runtime_sa else []),
+           *(["--service-account", runtime_sa, "--build-service-account", f"projects/{project}/serviceAccounts/{runtime_sa}"] if runtime_sa else []),
            "--concurrency", "40", "--max-instances", "1", "--min-instances", "1", "--session-affinity",
            "--set-env-vars", env_arg, "--quiet"]
     print(f"── deploying {a.service} to Cloud Run · project {project} · region {a.region} ──")

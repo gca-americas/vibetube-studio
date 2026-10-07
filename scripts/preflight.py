@@ -106,17 +106,15 @@ for label, cache, lock, step in (("Memory Bank", "memorybank.json", ".memorybank
     else:
         print(f"  - {label}: not created yet (step {step} creates it)")
 
-# step 9 runs as the default compute account; in an organisation's project it may hold nothing
+# step 9's account: found, or the lab's own; in an organisation's project it may hold nothing
 try:
-    import subprocess
+    from scripts.runtime_account import ensure_roles, resolve
     _proj = os.environ.get("GOOGLE_CLOUD_PROJECT") or ""
-    _num = subprocess.run(["gcloud", "projects", "describe", _proj, "--format=value(projectNumber)"], capture_output=True, text=True, timeout=20).stdout.strip() if _proj else ""
-    if _num:
-        _sa = f"{_num}-compute@developer.gserviceaccount.com"
-        _held = subprocess.run(["gcloud", "projects", "get-iam-policy", _proj, "--flatten=bindings[].members", f"--filter=bindings.members:{_sa}", "--format=value(bindings.role)"], capture_output=True, text=True, timeout=30).stdout.split()
-        _need = ["roles/aiplatform.user", "roles/cloudbuild.builds.builder", "roles/logging.logWriter", "roles/cloudtrace.agent"]
-        _missing = [] if ("roles/editor" in _held or "roles/owner" in _held) else [r for r in _need if r not in _held]
-        tick(f"step 9 runtime account {_sa} has its roles", not _missing, "missing " + " ".join(_missing) + " · ./setup_codelab.sh grants them (needs a project Owner)")
+    _said: list[str] = []
+    _sa = resolve(_proj, create=False, say=_said.append) if _proj else None
+    _missing = ensure_roles(_proj, _sa, grant=False, say=_said.append) if _sa else []
+    tick(f"step 9 runtime account {_sa or 'not found'} has its roles", bool(_sa) and not _missing,
+         ("missing " + " ".join(_missing) + " · " if _missing else "") + "./setup_codelab.sh finds or creates the account and grants the roles (needs a project Owner)")
 except Exception:
     pass
 
