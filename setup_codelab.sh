@@ -113,16 +113,50 @@ fi
 gcloud config set project "$PROJECT" -q >/dev/null 2>&1 || true
 
 # Enabling an API that is already on is a no-op, so this is safe to repeat.
+# `gcloud services enable` returning 0 is a request accepted, not a service
+# working: a project that is minutes old answers "API not enabled" for a
+# while after. Each API is enabled, then confirmed twice - listed as enabled
+# by the project, and answering a cheap call - and re-enabled when either
+# fails, before the setup goes on to anything that depends on it.
+API_PROBE_ERR="$(mktemp)"
+api_listed() {              # the project lists it as enabled
+    gcloud services list --enabled --project="$PROJECT" --filter="config.name:$1" --format='value(config.name)' 2>/dev/null | grep -qx "$1"
+}
+api_answers() {             # a cheap call goes through; only "not enabled" counts as failure
+    local api="$1" rc=0
+    case "$api" in
+        aiplatform.googleapis.com)       gcloud ai models list --region=us-central1 --project="$PROJECT" --limit=1 >/dev/null 2>"$API_PROBE_ERR" || rc=$? ;;
+        run.googleapis.com)              gcloud run services list --region=us-central1 --project="$PROJECT" --limit=1 >/dev/null 2>"$API_PROBE_ERR" || rc=$? ;;
+        cloudbuild.googleapis.com)       gcloud builds list --project="$PROJECT" --limit=1 >/dev/null 2>"$API_PROBE_ERR" || rc=$? ;;
+        artifactregistry.googleapis.com) gcloud artifacts repositories list --location=us-central1 --project="$PROJECT" --limit=1 >/dev/null 2>"$API_PROBE_ERR" || rc=$? ;;
+        cloudtrace.googleapis.com)       gcloud trace sinks list --project="$PROJECT" >/dev/null 2>"$API_PROBE_ERR" || rc=$? ;;
+        *)                               return 0 ;;                     # no cheap call for this one; the listing decides
+    esac
+    [ "$rc" -eq 0 ] && return 0
+    grep -qiE "has not been used|is not enabled|SERVICE_DISABLED|not activated" "$API_PROBE_ERR" && return 1
+    return 0                 # it answered with some other complaint (permissions, say): the API itself is on
+}
 enable_api() {
-    local api="$1" what="$2"
-    gcloud services enable "$api" --project="$PROJECT" -q 2>/dev/null || die \
-        "Could not enable $api on $PROJECT." \
-        "Usually billing is not on the project yet, or the project is seconds old" \
-        "and its IAM policy is still propagating. Wait a minute, then re-run:" \
-        "" \
-        "  ./setup_project.sh    # confirms billing, waits for the project" \
-        "  ./setup_codelab.sh"
-    tick "$api  ($what)"
+    local api="$1" what="$2" attempt wait
+    for attempt in 1 2 3; do
+        gcloud services enable "$api" --project="$PROJECT" -q 2>/dev/null || die \
+            "Could not enable $api on $PROJECT." \
+            "Usually billing is not on the project yet, or the project is seconds old" \
+            "and its IAM policy is still propagating. Wait a minute, then re-run:" \
+            "" \
+            "  ./setup_project.sh    # confirms billing, waits for the project" \
+            "  ./setup_codelab.sh"
+        for wait in 0 5 10 15 20; do
+            [ "$wait" -gt 0 ] && sleep "$wait"
+            if api_listed "$api" && api_answers "$api"; then
+                tick "$api  ($what)$( [ "$attempt" -gt 1 ] && printf ' · on attempt %s' "$attempt")"
+                return 0
+            fi
+        done
+        [ "$attempt" -lt 3 ] && info "$api is enabled but not answering yet; enabling it again (attempt $((attempt + 1)) of 3)"
+    done
+    die "$api was enabled three times and still does not answer on $PROJECT." \
+        "The project is probably still propagating. Wait a few minutes, then re-run ./setup_codelab.sh."
 }
 enable_api aiplatform.googleapis.com "Gemini · Veo · Memory Bank · RAG Engine"
 enable_api vectorsearch.googleapis.com "the vector store behind a RAG Engine corpus"
@@ -130,6 +164,7 @@ enable_api run.googleapis.com "Cloud Run, step 9"
 enable_api cloudbuild.googleapis.com "Cloud Build, builds the container in step 9"
 enable_api artifactregistry.googleapis.com "Artifact Registry, holds the image in step 9"
 enable_api cloudtrace.googleapis.com "Cloud Trace, the app's traces"
+rm -f "$API_PROBE_ERR"
 
 # Step 9 builds and runs the app as the project's default compute service
 # account. scripts/runtime_account.py makes sure it exists (enabling the
