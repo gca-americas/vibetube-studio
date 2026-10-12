@@ -40,7 +40,9 @@ LOCATION = os.environ.get("GOOGLE_CLOUD_LOCATION_RAG", "us-central1")   # RAG En
 #: and then ("No available indexing project found"), and a project's Vector
 #: Search collections quota is per region, so a region whose quota failed
 #: attempts have used up is left behind rather than fought.
-FALLBACK_LOCATIONS = ("us-east4", "us-west1", "europe-west4")
+FALLBACK_LOCATIONS = ("us-east4", "us-west1", "us-east1", "us-west4", "northamerica-northeast1",
+                      "europe-west4", "europe-west3", "europe-west1", "europe-west2",
+                      "asia-southeast1", "asia-northeast1", "australia-southeast1")
 DISPLAY = "vibestudio-feedback"
 EMBEDDING_MODEL = "text-embedding-005"
 COMMENTS_FILE = pathlib.Path(__file__).resolve().parents[1] / "comments.md"   # agent/comments.md, one level up from agent/platform/
@@ -125,6 +127,11 @@ def _regional_trouble(e: Exception) -> str | None:
         return "RAG Engine has no indexing capacity there at the moment"
     if "CollectionsPerProject" in text or ("RESOURCE_EXHAUSTED" in text and "Collection" in text):
         return "the project's Vector Search collections quota there is used up (failed attempts leave collections behind)"
+    low = text.lower()
+    if ("not supported" in low or "not available" in low or "unsupported" in low) and ("location" in low or "region" in low):
+        return "RAG Engine is not offered there"
+    if "404" in text and ("location" in low or "region" in low):
+        return "RAG Engine is not offered there"
     return None
 
 
