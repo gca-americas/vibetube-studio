@@ -1,7 +1,7 @@
-import { LANG, LANGS, setLang, t, tx } from "../i18n";
+import { LANG, LANGS, setLang, t, tx, type Lang } from "../i18n";
 import { useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Moon, Sun } from "lucide-react";
+import { ChevronDown, Globe, Moon, Sun } from "lucide-react";
 import { STEPS } from "../steps/registry";
 import { tint } from "../steps/colors";
 import { useTheme } from "./ThemeProvider";
@@ -36,19 +36,22 @@ export function TopNav({ activeSlug }: { activeSlug: string }) {
         </Link>
         <div className="flex items-center gap-3">
           <LiveRunPill />
-          <div className="flex items-center rounded-full border border-vibe-line bg-vibe-card p-0.5 text-[11px] font-semibold" role="group" aria-label={t("Language")}>
-            {LANGS.map((l) => (
-              <button
-                key={l.id}
-                type="button"
-                onClick={() => setLang(l.id)}
-                aria-pressed={LANG === l.id}
-                className={`rounded-full px-2 py-0.5 ${LANG === l.id ? "bg-vibe-purple text-white" : "text-vibe-muted hover:text-vibe-ink"}`}
-              >
-                {l.label}
-              </button>
-            ))}
-          </div>
+          <label className="relative flex items-center gap-1 rounded-full border border-vibe-line bg-vibe-card pl-2 pr-1 text-[11px] font-semibold text-vibe-muted hover:text-vibe-ink" title={t("Language")}>
+            <Globe className="h-3.5 w-3.5" aria-hidden="true" />
+            <select
+              value={LANG}
+              onChange={(e) => setLang(e.target.value as Lang)}
+              aria-label={t("Language")}
+              className="cursor-pointer appearance-none bg-transparent py-0.5 pl-0.5 pr-4 text-inherit outline-none"
+            >
+              {LANGS.map((l) => (
+                <option key={l.id} value={l.id}>
+                  {l.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-1.5 h-3 w-3" aria-hidden="true" />
+          </label>
           <button
             onClick={toggle}
             className="rounded-lg p-2 transition-opacity hover:opacity-80"

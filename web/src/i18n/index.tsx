@@ -11,10 +11,13 @@ import pt from "./pt.json";
  *  evaluated in the new language with everything else. Console output,
  *  code, commands and the embedded adk web stay English. */
 export type Lang = "en" | "es" | "pt";
+/** The languages the dropdown offers. To add one: put its dictionary in
+ *  src/i18n/<id>.json (python checks/verify_i18n.py lists what it needs),
+ *  import it below, and add a row here with the language's own name. */
 export const LANGS: { id: Lang; label: string }[] = [
-  { id: "en", label: "EN" },
-  { id: "es", label: "ES" },
-  { id: "pt", label: "PT" },
+  { id: "en", label: "English" },
+  { id: "es", label: "Español" },
+  { id: "pt", label: "Português" },
 ];
 const KEY = "vibe.lang";
 
