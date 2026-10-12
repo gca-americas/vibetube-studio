@@ -34,7 +34,13 @@ from . import config
 from .memory import _call, creation_lock, project
 
 CORPUS_CACHE = config.RUNS / "ragcorpus.json"
-LOCATION = os.environ.get("GOOGLE_CLOUD_LOCATION_RAG", "us-central1")   # RAG Engine is regional
+LOCATION = os.environ.get("GOOGLE_CLOUD_LOCATION_RAG", "us-central1")   # RAG Engine is regional: where a new corpus is tried first
+#: Where to try next when the preferred region cannot make a corpus: RAG
+#: Engine's serverless backend runs out of indexing capacity in a region now
+#: and then ("No available indexing project found"), and a project's Vector
+#: Search collections quota is per region, so a region whose quota failed
+#: attempts have used up is left behind rather than fought.
+FALLBACK_LOCATIONS = ("us-east4", "us-west1", "europe-west4")
 DISPLAY = "vibestudio-feedback"
 EMBEDDING_MODEL = "text-embedding-005"
 COMMENTS_FILE = pathlib.Path(__file__).resolve().parents[1] / "comments.md"   # agent/comments.md, one level up from agent/platform/
@@ -44,15 +50,26 @@ TOP_K = 5
 _inited = False
 
 
-def _rag():
-    """The rag module, with the SDK pointed at your project and region."""
-    global _inited
-    warnings.filterwarnings("ignore")             # the SDK's migration notice is not the lesson
+def _location() -> str:
+    """The region the corpus lives in, read from its resource name when one
+    is known; the preferred region before there is a corpus."""
+    name = os.environ.get("STUDIO_RAG_CORPUS") or (json.loads(CORPUS_CACHE.read_text())["name"] if CORPUS_CACHE.exists() else "")
+    parts = name.split("/")
+    return parts[parts.index("locations") + 1] if "locations" in parts else LOCATION
+
+
+_inited_for: str | None = None
+
+
+def _rag(location: str | None = None):
+    """The vertexai.rag module, initialised for the corpus's region."""
+    global _inited_for
     import vertexai
     from vertexai import rag
-    if not _inited:
-        vertexai.init(project=project(), location=LOCATION)
-        _inited = True
+    loc = location or _location()
+    if _inited_for != loc:
+        vertexai.init(project=project(), location=loc)
+        _inited_for = loc
     return rag
 
 
@@ -100,42 +117,68 @@ def _api_hint(e: Exception) -> str | None:
     return None
 
 
+def _regional_trouble(e: Exception) -> str | None:
+    """Why a region cannot make a corpus right now, in a few words; None for
+    any other error, which is not the region's fault."""
+    text = str(e)
+    if "No available indexing project" in text:
+        return "RAG Engine has no indexing capacity there at the moment"
+    if "CollectionsPerProject" in text or ("RESOURCE_EXHAUSTED" in text and "Collection" in text):
+        return "the project's Vector Search collections quota there is used up (failed attempts leave collections behind)"
+    return None
+
+
 def _create_corpus() -> str:
-    """Reuse a corpus of this display name in the project, else make one.
-    Called with the creation lock held."""
-    rag = _rag()
-    for c in rag.list_corpora():
-        if c.display_name == DISPLAY:
-            print(f"  reusing the corpus already in this project: {c.name.split('/')[-1]}")
-            CORPUS_CACHE.write_text(json.dumps({"name": c.name}))
-            return c.name
-    _serverless()
+    """Reuse a corpus of this display name in the project, else make one:
+    in the preferred region, and when that region cannot - no capacity, or
+    its quota spent - in the next, since every later call reads the region
+    from the corpus's own name. Called with the creation lock held."""
     import contextlib, io
-    quiet = io.StringIO()                         # the SDK prints DEBUG lines during create
-    try:
-      with contextlib.redirect_stdout(quiet):
-        corpus = _call("create_corpus", lambda: rag.create_corpus(
-            display_name=DISPLAY,
-            description="Vibe Studio: what the audience wrote under the channel's past videos.",
-            backend_config=rag.RagVectorDbConfig(
-                rag_embedding_model_config=rag.RagEmbeddingModelConfig(
-                    vertex_prediction_endpoint=rag.VertexPredictionEndpoint(
-                        publisher_model=f"publishers/google/models/{EMBEDDING_MODEL}")))),
-            tries=4, wait_s=20.0)
-    except Exception as e:
-        hint = _api_hint(e)
-        if hint is None:
-            raise
-        raise SystemExit(f"the corpus was not created: {hint}") from None
-    CORPUS_CACHE.write_text(json.dumps({"name": corpus.name}))
-    return corpus.name
+    tried: list[str] = []
+    for region in (LOCATION, *[r for r in FALLBACK_LOCATIONS if r != LOCATION]):
+        rag = _rag(region)
+        for c in rag.list_corpora():
+            if c.display_name == DISPLAY:
+                print(f"  reusing the corpus already in this project: {c.name.split('/')[-1]} ({region})")
+                CORPUS_CACHE.write_text(json.dumps({"name": c.name}))
+                return c.name
+        _serverless(region)
+        quiet = io.StringIO()                     # the SDK prints DEBUG lines during create
+        try:
+            with contextlib.redirect_stdout(quiet):
+                corpus = _call("create_corpus", lambda: rag.create_corpus(
+                    display_name=DISPLAY,
+                    description="Vibe Studio: what the audience wrote under the channel's past videos.",
+                    backend_config=rag.RagVectorDbConfig(
+                        rag_embedding_model_config=rag.RagEmbeddingModelConfig(
+                            vertex_prediction_endpoint=rag.VertexPredictionEndpoint(
+                                publisher_model=f"publishers/google/models/{EMBEDDING_MODEL}")))),
+                    tries=3, wait_s=20.0)
+        except Exception as e:
+            hint = _api_hint(e)
+            if hint is not None:
+                raise SystemExit(f"the corpus was not created: {hint}") from None
+            why = _regional_trouble(e)
+            if why is None:
+                raise
+            tried.append(f"{region}: {why}")
+            print(f"  {region}: {why}; trying the next region")
+            continue
+        if region != LOCATION:
+            print(f"  the corpus lives in {region} rather than {LOCATION}; every call reads the region from its name")
+        CORPUS_CACHE.write_text(json.dumps({"name": corpus.name}))
+        return corpus.name
+    raise RuntimeError("no region could create the corpus:\n  " + "\n  ".join(tried) +
+                       "\n  Either wait and run this again, request a higher 'Collections per project' quota for Vector Search "
+                       "in one of those regions, or put another region in .env as GOOGLE_CLOUD_LOCATION_RAG.")
 
 
-def _serverless():
+def _serverless(location: str | None = None):
     """Put the project's RAG managed database in serverless mode before the
     first corpus. A fresh project defaults to a provisioned mode that is
     capacity-limited in some regions, and corpus creation then fails with
-    400 INVALID_ARGUMENT. Project-level, idempotent, best effort."""
+    400 INVALID_ARGUMENT. Per region, idempotent, best effort."""
+    location = location or LOCATION
     try:
         import urllib.request
         import google.auth
@@ -143,8 +186,8 @@ def _serverless():
         creds, _ = google.auth.default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
         creds.refresh(grt.Request())
         req = urllib.request.Request(
-            f"https://{LOCATION}-aiplatform.googleapis.com/v1beta1/projects/{project()}"
-            f"/locations/{LOCATION}/ragEngineConfig",
+            f"https://{location}-aiplatform.googleapis.com/v1beta1/projects/{project()}"
+            f"/locations/{location}/ragEngineConfig",
             method="PATCH",
             data=json.dumps({"ragManagedDbConfig": {"serverless": {}}}).encode(),
             headers={"Authorization": f"Bearer {creds.token}", "Content-Type": "application/json"})
@@ -244,7 +287,7 @@ def connect() -> None:
     else:
         print("no corpus cached - looking for one in your project, and creating it if there is none (~20s)…")
         print(f"── ready ──\n  {corpus_name(create=True)}")
-    print(f"embedding model: {EMBEDDING_MODEL} · region: {LOCATION}")
+    print(f"embedding model: {EMBEDDING_MODEL} · region: {_location()}")
     files = list_files()
     print(f"the corpus holds {len(files)} file(s)")
     for f in files:
