@@ -128,6 +128,8 @@ def _regional_trouble(e: Exception) -> str | None:
     if "CollectionsPerProject" in text or ("RESOURCE_EXHAUSTED" in text and "Collection" in text):
         return "the project's Vector Search collections quota there is used up (failed attempts leave collections behind)"
     low = text.lower()
+    if "allowlisted" in low or "capacity limitation" in low:
+        return "new projects are not allowed RAG Engine's provisioned tier there, and the switch to serverless did not take"
     if ("not supported" in low or "not available" in low or "unsupported" in low) and ("location" in low or "region" in low):
         return "RAG Engine is not offered there"
     if "404" in text and ("location" in low or "region" in low):
@@ -196,12 +198,18 @@ def _serverless(location: str | None = None):
             f"https://{location}-aiplatform.googleapis.com/v1beta1/projects/{project()}"
             f"/locations/{location}/ragEngineConfig",
             method="PATCH",
-            data=json.dumps({"ragManagedDbConfig": {"serverless": {}}}).encode(),
+            data=json.dumps({"name": f"projects/{project()}/locations/{location}/ragEngineConfig",
+                             "ragManagedDbConfig": {"serverless": {}}}).encode(),
             headers={"Authorization": f"Bearer {creds.token}", "Content-Type": "application/json"})
         urllib.request.urlopen(req, timeout=90).read()
-        print("  ragEngineConfig: serverless")
+        print(f"  ragEngineConfig: serverless ({location})")
     except Exception as e:
-        print(f"  ragEngineConfig unchanged ({str(e)[:80]}); creating the corpus anyway")
+        body = ""
+        try:
+            body = e.read().decode(errors="replace")[:220]        # an HTTPError carries the API's reason
+        except Exception:
+            pass
+        print(f"  ragEngineConfig unchanged in {location} ({str(e)[:60]}{' · ' + body if body else ''}); creating the corpus anyway")
 
 
 # ── files ───────────────────────────────────────────────────────────────────
