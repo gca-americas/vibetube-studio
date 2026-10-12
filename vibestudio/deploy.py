@@ -52,6 +52,44 @@ def cached(name: str) -> str:
         return ""
 
 
+def resource(cache: str, what: str, module: str, fn: str) -> str:
+    """The Memory Bank or RAG corpus the app needs: from runs/<cache> when
+    setup already made it; else, while setup's background creation still
+    holds its lock, waited for; else created here, the same way setup does
+    it. A person who goes straight from setup to this step must not be told
+    to run a console command first."""
+    import importlib, time
+    val = cached(cache)
+    if val:
+        print(f"  {what}: {val}"); return val
+    stem = cache.rsplit(".", 1)[0]
+    sys.path.insert(0, str(REPO))
+    for k, v in dotenv().items():
+        os.environ.setdefault(k, v)
+    from agent.platform.memory import creation_in_progress
+    if creation_in_progress(stem):
+        print(f"  {what}: setup is still creating it; waiting (up to five minutes)")
+        for _ in range(60):
+            time.sleep(5)
+            val = cached(cache)
+            if val:
+                print(f"  {what}: {val}"); return val
+            if not creation_in_progress(stem):
+                break                             # it ended without a cache: it failed; make it here
+    print(f"  {what}: not created yet; creating it now (one to three minutes)")
+    try:
+        val = getattr(importlib.import_module(module), fn)(create=True) or ""
+    except Exception as e:
+        print(f"  {what}: could not create it: {type(e).__name__}: {str(e)[:240]}")
+        log = RUNS / ("rag_setup.log" if stem == "ragcorpus" else "bank_setup.log")
+        if log.exists():
+            print("  setup's attempt said:")
+            for line in log.read_text().splitlines()[-5:]:
+                print("    " + line)
+        return ""
+    print(f"  {what}: {val}"); return val
+
+
 def ensure_runtime_account(project: str) -> str | None:
     """scripts/runtime_account.py: the account found or made, with its roles."""
     sys.path.insert(0, str(HERE.parent))
@@ -75,10 +113,10 @@ def main() -> int:
     project = a.project or env.get("GOOGLE_CLOUD_PROJECT") or env.get("STUDIO_GCP_PROJECT")
     if not project:
         print("no project: set GOOGLE_CLOUD_PROJECT in .env or pass --project"); return 2
-    bank = os.environ.get("STUDIO_MEMORY_BANK") or cached("memorybank.json")
-    corpus = os.environ.get("STUDIO_RAG_CORPUS") or cached("ragcorpus.json")
-    for what, val, cmd in (("Memory Bank", bank, "python -m agent.platform.bank"), ("RAG corpus", corpus, "python -m agent.platform.rag")):
-        print(f"  {what}: {val or '(none: run ' + cmd + ' first; the app degrades without it)'}")
+    bank = os.environ.get("STUDIO_MEMORY_BANK") or resource("memorybank.json", "Memory Bank", "agent.platform.memory", "engine_name")
+    corpus = os.environ.get("STUDIO_RAG_CORPUS") or resource("ragcorpus.json", "RAG corpus", "agent.platform.rag", "corpus_name")
+    if not bank or not corpus:
+        print("the app needs both; fix the error above and deploy again"); return 1
     vars_ = {"GOOGLE_CLOUD_PROJECT": project, "STUDIO_GCP_PROJECT": project, "STUDIO_VERTEX": "1",
              "STUDIO_MEMORY_BANK": bank, "STUDIO_RAG_CORPUS": corpus}
     for k in PASS_THROUGH:

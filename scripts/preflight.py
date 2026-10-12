@@ -97,14 +97,27 @@ else:
 
 # The two cloud resources: setup creates them in the background, so "not yet"
 # is a normal answer minutes after setup and never a failure.
+def _in_progress(name: str) -> bool:
+    try:
+        from agent.platform.memory import creation_in_progress
+        return creation_in_progress(name)
+    except Exception:
+        return False
+
+
 for label, cache, lock, step in (("Memory Bank", "memorybank.json", ".memorybank.lock", "6"),
                                  ("RAG corpus", "ragcorpus.json", ".ragcorpus.lock", "7")):
     if (ROOT / "runs" / cache).exists():
         print(f"  ✓ {label} connected")
-    elif (ROOT / "runs" / lock).exists():
+    elif _in_progress(lock.strip(".").removesuffix(".lock")):
         print(f"  - {label}: still being created in the background")
     else:
-        print(f"  - {label}: not created yet (step {step} creates it)")
+        log = ROOT / "runs" / ("rag_setup.log" if cache == "ragcorpus.json" else "bank_setup.log")
+        err = next((l for l in reversed(log.read_text().splitlines()) if l.strip()), "") if log.exists() else ""
+        if err and not err.startswith(("──", "  ")):
+            print(f"  ! {label}: setup could not create it: {err[:110]}")
+        else:
+            print(f"  - {label}: not created yet (step 9 creates it if setup has not)")
 
 # step 9's account, the default compute account; in an organisation's project it may hold nothing
 try:

@@ -140,6 +140,25 @@ def creation_lock(name: str):
             fcntl.flock(fh, fcntl.LOCK_UN)
 
 
+def creation_in_progress(name: str) -> bool:
+    """Is some process creating this resource right now? The lock file stays
+    on disk after its holder is done (removing it would race a waiter), so
+    the file's existence says nothing; whether the flock is held does."""
+    lock = config.RUNS / f".{name}.lock"
+    if not lock.exists():
+        return False
+    try:
+        with lock.open("r+") as fh:
+            try:
+                fcntl.flock(fh, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except OSError:
+                return True                       # held: a creation is under way
+            fcntl.flock(fh, fcntl.LOCK_UN)
+            return False
+    except OSError:
+        return False
+
+
 def _call(label: str, fn, tries: int = 6, wait_s: float = 8.0):
     """Memory Bank answers 500 now and then, in bursts. Retry with a growing
     pause, then let the error through."""
