@@ -671,7 +671,7 @@ async def rag_corpus():
     from agent.platform import rag
     name = rag.corpus_name()
     if not name:
-        return {"connected": False, "corpus": None, "files": [], "comments": len(rag.comments())}
+        return {"connected": False, "corpus": None, "files": [], "comments": len(rag.comments()), "blocked": rag.blocked_reason()}
     import asyncio
     try:
         files = await asyncio.to_thread(rag.list_files)
@@ -712,6 +712,7 @@ async def stage5():
                                 for c in cands if isinstance(c, dict)]
     return {
         "corpus_connected": bool(rag.corpus_name()),
+        "corpus_blocked": rag.blocked_reason(),
         "feedback_wired": FEEDBACK_EDGE in edges,
         "edges": [list(e) for e in edges],
         "sessions": len(sessions),

@@ -34,6 +34,21 @@ from . import config
 from .memory import _call, creation_lock, project
 
 CORPUS_CACHE = config.RUNS / "ragcorpus.json"
+#: Written when no region could create a corpus, with the reasons; read by
+#: the page, the deploy and the console so the lab goes on without audience
+#: feedback instead of stopping. Removed the moment a corpus exists.
+BLOCKED = config.RUNS / "ragcorpus.blocked"
+CAPACITY_NOTE = ("RAG Engine could not provision a corpus for this project right now (capacity and quota limits, see above).\n"
+                 "  The lab continues without audience feedback: read_feedback runs and returns no passages.\n"
+                 "  Run this command again later; when a corpus exists, load the comments and the next run uses them.")
+
+
+def blocked_reason() -> str:
+    """Why no corpus could be made, or an empty string."""
+    try:
+        return BLOCKED.read_text().strip()
+    except OSError:
+        return ""
 LOCATION = os.environ.get("GOOGLE_CLOUD_LOCATION_RAG", "us-central1")   # RAG Engine is regional: where a new corpus is tried first
 #: Where to try next when the preferred region cannot make a corpus: RAG
 #: Engine's serverless backend runs out of indexing capacity in a region now
@@ -150,6 +165,7 @@ def _create_corpus() -> str:
             if c.display_name == DISPLAY:
                 print(f"  reusing the corpus already in this project: {c.name.split('/')[-1]} ({region})")
                 CORPUS_CACHE.write_text(json.dumps({"name": c.name}))
+                BLOCKED.unlink(missing_ok=True)
                 return c.name
         _serverless(region)
         quiet = io.StringIO()                     # the SDK prints DEBUG lines during create
@@ -176,7 +192,9 @@ def _create_corpus() -> str:
         if region != LOCATION:
             print(f"  the corpus lives in {region} rather than {LOCATION}; every call reads the region from its name")
         CORPUS_CACHE.write_text(json.dumps({"name": corpus.name}))
+        BLOCKED.unlink(missing_ok=True)
         return corpus.name
+    BLOCKED.write_text("\n".join(tried) + "\n")
     raise RuntimeError("no region could create the corpus:\n  " + "\n  ".join(tried) +
                        "\n  Either wait and run this again, request a higher 'Collections per project' quota for Vector Search "
                        "in one of those regions, or put another region in .env as GOOGLE_CLOUD_LOCATION_RAG.")
@@ -301,7 +319,12 @@ def connect() -> None:
         print(f"connected (runs/ragcorpus.json):\n  {cached}")
     else:
         print("no corpus cached - looking for one in your project, and creating it if there is none (~20s)…")
-        print(f"── ready ──\n  {corpus_name(create=True)}")
+        try:
+            print(f"── ready ──\n  {corpus_name(create=True)}")
+        except RuntimeError as e:                  # no region could: say so and let the lab go on
+            print(str(e))
+            print(f"── no corpus for now ──\n  {CAPACITY_NOTE}")
+            return
     print(f"embedding model: {EMBEDDING_MODEL} · region: {_location()}")
     files = list_files()
     print(f"the corpus holds {len(files)} file(s)")
@@ -318,7 +341,7 @@ def main(argv=None):
         connect()
     elif cmd == "load":
         if not corpus_name():
-            print("no corpus yet - run: python -m agent.platform.rag"); return
+            print(f"── no corpus for now ──\n  {CAPACITY_NOTE}" if blocked_reason() else "no corpus yet - run: python -m agent.platform.rag"); return
         print(f"── loading {COMMENTS_FILE.name} into the corpus ──")
         load()
     elif cmd == "query" and len(argv) > 1:

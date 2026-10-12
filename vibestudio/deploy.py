@@ -115,8 +115,11 @@ def main() -> int:
         print("no project: set GOOGLE_CLOUD_PROJECT in .env or pass --project"); return 2
     bank = os.environ.get("STUDIO_MEMORY_BANK") or resource("memorybank.json", "Memory Bank", "agent.platform.memory", "engine_name")
     corpus = os.environ.get("STUDIO_RAG_CORPUS") or resource("ragcorpus.json", "RAG corpus", "agent.platform.rag", "corpus_name")
-    if not bank or not corpus:
-        print("the app needs both; fix the error above and deploy again"); return 1
+    if not corpus:
+        print("  RAG corpus: deploying without one. RAG Engine could not provision a corpus for this project right now (capacity and quota limits):")
+        print("  the app's read_feedback runs and returns no passages. When a corpus exists, load the comments and deploy again, or set STUDIO_RAG_CORPUS on the service.")
+    if not bank:
+        print("  Memory Bank: deploying without one; the app's memory callbacks skip. Deploy again once it exists.")
     vars_ = {"GOOGLE_CLOUD_PROJECT": project, "STUDIO_GCP_PROJECT": project, "STUDIO_VERTEX": "1",
              "STUDIO_MEMORY_BANK": bank, "STUDIO_RAG_CORPUS": corpus}
     for k in PASS_THROUGH:

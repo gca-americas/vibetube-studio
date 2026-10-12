@@ -587,7 +587,14 @@ function CorpusLedger({ refreshKey = 0 }: { refreshKey?: number }) {
       {corpus && !failed && (
         <div className="mt-4 rounded-2xl border border-hairline bg-overlay p-4">
           {!corpus.connected ? (
-            <p className="text-sm text-fg-muted">No corpus yet. Run the first command above.</p>
+            corpus.blocked ? (
+              <p className="text-sm" style={{ color: AMBER }}>
+                RAG Engine could not provision a corpus for this project right now: {corpus.blocked.split("\n")[0]}. The lab continues without audience feedback;
+                run the first command again later.
+              </p>
+            ) : (
+              <p className="text-sm text-fg-muted">No corpus yet. Run the first command above.</p>
+            )
           ) : corpus.error ? (
             <p className="font-mono text-xs" style={{ color: RED }}>{corpus.error}</p>
           ) : (
@@ -1158,16 +1165,16 @@ function TheReader() {
 
       <In delay={0.5}>
         <VerifyPanel checking={checking} onCheck={check} intro="Read from runs/ragcorpus.json, this step's app file, and the latest stage5_rag session's events.">
-          <CheckRow ok={status?.corpus_connected ?? false} label="a corpus is connected">
-            {status ? (status.corpus_connected ? "runs/ragcorpus.json names it." : "Run the first command in 7a.") : "…"}
+          <CheckRow ok={(status?.corpus_connected ?? false) || !!status?.corpus_blocked} label={status?.corpus_blocked && !status.corpus_connected ? "no corpus: RAG Engine had no capacity for this project" : "a corpus is connected"}>
+            {status ? (status.corpus_connected ? "runs/ragcorpus.json names it." : status.corpus_blocked ? "The lab continues without audience feedback. Run 7a's first command again later." : "Run the first command in 7a.") : "…"}
           </CheckRow>
           <CheckRow ok={wired} label="read_feedback enters the join">
             {status ? (wired ? "(START, read_feedback, join_research) is in the edge list." : "The edit above.") : "…"}
           </CheckRow>
-          <CheckRow ok={ran && passages.length > 0} label="read_feedback ran and retrieved passages">
+          <CheckRow ok={ran && (passages.length > 0 || !!status?.corpus_blocked)} label={status?.corpus_blocked && ran && !passages.length ? "read_feedback ran; no corpus, so no passages" : "read_feedback ran and retrieved passages"}>
             {ran ? (passages.length ? `query · ${status?.feedback_query} · ${passages.length} passages · first · ${passages[0].slice(0, 90)}…` : status?.feedback_note || "ran, but no passages came back") : "No run yet."}
           </CheckRow>
-          <CheckRow ok={status?.cited_feedback ?? false} label="a candidate cites feedback">
+          <CheckRow ok={(status?.cited_feedback ?? false) || !!status?.corpus_blocked} label={status?.corpus_blocked && !status?.cited_feedback ? "no feedback to cite without a corpus" : "a candidate cites feedback"}>
             {proposed.length ? (status?.cited_feedback ? "Yes. The model chose how; another run may cite it elsewhere." : "Not in this run. The model is not obliged to; run again.") : "No candidates yet."}
           </CheckRow>
           {proposed.length ? (

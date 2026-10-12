@@ -139,6 +139,7 @@ export interface MemoryBank {
 }
 
 export interface Stage5Status {
+  corpus_blocked?: string;
   corpus_connected: boolean;
   feedback_wired: boolean;
   edges: string[][];
@@ -153,6 +154,7 @@ export interface Stage5Status {
 }
 
 export interface RagCorpus {
+  blocked?: string;
   connected: boolean;
   corpus: string | null;
   files: { id: string; display_name: string; description: string }[];
