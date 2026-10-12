@@ -1,3 +1,4 @@
+import { t } from "../i18n";
 import type { ReactNode } from "react";
 import { COLORS } from "./colors";
 import { Story } from "./Story";
@@ -30,46 +31,46 @@ export interface Step {
  * 3 a single prompt (3a ADK at a glance, 3b the agent, 3c tools), 4 the fan-out.
  */
 export const STEPS: Step[] = [
-  { slug: "story", label: "The story", color: COLORS.cyan, element: <Story />, nextLabel: "Enter the studio" },
+  { slug: "story", label: t("The story"), color: COLORS.cyan, element: <Story />, nextLabel: t("Enter the studio") },
   {
     slug: "overview",
-    label: "What you build",
+    label: t("What you build"),
     color: COLORS.purple,
     element: <Overview />,
-    nextLabel: "Start building",
+    nextLabel: t("Start building"),
   },
   {
     slug: "single-prompt",
-    label: "Monolithic agent",
+    label: t("Monolithic agent"),
     color: COLORS.blue,
     element: <SinglePrompt />,
     parts: [
-      { id: "a", label: "ADK agent architecture" },
-      { id: "b", label: "Monolithic agent specification" },
-      { id: "c", label: "Tools in Agent" },
+      { id: "a", label: t("ADK agent architecture") },
+      { id: "b", label: t("Monolithic agent specification") },
+      { id: "c", label: t("Tools in Agent") },
     ],
   },
   {
     slug: "fan-out",
-    label: "Agentic workflow fundamentals",
+    label: t("Agentic workflow fundamentals"),
     color: COLORS.amber,
     element: <FanOut />,
     parts: [
-      { id: "a", label: "Graph architecture and execution chains" },
-      { id: "b", label: "Parallel research fan-out" },
-      { id: "c", label: "Agent nodes" },
-      { id: "d", label: "Human-in-the-loop" },
+      { id: "a", label: t("Graph architecture and execution chains") },
+      { id: "b", label: t("Parallel research fan-out") },
+      { id: "c", label: t("Agent nodes") },
+      { id: "d", label: t("Human-in-the-loop") },
     ],
   },
   {
     slug: "policy-gate",
-    label: "State and Router",
+    label: t("State and Router"),
     color: COLORS.red,
     element: <PolicyGate />,
     parts: [
-      { id: "a", label: "Workflow State" },
-      { id: "b", label: "The router node" },
-      { id: "c", label: "Agent modes and the task node" },
+      { id: "a", label: t("Workflow State") },
+      { id: "b", label: t("The router node") },
+      { id: "c", label: t("Agent modes and the task node") },
     ],
   },
   {
@@ -79,7 +80,7 @@ export const STEPS: Step[] = [
     element: <Memory />,
     parts: [
       { id: "a", label: "Memory Bank" },
-      { id: "b", label: "Callbacks" },
+      { id: "b", label: t("Callbacks") },
     ],
   },
   {
@@ -89,28 +90,28 @@ export const STEPS: Step[] = [
     element: <Rag />,
     parts: [
       { id: "a", label: "RAG Engine" },
-      { id: "b", label: "The third reader" },
+      { id: "b", label: t("The third reader") },
     ],
   },
   {
     slug: "video",
-    label: "The video",
+    label: t("The video"),
     color: COLORS.amber,
     element: <Video />,
     parts: [
-      { id: "a", label: "A long-running tool" },
-      { id: "b", label: "render_desk in the graph" },
+      { id: "a", label: t("A long-running tool") },
+      { id: "b", label: t("render_desk in the graph") },
     ],
   },
   {
     slug: "deploy",
-    label: "Deploy",
+    label: t("Deploy"),
     color: COLORS.green,
     element: <Deploy />,
   },
   {
     slug: "summary",
-    label: "Summary",
+    label: t("Summary"),
     color: COLORS.purple,
     element: <Summary />,
   },

@@ -1,3 +1,4 @@
+import { tx } from "../i18n";
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
 
@@ -62,9 +63,7 @@ export function StubScene({ kicker, title, blurb }: { kicker: string; title: str
       <StepHeader kicker={kicker} title={title} blurb={blurb} />
       <In delay={0.25} className="mt-10">
         <div className="inline-flex items-center gap-2 rounded-full border border-hairline bg-card px-5 py-2 font-mono text-xs text-fg-muted">
-          <span className="h-2 w-2 rounded-full bg-vibe-amber" />
-          This step is being built
-        </div>
+          {tx("{0}This step is being built", [<span className="h-2 w-2 rounded-full bg-vibe-amber" />])}</div>
       </In>
     </div>
   );

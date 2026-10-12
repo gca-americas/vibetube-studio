@@ -1,3 +1,4 @@
+import { t, tx } from "../i18n";
 import { useEffect } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { STEPS } from "../steps/registry";
@@ -48,7 +49,7 @@ export function StepShell() {
             <span className="px-5 py-3 text-sm opacity-0">← Back</span>
           )}
           <span className="min-w-24 text-center font-mono text-xs text-fg-muted">
-            Step {index + 1} of {STEPS.length}
+            {tx("Step {0} of {1}", [index + 1, STEPS.length])}
           </span>
           {next ? (
             <Link
@@ -64,8 +65,7 @@ export function StepShell() {
               to={`/step/${STEPS[0].slug}`}
               className="rounded-full border border-hairline px-7 py-3 text-sm font-semibold transition-colors hover:text-fg"
             >
-              Back to start
-            </Link>
+              {t("Back to start")}</Link>
           )}
         </div>
       </main>

@@ -1,3 +1,4 @@
+import { LANG, LANGS, setLang, t, tx } from "../i18n";
 import { useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Moon, Sun } from "lucide-react";
@@ -26,21 +27,33 @@ export function TopNav({ activeSlug }: { activeSlug: string }) {
   return (
     <nav className="sticky top-0 z-50 border-b border-hairline bg-card/40 backdrop-blur-xl">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 md:px-8">
-        <Link to={`/step/${STEPS[0].slug}`} className="flex items-center gap-2" aria-label="Vibe Studio home">
+        <Link to={`/step/${STEPS[0].slug}`} className="flex items-center gap-2" aria-label={t("Vibe Studio home")}>
           <span className="font-display text-xl tracking-tight">
-            Vibe<span className="holo-text">Studio</span>
+            {tx("Vibe{0}", [<span className="holo-text">Studio</span>])}
           </span>
           <span className="hidden font-mono text-[10px] uppercase tracking-widest text-fg-muted sm:inline">
-            · Agentic Workflow with ADK
-          </span>
+            {t("· Agentic Workflow with ADK")}</span>
         </Link>
         <div className="flex items-center gap-3">
           <LiveRunPill />
+          <div className="flex items-center rounded-full border border-vibe-line bg-vibe-card p-0.5 text-[11px] font-semibold" role="group" aria-label={t("Language")}>
+            {LANGS.map((l) => (
+              <button
+                key={l.id}
+                type="button"
+                onClick={() => setLang(l.id)}
+                aria-pressed={LANG === l.id}
+                className={`rounded-full px-2 py-0.5 ${LANG === l.id ? "bg-vibe-purple text-white" : "text-vibe-muted hover:text-vibe-ink"}`}
+              >
+                {l.label}
+              </button>
+            ))}
+          </div>
           <button
             onClick={toggle}
             className="rounded-lg p-2 transition-opacity hover:opacity-80"
-            aria-label="Toggle theme"
-            title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            aria-label={t("Toggle theme")}
+            title={theme === "dark" ? t("Switch to light mode") : t("Switch to dark mode")}
           >
             {theme === "dark" ? <Sun className="h-5 w-5 text-vibe-amber" /> : <Moon className="h-5 w-5 text-vibe-purple" />}
           </button>

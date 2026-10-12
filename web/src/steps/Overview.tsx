@@ -1,3 +1,4 @@
+import { t } from "../i18n";
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { In, StepHeader } from "../components/shared";
@@ -45,12 +46,12 @@ const ALL_EDGES: { from: string; to: string; route?: string }[] = [
   { from: "persist_direction", to: "policy_check" },
   { from: "policy_check", to: "scripter", route: "OK" },
   { from: "policy_check", to: "quarantine", route: "BLOCK" },
-  { from: "quarantine", to: "scripter" },
-  { from: "scripter", to: "render_desk" },
+  { from: t("quarantine"), to: "scripter" },
+  { from: t("scripter"), to: "render_desk" },
   { from: "render_desk", to: "store_video" },
 ];
 
-const ALL_ORDER = ["__START__", "scan_trends", "read_backlog", "read_feedback", "join_research", "propose_directions", "direction_gate", "persist_direction", "policy_check", "scripter", "render_desk", "store_video"];
+const ALL_ORDER = ["__START__", "scan_trends", "read_backlog", "read_feedback", "join_research", "propose_directions", "direction_gate", "persist_direction", "policy_check", t("scripter"), "render_desk", "store_video"];
 
 const KIND_COLOR: Record<Kind, string> = {
   start: "currentColor",
@@ -64,13 +65,13 @@ const KIND_COLOR: Record<Kind, string> = {
 };
 const KIND_LABEL: Record<Kind, string> = {
   start: "",
-  function: "function",
+  function: t("function"),
   join: "join",
-  agent: "agent",
-  human: "your pick",
-  router: "router",
+  agent: t("agent"),
+  human: t("your pick"),
+  router: t("router"),
   task: "agent (mode: task)",
-  desk: "long-running tool",
+  desk: t("long-running tool"),
 };
 
 const COLS = 5;
@@ -139,7 +140,7 @@ export function SnakeGraph({ only, highlight, cols = COLS, label, hover, onHover
   const period = ORDER.length * 0.5 + 1.5;
   return (
     <div className="overflow-x-auto">
-      <svg viewBox={`0 0 ${width} ${height}`} className="mx-auto h-auto w-full min-w-[760px] max-w-[1080px] text-fg" role="img" aria-label={label ?? "The finished workflow: START fans out to scan_trends, read_backlog and read_feedback, then join_research, propose_directions, direction_gate, persist_direction, policy_check routing OK to scripter and BLOCK to quarantine, render_desk, store_video."}>
+      <svg viewBox={`0 0 ${width} ${height}`} className="mx-auto h-auto w-full min-w-[760px] max-w-[1080px] text-fg" role="img" aria-label={label ?? t("The finished workflow: START fans out to scan_trends, read_backlog and read_feedback, then join_research, propose_directions, direction_gate, persist_direction, policy_check routing OK to scripter and BLOCK to quarantine, render_desk, store_video.")}>
         <defs>
           <marker id="ov-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
             <path d="M0 0L10 5 0 10z" fill="#7b8794" />
@@ -182,7 +183,7 @@ export function SnakeGraph({ only, highlight, cols = COLS, label, hover, onHover
               <rect width={W} height={H} rx={9} fill={hover === n.name ? tint(color === "currentColor" ? COLORS.cyan : color, 0.16) : n.kind === "function" ? "var(--overlay)" : tint(color, 0.08)} stroke={hover === n.name ? (color === "currentColor" ? COLORS.cyan : color) : color === "currentColor" ? "var(--hairline)" : color} strokeWidth={hover === n.name ? 2 : 1.2} />
               <text x={W / 2} y={21} textAnchor="middle" fontSize="12.5" style={mono} fill={color === "currentColor" ? "currentColor" : color}>{n.name}</text>
               <text x={W / 2} y={labelAbove.has(n.name) ? -8 : H + 13} textAnchor="middle" fontSize="9.5" style={mono} fill={n.name === highlight ? COLORS.red : "currentColor"} opacity={n.name === highlight ? 1 : 0.6}>
-                {n.name === highlight ? "new in this part" : `${KIND_LABEL[n.kind]}${n.step ? ` · ${n.step}` : ""}`}
+                {n.name === highlight ? t("new in this part") : `${KIND_LABEL[n.kind]}${n.step ? ` · ${n.step}` : ""}`}
               </text>
             </g>
           );
@@ -192,40 +193,40 @@ export function SnakeGraph({ only, highlight, cols = COLS, label, hover, onHover
   );
 }
 
-const YOU = ["Type the video idea.", "Pick one of four directions.", "Publish the clip when it lands."];
+const YOU = [t("Type the video idea."), t("Pick one of four directions."), t("Publish the clip when it lands.")];
 const WHAT_YOU_LEARN = [
-  "Graph engineering foundations: Workflow, edge tuples, START, JoinNode for parallel fan-out, and deterministic router nodes.",
-  "Agent modes and lifecycle callbacks: chat, single_turn, and task modes as graph nodes, with interceptors.",
-  "Human-in-the-loop orchestration: RequestInput to suspend workflows for human decisions and resume with structured schemas.",
-  "Hierarchical agent memory: Session state via parameter binding and persistent GEAP Memory Bank context.",
-  "Knowledge grounding: GEAP RAG Engine corpus integrated as a parallel retrieval node for audience feedback.",
-  "Long-running workflows and deployment: LongRunningFunctionTool receipts, resuming by ID, and Cloud Run deployment.",
+  t("Graph engineering foundations: Workflow, edge tuples, START, JoinNode for parallel fan-out, and deterministic router nodes."),
+  t("Agent modes and lifecycle callbacks: chat, single_turn, and task modes as graph nodes, with interceptors."),
+  t("Human-in-the-loop orchestration: RequestInput to suspend workflows for human decisions and resume with structured schemas."),
+  t("Hierarchical agent memory: Session state via parameter binding and persistent GEAP Memory Bank context."),
+  t("Knowledge grounding: GEAP RAG Engine corpus integrated as a parallel retrieval node for audience feedback."),
+  t("Long-running workflows and deployment: LongRunningFunctionTool receipts, resuming by ID, and Cloud Run deployment."),
 ];
 
 const LEGEND: { kind: Kind; label: string }[] = [
-  { kind: "function", label: "function node" },
+  { kind: "function", label: t("function node") },
   { kind: "join", label: "join" },
-  { kind: "agent", label: "agent as a node" },
+  { kind: "agent", label: t("agent as a node") },
   { kind: "human", label: "your decision (RequestInput)" },
-  { kind: "router", label: "router" },
+  { kind: "router", label: t("router") },
   { kind: "task", label: "agent (mode: task)" },
-  { kind: "desk", label: "long-running tool" },
+  { kind: "desk", label: t("long-running tool") },
 ];
 
 export function Overview() {
   return (
     <div className="space-y-12">
       <StepHeader
-        kicker="Step 2 · What you build today"
+        kicker={t("Step 2 · What you build today")}
         color={COLORS.purple}
-        title="A production pipeline as an explicit graph."
-        blurb="An ADK Workflow executes end-to-end video production, managing parallel research, human-in-the-loop pauses, asynchronous video generation, and Cloud Run deployment."
+        title={t("A production pipeline as an explicit graph.")}
+        blurb={t("An ADK Workflow executes end-to-end video production, managing parallel research, human-in-the-loop pauses, asynchronous video generation, and Cloud Run deployment.")}
       />
 
       {/* The graph, drawn the way the app draws it */}
       <In delay={0.15}>
         <div className="rounded-3xl border border-hairline bg-card p-5 shadow-2xl">
-          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">The workflow you finish with · each node names the step that adds it</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">{t("The workflow you finish with · each node names the step that adds it")}</p>
           <SnakeGraph />
           <div className="mt-2 flex flex-wrap gap-4 font-mono text-[10px] text-fg-muted">
             {LEGEND.map((l) => (
@@ -242,7 +243,7 @@ export function Overview() {
       <In delay={0.35}>
         <div className="grid gap-4 md:grid-cols-2">
           <div className="rounded-3xl border border-vibe-amber/40 bg-vibe-amber/5 p-6">
-            <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-vibe-amber">Your inputs, per video</p>
+            <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-vibe-amber">{t("Your inputs, per video")}</p>
             <ol className="mt-4 space-y-3">
               {YOU.map((t, i) => (
                 <li key={t} className="flex items-start gap-3 text-sm">
@@ -255,7 +256,7 @@ export function Overview() {
             </ol>
           </div>
           <div className="rounded-3xl border border-hairline bg-card p-6">
-            <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">What you learn</p>
+            <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">{t("What you learn")}</p>
             <ul className="mt-4 space-y-2">
               {WHAT_YOU_LEARN.map((t) => (
                 <li key={t} className="flex items-start gap-3 text-sm text-fg-muted">

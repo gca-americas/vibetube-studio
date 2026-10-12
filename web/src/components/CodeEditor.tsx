@@ -1,3 +1,4 @@
+import { t, tx } from "../i18n";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRunEvents } from "../lib/api";
 import { RefreshCw, Check, Loader2, RotateCcw, Save } from "lucide-react";
@@ -204,15 +205,14 @@ export function CodeEditor({
               onClick={() => adopt(onDisk)}
               className="flex items-center gap-1 rounded-md border px-2 py-0.5 font-bold"
               style={{ borderColor: "var(--vibe-amber)", color: "var(--vibe-amber)" }}
-              title="Something else wrote this file. Show it as it is now; your unsaved edits here are dropped."
+              title={t("Something else wrote this file. Show it as it is now; your unsaved edits here are dropped.")}
             >
-              <RotateCcw size={11} /> changed on disk · reload
-            </button>
+              <RotateCcw size={11} /> {t("changed on disk · reload")} </button>
           )}
           <span className="flex items-center gap-1.5">
             {state === "saving" && <Loader2 size={12} className="animate-spin" />}
             {state === "saved" && <Check size={12} className="text-vibe-green" />}
-            {state === "saved" ? "saved" : state === "saving" ? "saving" : state === "invalid" ? "not saved" : "unsaved"}
+            {state === "saved" ? t("saved") : state === "saving" ? t("saving") : state === "invalid" ? t("not saved") : t("unsaved")}
           </span>
           <button
             onClick={async () => {
@@ -231,10 +231,9 @@ export function CodeEditor({
               }
             }}
             className="flex items-center gap-1 hover:text-fg"
-            title="Put this block back as the lab shipped it, TODO line and all. Your edits to it are gone."
+            title={t("Put this block back as the lab shipped it, TODO line and all. Your edits to it are gone.")}
           >
-            <RotateCcw size={12} /> reset
-          </button>
+            <RotateCcw size={12} /> {t("reset")} </button>
           <button
             onClick={async () => {
               // read the file again from disk, whatever this editor thinks it holds
@@ -249,11 +248,10 @@ export function CodeEditor({
               }
             }}
             className="flex items-center gap-1 hover:text-fg"
-            title="Read the file from disk again. Unsaved edits here are dropped."
+            title={t("Read the file from disk again. Unsaved edits here are dropped.")}
           >
-            <RefreshCw size={12} className={reloading ? "animate-spin" : ""} /> reload
-          </button>
-          <button onClick={() => save(code)} className="flex items-center gap-1 hover:text-fg" title="Save now">
+            <RefreshCw size={12} className={reloading ? "animate-spin" : ""} /> {t("reload")} </button>
+          <button onClick={() => save(code)} className="flex items-center gap-1 hover:text-fg" title={t("Save now")}>
             <Save size={12} /> save
           </button>
         </div>
@@ -306,9 +304,9 @@ export function CodeEditor({
       >
         <span className={`h-1.5 w-1.5 rounded-full ${validation?.valid === false || validation?.import_error ? "bg-vibe-red" : "bg-vibe-green"}`} />
         {validation?.import_error
-          ? <span className="text-vibe-red">saved, but the file does not import: {validation.import_error} · adk web will show the same error until it is fixed</span>
-          : validation ? `${validation.message}${validation.line ? ` (line ${validation.line})` : ""}` : "loading"}
-        {validation?.valid === false && <span>· the file on disk was not changed</span>}
+          ? <span className="text-vibe-red">{tx("saved, but the file does not import: {0} · adk web will show the same error until it is fixed", [validation.import_error])}</span>
+          : validation ? `${validation.message}${validation.line ? ` (line ${validation.line})` : ""}` : t("loading")}
+        {validation?.valid === false && <span>{t("· the file on disk was not changed")}</span>}
       </div>
     </div>
   );

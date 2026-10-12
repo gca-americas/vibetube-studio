@@ -1,3 +1,4 @@
+import { t } from "../i18n";
 import { motion } from "framer-motion";
 import { BookOpen, Clapperboard, ListChecks, Sparkles, Timer, Workflow } from "lucide-react";
 import { In, StepHeader } from "../components/shared";
@@ -37,12 +38,12 @@ const marker = (id: string, color = "currentColor") => (
 function WeekLoopFigure() {
   const cx = 180, cy = 140, R = 96;
   const stations = [
-    { label: "research the trend", who: "Gemini" },
-    { label: "comb the backlog", who: "Gemini" },
-    { label: "choose a direction", who: "" },
-    { label: "check the policy", who: "" },
-    { label: "write the script", who: "Gemini" },
-    { label: "render the clip", who: "Veo" },
+    { label: t("research the trend"), who: "Gemini" },
+    { label: t("comb the backlog"), who: "Gemini" },
+    { label: t("choose a direction"), who: "" },
+    { label: t("check the policy"), who: "" },
+    { label: t("write the script"), who: "Gemini" },
+    { label: t("render the clip"), who: "Veo" },
   ];
   const pt = (i: number, r = R) => {
     const a = (-90 + i * 60) * (Math.PI / 180);
@@ -50,7 +51,7 @@ function WeekLoopFigure() {
   };
   return (
     <figure className="m-0">
-      <svg viewBox="0 0 360 290" role="img" aria-label="Six chores arranged in a ring around one person: research the trend, comb the backlog, choose a direction, check the policy, write the script, render the clip. The ring repeats every week. Gemini can do the research, the backlog and the script alone; Veo can render alone; choosing and checking are the person's." className="h-auto w-full text-fg">
+      <svg viewBox="0 0 360 290" role="img" aria-label={t("Six chores arranged in a ring around one person: research the trend, comb the backlog, choose a direction, check the policy, write the script, render the clip. The ring repeats every week. Gemini can do the research, the backlog and the script alone; Veo can render alone; choosing and checking are the person's.")} className="h-auto w-full text-fg">
         <defs>{marker("wk-arrow")}</defs>
         <circle cx={cx} cy={cy} r={R} fill="none" stroke="var(--hairline)" strokeDasharray="4 4" />
         {stations.map((_, i) => {
@@ -90,7 +91,7 @@ function WeekLoopFigure() {
 function PipelineFigure() {
   return (
     <figure className="m-0">
-      <svg viewBox="0 0 440 170" role="img" aria-label="A pipeline: research, then choose, where the person is asked; then the policy check, which refuses a bad direction before the render; then the script, the render, where the run waits with nothing kept alive; and a record at the end. Memory and the audience's comments feed the research." className="h-auto w-full text-fg">
+      <svg viewBox="0 0 440 170" role="img" aria-label={t("A pipeline: research, then choose, where the person is asked; then the policy check, which refuses a bad direction before the render; then the script, the render, where the run waits with nothing kept alive; and a record at the end. Memory and the audience's comments feed the research.")} className="h-auto w-full text-fg">
         <defs>{marker("pl-arrow")}{marker("pl-arrow-c", CYAN)}</defs>
         {box(8, 70, 66, "research")}
         {box(84, 70, 60, "choose", AMBER)}
@@ -127,7 +128,7 @@ function PipelineFigure() {
 function ArcFigure() {
   return (
     <figure className="m-0">
-      <svg viewBox="0 0 700 96" role="img" aria-label="Steps 2 to 8: you build the Workflow in the workbench. Step 9: the graph inside VibeStudio, an app, deployed to Cloud Run. The video it makes is published on vibetube.dev." className="h-auto w-full text-fg">
+      <svg viewBox="0 0 700 96" role="img" aria-label={t("Steps 2 to 8: you build the Workflow in the workbench. Step 9: the graph inside VibeStudio, an app, deployed to Cloud Run. The video it makes is published on vibetube.dev.")} className="h-auto w-full text-fg">
         <defs>{marker("arc-arrow")}</defs>
         <rect x="8" y="14" width="196" height="54" rx="12" fill="var(--overlay)" stroke="var(--hairline)" />
         {note(106, 34, "steps 2 to 8", undefined, "middle", 8)}
@@ -148,38 +149,38 @@ function ArcFigure() {
 }
 
 const CHORES = [
-  "research what is trending",
-  "comb through the backlog of ideas",
-  "choose a direction",
-  "check it against the channel's policy",
-  "write the script",
-  "render the clip",
+  t("research what is trending"),
+  t("comb through the backlog of ideas"),
+  t("choose a direction"),
+  t("check it against the channel's policy"),
+  t("write the script"),
+  t("render the clip"),
 ];
 
 const WANTS = [
-  { icon: Workflow, text: "Runs the routine steps on its own, in a fixed order." },
-  { icon: ListChecks, text: "Asks you only for the decisions that need your judgment." },
-  { icon: Sparkles, text: "Refuses a bad direction before it costs money." },
-  { icon: Clapperboard, text: "Remembers what you picked last time, and reads what the audience said." },
-  { icon: Timer, text: "Waits minutes for a render without a process kept alive for it." },
-  { icon: BookOpen, text: "Leaves a record of every run: what was cited, what was refused, what shipped." },
+  { icon: Workflow, text: t("Runs the routine steps on its own, in a fixed order.") },
+  { icon: ListChecks, text: t("Asks you only for the decisions that need your judgment.") },
+  { icon: Sparkles, text: t("Refuses a bad direction before it costs money.") },
+  { icon: Clapperboard, text: t("Remembers what you picked last time, and reads what the audience said.") },
+  { icon: Timer, text: t("Waits minutes for a render without a process kept alive for it.") },
+  { icon: BookOpen, text: t("Leaves a record of every run: what was cited, what was refused, what shipped.") },
 ];
 
 export function Story() {
   return (
     <div className="space-y-12">
       <StepHeader
-        kicker="Step 1 · The story"
+        kicker={t("Step 1 · The story")}
         color={COLORS.cyan}
-        title="You run a digital channel on VibeTube."
-        blurb="You have an active audience and an expanding backlog of creative ideas, but producing each video requires continuous multi-stage execution."
+        title={t("You run a digital channel on VibeTube.")}
+        blurb={t("You have an active audience and an expanding backlog of creative ideas, but producing each video requires continuous multi-stage execution.")}
       />
 
       {/* The work, as a wall of chores */}
       <In delay={0.15}>
         <div className="mx-auto grid max-w-4xl gap-4 md:grid-cols-[1.1fr_1fr]">
           <div className="rounded-3xl border border-hairline bg-card p-6 shadow-2xl">
-            <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">Every video, every week</p>
+            <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">{t("Every video, every week")}</p>
             <ul className="mt-4 grid grid-cols-2 gap-2">
               {CHORES.map((c, i) => (
                 <motion.li
@@ -198,18 +199,17 @@ export function Story() {
               <WeekLoopFigure />
             </div>
             <p className="mt-2 text-sm text-fg-muted">
-              Generative models can execute each of these tasks individually: Gemini researches and writes scripts, while Veo renders video clips.
-            </p>
+              {t("Generative models can execute each of these tasks individually: Gemini researches and writes scripts, while Veo renders video clips.")}</p>
           </div>
 
           <div className="flex flex-col justify-between rounded-3xl border border-vibe-cyan/30 bg-vibe-cyan/5 p-6 shadow-2xl">
             <div>
-              <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-vibe-cyan">Agentic orchestration</p>
-              <h2 className="font-display mt-3 text-2xl leading-tight md:text-3xl">End-to-end workflow automation.</h2>
+              <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-vibe-cyan">{t("Agentic orchestration")}</p>
+              <h2 className="font-display mt-3 text-2xl leading-tight md:text-3xl">{t("End-to-end workflow automation.")}</h2>
               <div className="mt-4">
                 <PipelineFigure />
               </div>
-              <p className="mt-3 text-sm text-fg-muted">The production pipeline delivers:</p>
+              <p className="mt-3 text-sm text-fg-muted">{t("The production pipeline delivers:")}</p>
             </div>
             <ul className="mt-4 space-y-3">
               {WANTS.map(({ icon: Icon, text }, i) => (
@@ -234,8 +234,8 @@ export function Story() {
       <In delay={0.9}>
         <div className="mx-auto max-w-3xl rounded-2xl border border-hairline bg-card/60 px-6 py-5 text-center">
           <p className="text-balance text-base text-fg-muted md:text-lg">
-            This workflow provides a <span className="font-semibold text-fg">repeatable</span>,{" "}
-            <span className="font-semibold text-fg">auditable</span> production system. In this lab, you build this pipeline
+            This workflow provides a <span className="font-semibold text-fg">{t("repeatable")}</span>,{" "}
+            <span className="font-semibold text-fg">{t("auditable")}</span> production system. In this lab, you build this pipeline
             using an ADK <span className="font-mono text-fg">Workflow</span>. In the final step, you package the graph into
             a complete application, <span className="font-display text-fg">VibeStudio</span>, and deploy it to Cloud Run.
           </p>

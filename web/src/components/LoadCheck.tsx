@@ -1,3 +1,4 @@
+import { t, tf } from "../i18n";
 import { useState } from "react";
 import { RefreshCw } from "lucide-react";
 import { api, type LoadedStatus } from "../lib/api";
@@ -28,7 +29,7 @@ export function LoadCheck({ app, intro }: { app: string; intro?: string }) {
       const st = await api.loaded(app);
       setLoaded(st.status === "stale" ? await api.refreshLoaded(app) : st);
     } catch (e) {
-      setLoad({ ok: false, error: `could not reach the learning center: ${(e as Error).message}` });
+      setLoad({ ok: false, error: tf("could not reach the learning center: {0}", (e as Error).message) });
     } finally {
       setAsking("");
     }
@@ -43,7 +44,7 @@ export function LoadCheck({ app, intro }: { app: string; intro?: string }) {
     <section className="rounded-3xl border border-hairline bg-card p-6">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
-          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">Before you run</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">{t("Before you run")}</p>
           <p className="mt-1 max-w-2xl text-sm text-fg-muted">{intro ?? `Save your edits, then click the button. It loads ${app} the way adk web will and tells you either that it loads or what ADK objects to.`}</p>
         </div>
         <button
@@ -52,7 +53,7 @@ export function LoadCheck({ app, intro }: { app: string; intro?: string }) {
           className="flex shrink-0 items-center gap-2 rounded-xl border border-hairline bg-overlay px-4 py-2 font-mono text-xs text-fg-muted hover:text-fg disabled:opacity-60"
         >
           <RefreshCw size={13} className={busy ? "animate-spin" : ""} />
-          {asking === "loading" ? "Loading…" : asking === "verifying" ? "Asking adk web…" : "Check the workflow loads"}
+          {asking === "loading" ? "Loading…" : asking === "verifying" ? t("Asking adk web…") : t("Check the workflow loads")}
         </button>
       </div>
       {load && (
@@ -64,10 +65,10 @@ export function LoadCheck({ app, intro }: { app: string; intro?: string }) {
               {what}
               <span className="mt-1 block opacity-90">
                 {loaded === null
-                  ? "asking adk web whether it has this save…"
+                  ? t("asking adk web whether it has this save…")
                   : ready
-                    ? `adk web has your save from ${clock(loaded.saved_at)} · ready to run`
-                    : `adk web could not take your save · ${loaded.detail}`}
+                    ? tf("adk web has your save from {0} · ready to run", clock(loaded.saved_at))
+                    : tf("adk web could not take your save · {0}", loaded.detail)}
               </span>
             </>
           )}

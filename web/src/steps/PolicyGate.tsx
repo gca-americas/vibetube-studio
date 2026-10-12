@@ -1,3 +1,4 @@
+import { t, tf, tx } from "../i18n";
 import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowRight, RefreshCw } from "lucide-react";
@@ -29,9 +30,9 @@ const GREEN = COLORS.green;
 
 type Part = "a" | "b" | "c";
 const PARTS: { id: Part; label: string }[] = [
-  { id: "a", label: "Workflow State" },
-  { id: "b", label: "The router node" },
-  { id: "c", label: "Agent modes and the task node" },
+  { id: "a", label: t("Workflow State") },
+  { id: "b", label: t("The router node") },
+  { id: "c", label: t("Agent modes and the task node") },
 ];
 
 export function PolicyGate() {
@@ -53,7 +54,7 @@ export function PolicyGate() {
         )}
         {idx < PARTS.length - 1 && (
           <Link to={`/step/policy-gate/${PARTS[idx + 1].id}`} className="flex items-center gap-2 rounded-full px-5 py-2 text-xs font-bold text-white" style={{ background: RED }}>
-            Continue to 5{PARTS[idx + 1].id} · {PARTS[idx + 1].label} <ArrowRight size={14} />
+            {t("Continue to 5")}{PARTS[idx + 1].id} · {PARTS[idx + 1].label} <ArrowRight size={14} />
           </Link>
         )}
       </div>
@@ -94,7 +95,7 @@ function RouterFigure({ reroute }: { reroute: boolean }) {
   const box = { fill: "var(--overlay)", stroke: "var(--hairline)" };
   return (
     <figure className="m-0">
-      <svg viewBox="0 0 620 190" role="img" aria-label={reroute ? "persist_direction feeds policy_check, a router. OK goes to scripter, BLOCK goes to quarantine, and quarantine now continues to scripter." : "persist_direction feeds policy_check, a router. OK goes to scripter, BLOCK goes to quarantine, where the run ends."} className="h-auto w-full text-fg" style={{ maxWidth: "100%" }}>
+      <svg viewBox="0 0 620 190" role="img" aria-label={reroute ? t("persist_direction feeds policy_check, a router. OK goes to scripter, BLOCK goes to quarantine, and quarantine now continues to scripter.") : t("persist_direction feeds policy_check, a router. OK goes to scripter, BLOCK goes to quarantine, where the run ends.")} className="h-auto w-full text-fg" style={{ maxWidth: "100%" }}>
         <defs>
           <marker id="rt-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
             <path d="M0 0 L10 5 L0 10 z" fill="currentColor" />
@@ -106,28 +107,28 @@ function RouterFigure({ reroute }: { reroute: boolean }) {
         {/* the diamond */}
         <polygon points="260,50 330,95 260,140 190,95" fill={tint(AMBER, 0.12)} stroke={AMBER} strokeWidth="1.2" />
         <text x="260" y="92" fontSize="10" fontFamily="var(--font-mono)" textAnchor="middle" fill={AMBER}>policy_check</text>
-        <text x="260" y="106" fontSize="8.5" fontFamily="var(--font-mono)" textAnchor="middle" fill="currentColor" opacity="0.7">a function node</text>
+        <text x="260" y="106" fontSize="8.5" fontFamily="var(--font-mono)" textAnchor="middle" fill="currentColor" opacity="0.7">{t("a function node")}</text>
         {/* OK */}
         <path d="M330 95 C 370 95, 380 40, 430 40" fill="none" stroke={GREEN} strokeWidth="1.2" markerEnd="url(#rt-arrow)" />
         <text x="372" y="56" fontSize="9.5" fontFamily="var(--font-mono)" fill={GREEN}>route="OK"</text>
         <rect x="432" y="27" width="108" height="26" rx="8" {...box} />
-        <text x="486" y="44" fontSize="10" fontFamily="var(--font-mono)" textAnchor="middle" fill="currentColor">scripter</text>
-        <text x="486" y="66" fontSize="8.5" fontFamily="var(--font-mono)" textAnchor="middle" fill="currentColor" opacity="0.6">agent node</text>
+        <text x="486" y="44" fontSize="10" fontFamily="var(--font-mono)" textAnchor="middle" fill="currentColor">{t("scripter")}</text>
+        <text x="486" y="66" fontSize="8.5" fontFamily="var(--font-mono)" textAnchor="middle" fill="currentColor" opacity="0.6">{t("agent node")}</text>
         {/* BLOCK */}
         <path d="M330 95 C 370 95, 380 150, 430 150" fill="none" stroke={RED} strokeWidth="1.2" markerEnd="url(#rt-arrow)" />
         <text x="366" y="142" fontSize="9.5" fontFamily="var(--font-mono)" fill={RED}>route="BLOCK"</text>
         <rect x="432" y="137" width="108" height="26" rx="8" fill={reroute ? tint(PURPLE, 0.12) : "var(--overlay)"} stroke={reroute ? PURPLE : "var(--hairline)"} />
-        <text x="486" y="154" fontSize="10" fontFamily="var(--font-mono)" textAnchor="middle" fill={reroute ? PURPLE : "currentColor"}>quarantine</text>
-        <text x="486" y="176" fontSize="8.5" fontFamily="var(--font-mono)" textAnchor="middle" fill="currentColor" opacity="0.6">{reroute ? "task agent · clean the words" : "placeholder · says blocked, run ends"}</text>
+        <text x="486" y="154" fontSize="10" fontFamily="var(--font-mono)" textAnchor="middle" fill={reroute ? PURPLE : "currentColor"}>{t("quarantine")}</text>
+        <text x="486" y="176" fontSize="8.5" fontFamily="var(--font-mono)" textAnchor="middle" fill="currentColor" opacity="0.6">{reroute ? t("task agent · clean the words") : t("placeholder · says blocked, run ends")}</text>
         {reroute && (
           <>
             <path d="M540 150 C 590 150, 590 40, 542 40" fill="none" stroke={PURPLE} strokeWidth="1.2" strokeDasharray="4 3" markerEnd="url(#rt-arrow)" />
-            <text x="598" y="99" fontSize="9" fontFamily="var(--font-mono)" fill={PURPLE} textAnchor="middle" transform="rotate(90 598 99)">cleaned</text>
+            <text x="598" y="99" fontSize="9" fontFamily="var(--font-mono)" fill={PURPLE} textAnchor="middle" transform="rotate(90 598 99)">{t("cleaned")}</text>
           </>
         )}
       </svg>
       <figcaption className="mt-2 text-xs text-fg-muted">
-        {reroute ? "After Step 5c, the refused direction is cleaned and continues to the scripter instead of ending the run." : "The router returns a route name; the edge dict maps each name to a node. In Step 5b, a blocked direction ends the run."}
+        {reroute ? t("After Step 5c, the refused direction is cleaned and continues to the scripter instead of ending the run.") : t("The router returns a route name; the edge dict maps each name to a node. In Step 5b, a blocked direction ends the run.")}
       </figcaption>
     </figure>
   );
@@ -163,7 +164,7 @@ function SaveFigure() {
         {/* the gate and its answer */}
         <rect x="12" y="126" width="118" height="28" rx="8" {...box} />
         <text x="71" y="144" fontSize="10" style={mono} textAnchor="middle" fill="currentColor">direction_gate</text>
-        <text x="71" y="170" fontSize="8.5" style={mono} textAnchor="middle" fill="currentColor" opacity="0.6">the form input</text>
+        <text x="71" y="170" fontSize="8.5" style={mono} textAnchor="middle" fill="currentColor" opacity="0.6">{t("the form input")}</text>
         <line x1="130" y1="140" x2="196" y2="140" stroke="currentColor" strokeWidth="1.2" markerEnd="url(#sv-arrow)" />
         <text x="163" y="128" fontSize="9" style={mono} textAnchor="middle" fill="currentColor">{'{"pick": "2"}'}</text>
         <text x="163" y="156" fontSize="8.5" style={mono} textAnchor="middle" fill="currentColor" opacity="0.6">node_input</text>
@@ -175,8 +176,8 @@ function SaveFigure() {
 
         {/* session state */}
         <rect x="440" y="14" width="250" height="140" rx="12" {...box} strokeDasharray="0" />
-        <text x="452" y="34" fontSize="10.5" style={mono} fill="currentColor">session state</text>
-        <text x="678" y="34" fontSize="8.5" style={mono} textAnchor="end" fill="currentColor" opacity="0.6">one dict per run</text>
+        <text x="452" y="34" fontSize="10.5" style={mono} fill="currentColor">{t("session state")}</text>
+        <text x="678" y="34" fontSize="8.5" style={mono} textAnchor="end" fill="currentColor" opacity="0.6">{t("one dict per run")}</text>
         <line x1="440" y1="42" x2="690" y2="42" stroke="var(--hairline)" />
         {keyRow(60, "candidates", "written by the gate", "currentColor")}
         {keyRow(80, "direction", '"Tiny dragon guards…"')}
@@ -187,32 +188,31 @@ function SaveFigure() {
         {/* write */}
         <path d="M348 126 C 390 126, 400 90, 438 90" fill="none" stroke={RED} strokeWidth="1.4" markerEnd="url(#sv-arrow-red)" />
         <text x="392" y="86" fontSize="9" style={mono} textAnchor="middle" fill={RED}>Event(state={'{…}'})</text>
-        <text x="392" y="98" fontSize="8" style={mono} textAnchor="middle" fill={RED} opacity="0.8">writes the direction</text>
+        <text x="392" y="98" fontSize="8" style={mono} textAnchor="middle" fill={RED} opacity="0.8">{t("writes the direction")}</text>
         {/* bind */}
         <path d="M438 140 C 400 140, 390 156, 350 156" fill="none" stroke="currentColor" strokeOpacity="0.6" strokeWidth="1.1" strokeDasharray="4 3" markerEnd="url(#sv-arrow)" />
-        <text x="394" y="172" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.7">candidates, bound</text>
-        <text x="394" y="183" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.7">by parameter name</text>
+        <text x="394" y="172" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.7">{t("candidates, bound")}</text>
+        <text x="394" y="183" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.7">{t("by parameter name")}</text>
 
         {/* readers of session state */}
         <line x1="690" y1="70" x2="748" y2="52" stroke="currentColor" strokeOpacity="0.6" strokeWidth="1.1" markerEnd="url(#sv-arrow)" />
         <rect x="750" y="38" width="176" height="28" rx="8" {...box} />
-        <text x="838" y="52" fontSize="9.5" style={mono} textAnchor="middle" fill="currentColor">adk web · State tab</text>
-        <text x="838" y="62" fontSize="7.5" style={mono} textAnchor="middle" fill="currentColor" opacity="0.6">shows the merged keys</text>
+        <text x="838" y="52" fontSize="9.5" style={mono} textAnchor="middle" fill="currentColor">{t("adk web · State tab")}</text>
+        <text x="838" y="62" fontSize="7.5" style={mono} textAnchor="middle" fill="currentColor" opacity="0.6">{t("shows the merged keys")}</text>
         <line x1="690" y1="110" x2="748" y2="114" stroke="currentColor" strokeOpacity="0.6" strokeWidth="1.1" markerEnd="url(#sv-arrow)" />
         <rect x="750" y="100" width="176" height="28" rx="8" {...box} />
-        <text x="838" y="114" fontSize="9.5" style={mono} textAnchor="middle" fill="currentColor">remember_pick · memory</text>
-        <text x="838" y="124" fontSize="7.5" style={mono} textAnchor="middle" fill="currentColor" opacity="0.6">reads direction, angle</text>
+        <text x="838" y="114" fontSize="9.5" style={mono} textAnchor="middle" fill="currentColor">{t("remember_pick · memory")}</text>
+        <text x="838" y="124" fontSize="7.5" style={mono} textAnchor="middle" fill="currentColor" opacity="0.6">{t("reads direction, angle")}</text>
 
         {/* output */}
         <line x1="273" y1="168" x2="273" y2="208" stroke="currentColor" strokeWidth="1.2" markerEnd="url(#sv-arrow)" />
         <text x="265" y="186" fontSize="9" style={mono} textAnchor="end" fill="currentColor">Event(output=chosen)</text>
-        <text x="265" y="198" fontSize="8" style={mono} textAnchor="end" fill="currentColor" opacity="0.6">output goes to the next node only</text>
+        <text x="265" y="198" fontSize="8" style={mono} textAnchor="end" fill="currentColor" opacity="0.6">{t("output goes to the next node only")}</text>
         <rect x="214" y="210" width="118" height="28" rx="8" {...box} />
         <text x="273" y="228" fontSize="10" style={mono} textAnchor="middle" fill="currentColor">policy_check</text>
       </svg>
       <figcaption className="mt-2 text-xs text-fg-muted">
-        Session state is the merged result of every <code className="font-mono">Event(state=...)</code> in the run. adk web shows it in the State tab, and a function node's parameters are bound from it by name.
-      </figcaption>
+        {tx("Session state is the merged result of every {0} in the run. adk web shows it in the State tab, and a function node's parameters are bound from it by name.", [<code className="font-mono">Event(state=...)</code>])}</figcaption>
     </figure>
   );
 }
@@ -230,29 +230,28 @@ function StateNode() {
   return (
     <div className="space-y-12">
       <StepHeader
-        kicker="Step 5a · Workflow State"
+        kicker={t("Step 5a · Workflow State")}
         color={RED}
-        title="Session state persistence."
-        blurb="Downstream nodes require the candidate selected at the approval gate. Session state provides cross-node data persistence across the workflow execution lifecycle."
+        title={t("Session state persistence.")}
+        blurb={t("Downstream nodes require the candidate selected at the approval gate. Session state provides cross-node data persistence across the workflow execution lifecycle.")}
       />
 
       <In delay={0.05}>
         <section className="rounded-3xl border border-hairline bg-card p-6">
-          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">The graph so far</p>
-          <h2 className="font-display mt-2 text-2xl">Extending the graph with state persistence.</h2>
+          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">{t("The graph so far")}</p>
+          <h2 className="font-display mt-2 text-2xl">{t("Extending the graph with state persistence.")}</h2>
           <p className="mt-2 max-w-3xl text-sm text-fg-muted">
-            The workflow extends the research fan-out, join synchronization, direction proposer, and approval gate. This stage appends <code className="font-mono text-fg">persist_direction</code> after the gate, mapping the selected choice into state for downstream nodes to read.
-          </p>
+            {tx("The workflow extends the research fan-out, join synchronization, direction proposer, and approval gate. This stage appends {0} after the gate, mapping the selected choice into state for downstream nodes to read.", [<code className="font-mono text-fg">persist_direction</code>])}</p>
           <div className="mt-4">
-            <SnakeGraph only={["__START__", "scan_trends", "read_backlog", "join_research", "propose_directions", "direction_gate", "persist_direction"]} highlight="persist_direction" cols={6} label="The graph after this part. START fans out to scan_trends and read_backlog, then join_research, propose_directions, direction_gate, and the new persist_direction." />
+            <SnakeGraph only={["__START__", "scan_trends", "read_backlog", "join_research", "propose_directions", "direction_gate", "persist_direction"]} highlight="persist_direction" cols={6} label={t("The graph after this part. START fans out to scan_trends and read_backlog, then join_research, propose_directions, direction_gate, and the new persist_direction.")} />
           </div>
         </section>
       </In>
 
       <In delay={0.1}>
         <section className="rounded-3xl border border-hairline bg-card p-6">
-          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">State persistence architecture</p>
-          <h2 className="font-display mt-2 text-2xl">Structured session state binding.</h2>
+          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">{t("State persistence architecture")}</p>
+          <h2 className="font-display mt-2 text-2xl">{t("Structured session state binding.")}</h2>
           <div className="mt-4 overflow-x-auto">
             <SaveFigure />
           </div>
@@ -261,8 +260,8 @@ function StateNode() {
 
       <In delay={0.3}>
         <EditPanel
-          label="Edit 1 of 2"
-          title="Persist chosen direction to session state."
+          label={t("Edit 1 of 2")}
+          title={t("Persist chosen direction to session state.")}
           intro={
             <>
               Open <code className="font-mono text-fg">agent/graph.py</code> and locate <code className="font-mono text-fg">persist_direction</code>.
@@ -273,7 +272,7 @@ function StateNode() {
               </span>
             </>
           }
-          pill={status ? (writeOk ? "state write in place ✓" : "no Event(state=...) yet") : "…"}
+          pill={status ? (writeOk ? t("state write in place ✓") : "no Event(state=...) yet") : "…"}
           ok={writeOk}
           hint={hintB}
           setHint={setHintB}
@@ -289,10 +288,10 @@ function StateNode() {
 
       <In delay={0.35}>
         <EditPanel
-          label="Edit 2 of 2"
-          title="Append persist_direction to the workflow chain."
+          label={t("Edit 2 of 2")}
+          title={t("Append persist_direction to the workflow chain.")}
           intro={<>In <code className="font-mono text-fg">stage3_router/agent.py</code>, append <code className="font-mono text-fg">persist_direction</code> to the final chain tuple following <code className="font-mono text-fg">direction_gate</code> to consume and persist the gate's output.</>}
-          pill={status ? (persistOk ? "persist_direction in the chain ✓" : `chain ends at ${status.chain[status.chain.length - 1] ?? "…"}`) : "…"}
+          pill={status ? (persistOk ? t("persist_direction in the chain ✓") : tf("chain ends at {0}", status.chain[status.chain.length - 1] ?? "…")) : "…"}
           ok={persistOk}
           hint={hintA}
           setHint={setHintA}
@@ -309,7 +308,7 @@ function StateNode() {
       </In>
 
       <In delay={0.4}>
-        <LoadCheck app="stage3_router" intro="Save both edits, then verify module loading to ensure the workflow graph imports cleanly without syntax or configuration errors." />
+        <LoadCheck app="stage3_router" intro={t("Save both edits, then verify module loading to ensure the workflow graph imports cleanly without syntax or configuration errors.")} />
       </In>
 
       <In delay={0.45}>
@@ -317,34 +316,34 @@ function StateNode() {
           app="stage3_router"
           open={open}
           setOpen={setOpen}
-          title="Execute the workflow and inspect session state."
-          intro="The workflow invokes propose_directions, suspends execution at direction_gate, and resumes upon form submission to persist selected attributes into session state."
+          title={t("Execute the workflow and inspect session state.")}
+          intro={t("The workflow invokes propose_directions, suspends execution at direction_gate, and resumes upon form submission to persist selected attributes into session state.")}
           idea={idea}
           setIdea={setIdea}
           steps={[
-            "Submit '2' in the approval gate form. A state delta event follows the gate, and persist_direction outputs the resolved candidate dictionary before the run terminates.",
-            "Inspect the State tab in adk web. The candidates array was persisted by the gate; direction, angle, hook, and user:prefs are merged by persist_direction. The verification panel reads these persisted keys directly.",
+            t("Submit '2' in the approval gate form. A state delta event follows the gate, and persist_direction outputs the resolved candidate dictionary before the run terminates."),
+            t("Inspect the State tab in adk web. The candidates array was persisted by the gate; direction, angle, hook, and user:prefs are merged by persist_direction. The verification panel reads these persisted keys directly."),
           ]}
         />
       </In>
 
       <In delay={0.5}>
-        <VerifyPanel checking={checking} onCheck={check} intro="Read from agent/graph.py, this step's app file, and the latest stage3_router session's state.">
-          <CheckRow ok={persistOk} label="persist_direction follows the gate in the chain">
-            {status ? (persistOk ? status.chain.join(" → ") : "Edit 1 above.") : "…"}
+        <VerifyPanel checking={checking} onCheck={check} intro={t("Read from agent/graph.py, this step's app file, and the latest stage3_router session's state.")}>
+          <CheckRow ok={persistOk} label={t("persist_direction follows the gate in the chain")}>
+            {status ? (persistOk ? status.chain.join(" → ") : t("Edit 1 above.")) : "…"}
           </CheckRow>
           <CheckRow ok={writeOk} label="persist_direction yields Event(state=...)">
-            {status ? (writeOk ? "Found in agent/graph.py." : "Edit 2 above.") : "…"}
+            {status ? (writeOk ? t("Found in agent/graph.py.") : t("Edit 2 above.")) : "…"}
           </CheckRow>
-          <CheckRow ok={wrote} label="state.direction holds your pick">
-            {status?.direction ? `${status.direction}${status.angle ? ` · ${status.angle.slice(0, 60)}` : ""}` : "Not in state yet."}
+          <CheckRow ok={wrote} label={t("state.direction holds your pick")}>
+            {status?.direction ? `${status.direction}${status.angle ? ` · ${status.angle.slice(0, 60)}` : ""}` : t("Not in state yet.")}
           </CheckRow>
-          <CheckRow ok={!!status?.user_prefs?.last_direction} label="state has user:prefs">
-            {status?.user_prefs?.last_direction ? `last_direction · ${status.user_prefs.last_direction}` : "Not in state yet."}
+          <CheckRow ok={!!status?.user_prefs?.last_direction} label={t("state has user:prefs")}>
+            {status?.user_prefs?.last_direction ? `last_direction · ${status.user_prefs.last_direction}` : t("Not in state yet.")}
           </CheckRow>
           {keys.length ? (
             <li className="md:col-span-2 rounded-2xl border border-hairline bg-overlay p-3 font-mono text-[11px] text-fg-muted">
-              state keys · {keys.join(" · ")}
+              {tx("state keys · {0}", [keys.join(" · ")])}
             </li>
           ) : null}
         </VerifyPanel>
@@ -405,70 +404,68 @@ function RouterNode() {
   return (
     <div className="space-y-12">
       <StepHeader
-        kicker="Step 5b · The router node"
+        kicker={t("Step 5b · The router node")}
         color={RED}
-        title="Deterministic conditional routing."
-        blurb="Router nodes introduce deterministic control flow without incurring LLM inference costs. By evaluating payloads against explicit policy rules, the router directs execution branches conditionally via dictionary edge mapping."
+        title={t("Deterministic conditional routing.")}
+        blurb={t("Router nodes introduce deterministic control flow without incurring LLM inference costs. By evaluating payloads against explicit policy rules, the router directs execution branches conditionally via dictionary edge mapping.")}
       />
 
       <In delay={0.1}>
         <section className="rounded-3xl border border-hairline bg-card p-6">
-          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">Where the graph stands</p>
-          <h2 className="font-display mt-2 text-2xl">Integrating policy inspection into the chain.</h2>
+          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">{t("Where the graph stands")}</p>
+          <h2 className="font-display mt-2 text-2xl">{t("Integrating policy inspection into the chain.")}</h2>
           <p className="mt-2 max-w-3xl text-sm text-fg-muted">
             Upstream execution resolves the user's selection into a candidate dictionary (title, angle, hook). The router evaluates this payload next to determine downstream dispatch.
           </p>
           <div className="mt-4 grid gap-4 lg:grid-cols-[1.1fr_1fr]">
             <RouterFigure reroute={false} />
             <div className="overflow-hidden rounded-2xl border border-hairline bg-input">
-              <div className="border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">Sample router</div>
+              <div className="border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">{t("Sample router")}</div>
               <pre className="overflow-x-auto px-4 py-3 font-mono text-[11.5px] leading-relaxed text-fg">
                 <code>{CODE_ROUTER_SAMPLE}</code>
               </pre>
               <div className="border-t border-hairline px-4 py-2 font-mono text-[11.5px] text-fg">
-                <span className="text-fg-muted"># the edge that reads a route</span>
+                <span className="text-fg-muted">{t("# the edge that reads a route")}</span>
                 <br />
                 (length_check, {"{"}"TRIM": shorten, "PASS": scripter{"}"})
               </div>
             </div>
           </div>
           <p className="mt-4 max-w-3xl text-sm text-fg-muted">
-            The returned <code className="font-mono text-fg">Event(output=..., route=...)</code> dictates branch dispatch. The payload is forwarded to the node mapped by the selected route key in the edge dictionary. In <code className="font-mono text-fg">agent/graph.py</code>, <code className="font-mono text-fg">policy_check</code> identifies prohibited terms in the title and angle, preparing the route decision.
-          </p>
+            {tx("The returned {0} dictates branch dispatch. The payload is forwarded to the node mapped by the selected route key in the edge dictionary. In {1}, {2} identifies prohibited terms in the title and angle, preparing the route decision.", [<code className="font-mono text-fg">Event(output=..., route=...)</code>, <code className="font-mono text-fg">agent/graph.py</code>, <code className="font-mono text-fg">policy_check</code>])}</p>
         </section>
       </In>
 
       <In delay={0.2}>
         <section className="rounded-3xl border border-hairline bg-card p-6">
-          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">Branch destinations</p>
-          <h2 className="font-display mt-2 text-2xl">Production scripting vs. quarantine remediation.</h2>
+          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">{t("Branch destinations")}</p>
+          <h2 className="font-display mt-2 text-2xl">{t("Production scripting vs. quarantine remediation.")}</h2>
           <p className="mt-2 max-w-3xl text-sm text-fg-muted">
             The <code className="font-mono text-fg">scripter</code> agent generates production video scripts from approved directions. It receives the candidate JSON payload and generates a structured <code className="font-mono text-fg">Script</code> object matching the target schema (title, description, tags, opening line, and shot definitions).
           </p>
           <p className="mt-2 max-w-3xl text-sm text-fg-muted">
-            When policy violations are detected, execution routes to <code className="font-mono text-fg">quarantine</code>. In this stage, quarantine terminates the workflow upon violation; in 5c, it will be upgraded to an autonomous remediation agent.
-          </p>
+            {tx("When policy violations are detected, execution routes to {0}. In this stage, quarantine terminates the workflow upon violation; in 5c, it will be upgraded to an autonomous remediation agent.", [<code className="font-mono text-fg">quarantine</code>])}</p>
           <div className="mt-4 grid gap-4 lg:grid-cols-2">
             <div className="overflow-hidden rounded-2xl border border-hairline bg-input">
-              <div className="border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">The scripter · an agent node</div>
+              <div className="border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">{t("The scripter · an agent node")}</div>
               <pre className="overflow-x-auto px-4 py-3 font-mono text-[11.5px] leading-relaxed text-fg">
                 <code>{CODE_SCRIPTER}</code>
               </pre>
             </div>
             <div className="overflow-hidden rounded-2xl border border-hairline bg-input">
-              <div className="border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">quarantine · a placeholder function node</div>
+              <div className="border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">{t("quarantine · a placeholder function node")}</div>
               <pre className="overflow-x-auto px-4 py-3 font-mono text-[11.5px] leading-relaxed text-fg">
                 <code>{CODE_QUARANTINE_STUB}</code>
               </pre>
             </div>
             <div className="overflow-hidden rounded-2xl border border-hairline bg-input">
-              <div className="border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">The scripter's instruction · abridged</div>
+              <div className="border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">{t("The scripter's instruction · abridged")}</div>
               <pre className="overflow-x-auto px-4 py-3 font-mono text-[11.5px] leading-relaxed text-fg">
                 <code>{CODE_SCRIPT_INSTRUCTION}</code>
               </pre>
             </div>
             <div className="overflow-hidden rounded-2xl border border-hairline bg-input">
-              <div className="border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">The scripter's output schema</div>
+              <div className="border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">{t("The scripter's output schema")}</div>
               <pre className="overflow-x-auto px-4 py-3 font-mono text-[11.5px] leading-relaxed text-fg">
                 <code>{CODE_SCRIPT_SCHEMA}</code>
               </pre>
@@ -479,10 +476,10 @@ function RouterNode() {
 
       <In delay={0.3}>
         <EditPanel
-          label="Edit 1 of 2"
-          title="Implement conditional routing logic."
+          label={t("Edit 1 of 2")}
+          title={t("Implement conditional routing logic.")}
           intro={<>Replace the TODO line to return an <code className="font-mono text-fg">Event</code> with <code className="font-mono text-fg">output=node_input</code> and <code className="font-mono text-fg">route="BLOCK"</code> when <code className="font-mono text-fg">bad</code> contains violations, or <code className="font-mono text-fg">route="OK"</code> otherwise.</>}
-          pill={status ? (routeOk ? "router returns a route ✓" : "no return with a route yet") : "…"}
+          pill={status ? (routeOk ? t("router returns a route ✓") : t("no return with a route yet")) : "…"}
           ok={routeOk}
           hint={hintA}
           setHint={setHintA}
@@ -497,10 +494,10 @@ function RouterNode() {
 
       <In delay={0.35}>
         <EditPanel
-          label="Edit 2 of 2"
-          title="Connect router branches to the execution graph."
+          label={t("Edit 2 of 2")}
+          title={t("Connect router branches to the execution graph.")}
           intro={<>Append <code className="font-mono text-fg">policy_check</code> after <code className="font-mono text-fg">persist_direction</code>, then add the edge routing <code className="font-mono text-fg">OK</code> to the scripter and <code className="font-mono text-fg">BLOCK</code> to quarantine.</>}
-          pill={status ? (routerOk ? "router wired ✓" : status.router_wired ? "policy_check in the chain; add the route dict" : `chain ends at ${status.chain[status.chain.length - 1] ?? "…"}`) : "…"}
+          pill={status ? (routerOk ? t("router wired ✓") : status.router_wired ? t("policy_check in the chain; add the route dict") : tf("chain ends at {0}", status.chain[status.chain.length - 1] ?? "…")) : "…"}
           ok={routerOk}
           hint={hintB}
           setHint={setHintB}
@@ -518,7 +515,7 @@ function RouterNode() {
       </In>
 
       <In delay={0.4}>
-        <LoadCheck app="stage3_router" intro="Save both edits above, then verify module loading to confirm the updated router edges compile cleanly." />
+        <LoadCheck app="stage3_router" intro={t("Save both edits above, then verify module loading to confirm the updated router edges compile cleanly.")} />
       </In>
 
       <In delay={0.45}>
@@ -526,31 +523,31 @@ function RouterNode() {
           app="stage3_router"
           open={open}
           setOpen={setOpen}
-          title="Execute both routing branches."
-          intro="Execute two sessions to validate both conditional branches, testing the compliant path to scripter as well as quarantine interception."
+          title={t("Execute both routing branches.")}
+          intro={t("Execute two sessions to validate both conditional branches, testing the compliant path to scripter as well as quarantine interception.")}
           idea={idea}
           setIdea={setIdea}
           stepTitles={["Run 1 · Compliant execution branch (OK)", "Run 2 · Policy violation branch (BLOCK)"]}
           steps={[
-            "Submit the idea and select candidate 1, 2, or 3. These candidates adhere to channel policy. The policy_check node emits the OK route, triggering scripter to generate the structured Script payload.",
-            "Click NEW SESSION, submit the prompt again, and select candidate 4. Candidate 4 contains policy-violating terminology. The policy_check node detects the infraction, emits the BLOCK route, and halts execution in quarantine without invoking the scripter.",
+            t("Submit the idea and select candidate 1, 2, or 3. These candidates adhere to channel policy. The policy_check node emits the OK route, triggering scripter to generate the structured Script payload."),
+            t("Click NEW SESSION, submit the prompt again, and select candidate 4. Candidate 4 contains policy-violating terminology. The policy_check node detects the infraction, emits the BLOCK route, and halts execution in quarantine without invoking the scripter."),
           ]}
         />
       </In>
 
       <In delay={0.5}>
-        <VerifyPanel checking={checking} onCheck={check} intro="Read from agent/graph.py, this step's app file, and its sessions in runs/sessions.db.">
-          <CheckRow ok={routeOk} label="policy_check returns an Event with a route">
-            {status ? (routeOk ? "Found in agent/graph.py." : "Edit 1 above.") : "…"}
+        <VerifyPanel checking={checking} onCheck={check} intro={t("Read from agent/graph.py, this step's app file, and its sessions in runs/sessions.db.")}>
+          <CheckRow ok={routeOk} label={t("policy_check returns an Event with a route")}>
+            {status ? (routeOk ? t("Found in agent/graph.py.") : t("Edit 1 above.")) : "…"}
           </CheckRow>
-          <CheckRow ok={routerOk} label="policy_check is in the chain with both routes">
-            {status ? (routerOk ? `${status.chain.join(" → ")} → OK | BLOCK` : "Edit 2 above.") : "…"}
+          <CheckRow ok={routerOk} label={t("policy_check is in the chain with both routes")}>
+            {status ? (routerOk ? tf("{0} → OK | BLOCK", status.chain.join(" → ")) : t("Edit 2 above.")) : "…"}
           </CheckRow>
-          <CheckRow ok={!!status && status.ok_runs > 0 && !!status.script_title} label="An OK run reached the scripter">
-            {status?.script_title ? `Script title · ${status.script_title}` : `Completed ${status?.ok_runs ?? 0} OK route${status?.ok_runs === 1 ? "" : "s"} so far`}
+          <CheckRow ok={!!status && status.ok_runs > 0 && !!status.script_title} label={t("An OK run reached the scripter")}>
+            {status?.script_title ? tf("Script title · {0}", status.script_title) : tf("Completed {0} OK route{1} so far", status?.ok_runs ?? 0, status?.ok_runs === 1 ? "" : "s")}
           </CheckRow>
-          <CheckRow ok={!!status && status.block_runs > 0 && status.nodes_ran.includes("quarantine")} label="A BLOCK run reached quarantine">
-            {status ? (status.block_runs > 0 ? `Completed ${status.block_runs} BLOCK route${status.block_runs === 1 ? "" : "s"}${status.blocked_message ? ` · "${status.blocked_message}"` : ""}` : "Answer a run with candidate 4.") : "…"}
+          <CheckRow ok={!!status && status.block_runs > 0 && status.nodes_ran.includes("quarantine")} label={t("A BLOCK run reached quarantine")}>
+            {status ? (status.block_runs > 0 ? tf("Completed {0} BLOCK route{1}{2}", status.block_runs, status.block_runs === 1 ? "" : "s", status.blocked_message ? ` · "${status.blocked_message}"` : "") : t("Answer a run with candidate 4.")) : "…"}
           </CheckRow>
         </VerifyPanel>
       </In>
@@ -561,9 +558,9 @@ function RouterNode() {
 /* ───────────────────────── 5c ───────────────────────── */
 
 const MODES = [
-  { mode: "chat", color: CYAN, who: "Root or standalone conversational agents.", what: "A conversation. Each user message is a turn; the model decides when to call tools, when to ask, and when to stop. Required for a root agent; not allowed after another node." },
-  { mode: "single_turn", color: AMBER, who: "propose_directions, scripter.", what: "One model call, no conversation. Input from the previous node, one structured object out. The default for an agent used as a node." },
-  { mode: "task", color: PURPLE, who: "quarantine, from now on.", what: "The model works with its tools for as many calls as it needs and ends by calling the built-in finish_task tool. What it hands to finish_task, typed by output_schema, is the node's output." },
+  { mode: "chat", color: CYAN, who: t("Root or standalone conversational agents."), what: t("A conversation. Each user message is a turn; the model decides when to call tools, when to ask, and when to stop. Required for a root agent; not allowed after another node.") },
+  { mode: "single_turn", color: AMBER, who: t("propose_directions, scripter."), what: t("One model call, no conversation. Input from the previous node, one structured object out. The default for an agent used as a node.") },
+  { mode: "task", color: PURPLE, who: t("quarantine, from now on."), what: t("The model works with its tools for as many calls as it needs and ends by calling the built-in finish_task tool. What it hands to finish_task, typed by output_schema, is the node's output.") },
 ];
 
 const CODE_TOOLS = `"""Tools for the quarantine node.
@@ -667,7 +664,7 @@ function ModesFigure() {
   );
   return (
     <figure className="m-0 min-w-[820px]">
-      <svg viewBox="0 0 940 236" role="img" aria-label="Three agent modes. In chat mode, a person and the model exchange messages turn after turn, and the model calls tools when it decides to; the conversation ends when the model stops. In single_turn mode, the previous node's output goes into one model call, and one typed object comes out for the next node. In task mode, the previous node's output goes to the model, which calls its tools as many times as it needs and ends by calling finish_task; what it hands to finish_task is the node's output." className="h-auto w-full text-fg">
+      <svg viewBox="0 0 940 236" role="img" aria-label={t("Three agent modes. In chat mode, a person and the model exchange messages turn after turn, and the model calls tools when it decides to; the conversation ends when the model stops. In single_turn mode, the previous node's output goes into one model call, and one typed object comes out for the next node. In task mode, the previous node's output goes to the model, which calls its tools as many times as it needs and ends by calling finish_task; what it hands to finish_task is the node's output.")} className="h-auto w-full text-fg">
         <defs>
           <marker id="md-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
             <path d="M0 0 L10 5 L0 10 z" fill="currentColor" />
@@ -678,48 +675,48 @@ function ModesFigure() {
 
         {/* chat */}
         <text x="14" y="20" fontSize="11" style={mono} fill={CYAN}>chat</text>
-        <text x="60" y="20" fontSize="8.5" style={mono} fill="currentColor" opacity="0.6">a conversation · root conversational agent</text>
+        <text x="60" y="20" fontSize="8.5" style={mono} fill="currentColor" opacity="0.6">{t("a conversation · root conversational agent")}</text>
         {node(14, 100, 56, "you")}
         {node(220, 100, 80, "model", CYAN)}
         <line x1="70" y1="106" x2="218" y2="106" stroke="currentColor" strokeWidth="1.1" markerEnd="url(#md-arrow)" />
         <text x="144" y="100" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.75">message 1</text>
         <line x1="218" y1="118" x2="72" y2="118" stroke="currentColor" strokeWidth="1.1" markerEnd="url(#md-arrow)" />
-        <text x="144" y="130" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.75">reply</text>
+        <text x="144" y="130" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.75">{t("reply")}</text>
         <line x1="70" y1="148" x2="218" y2="148" stroke="currentColor" strokeOpacity="0.6" strokeWidth="1.1" strokeDasharray="4 3" markerEnd="url(#md-arrow)" />
         <text x="144" y="160" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.6">message 2, 3, …</text>
         {node(220, 44, 80, "tools")}
         <path d="M250 100 C 250 84, 250 78, 250 70" fill="none" stroke={CYAN} strokeWidth="1.1" markerEnd="url(#md-arrow)" />
         <path d="M270 68 C 270 78, 270 84, 270 98" fill="none" stroke={CYAN} strokeWidth="1.1" markerEnd="url(#md-arrow)" />
-        <text x="306" y="86" fontSize="8" style={mono} fill={CYAN} opacity="0.9" textAnchor="end">when it decides</text>
-        <text x="14" y="196" fontSize="8.5" style={mono} fill="currentColor" opacity="0.7">each message is a turn; the model chooses</text>
-        <text x="14" y="208" fontSize="8.5" style={mono} fill="currentColor" opacity="0.7">when to call tools, when to ask, when to stop</text>
+        <text x="306" y="86" fontSize="8" style={mono} fill={CYAN} opacity="0.9" textAnchor="end">{t("when it decides")}</text>
+        <text x="14" y="196" fontSize="8.5" style={mono} fill="currentColor" opacity="0.7">{t("each message is a turn; the model chooses")}</text>
+        <text x="14" y="208" fontSize="8.5" style={mono} fill="currentColor" opacity="0.7">{t("when to call tools, when to ask, when to stop")}</text>
 
         {/* single_turn */}
         <text x="330" y="20" fontSize="11" style={mono} fill={AMBER}>single_turn</text>
-        <text x="418" y="20" fontSize="8.5" style={mono} fill="currentColor" opacity="0.6">one call · propose_directions, scripter</text>
+        <text x="418" y="20" fontSize="8.5" style={mono} fill="currentColor" opacity="0.6">{t("one call · propose_directions, scripter")}</text>
         {node(330, 100, 92, "previous node")}
         {node(454, 100, 70, "model", AMBER)}
         {node(556, 100, 62, "next node")}
         <line x1="422" y1="112" x2="452" y2="112" stroke="currentColor" strokeWidth="1.1" markerEnd="url(#md-arrow)" />
         <line x1="524" y1="112" x2="554" y2="112" stroke="currentColor" strokeWidth="1.1" markerEnd="url(#md-arrow)" />
-        <text x="437" y="96" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.75">output</text>
-        <text x="539" y="96" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.75">object</text>
+        <text x="437" y="96" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.75">{t("output")}</text>
+        <text x="539" y="96" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.75">{t("object")}</text>
         <rect x="454" y="52" width="70" height="20" rx="10" fill={tint(AMBER, 0.12)} stroke={AMBER} strokeOpacity="0.6" />
-        <text x="489" y="66" fontSize="8.5" style={mono} textAnchor="middle" fill={AMBER}>One model call</text>
-        <text x="489" y="146" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.7">no tools, no follow-up</text>
-        <text x="489" y="158" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.7">the answer is typed by output_schema</text>
-        <text x="330" y="196" fontSize="8.5" style={mono} fill="currentColor" opacity="0.7">the default for an agent used as a node</text>
-        <text x="330" y="208" fontSize="8.5" style={mono} fill="currentColor" opacity="0.7">input from the node before, one object out</text>
+        <text x="489" y="66" fontSize="8.5" style={mono} textAnchor="middle" fill={AMBER}>{t("One model call")}</text>
+        <text x="489" y="146" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.7">{t("no tools, no follow-up")}</text>
+        <text x="489" y="158" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.7">{t("the answer is typed by output_schema")}</text>
+        <text x="330" y="196" fontSize="8.5" style={mono} fill="currentColor" opacity="0.7">{t("the default for an agent used as a node")}</text>
+        <text x="330" y="208" fontSize="8.5" style={mono} fill="currentColor" opacity="0.7">{t("input from the node before, one object out")}</text>
 
         {/* task */}
         <text x="640" y="20" fontSize="11" style={mono} fill={PURPLE}>task</text>
-        <text x="678" y="20" fontSize="8.5" style={mono} fill="currentColor" opacity="0.6">work with tools until done · quarantine</text>
+        <text x="678" y="20" fontSize="8.5" style={mono} fill="currentColor" opacity="0.6">{t("work with tools until done · quarantine")}</text>
         {node(640, 100, 92, "previous node")}
         {node(764, 100, 70, "model", PURPLE)}
         {node(866, 100, 62, "next node")}
         <line x1="732" y1="112" x2="762" y2="112" stroke="currentColor" strokeWidth="1.1" markerEnd="url(#md-arrow)" />
         <line x1="834" y1="112" x2="864" y2="112" stroke={PURPLE} strokeWidth="1.2" markerEnd="url(#md-arrow)" />
-        <text x="747" y="96" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.75">output</text>
+        <text x="747" y="96" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.75">{t("output")}</text>
         <text x="849" y="92" fontSize="8" style={mono} textAnchor="middle" fill={PURPLE}>finish_task</text>
         <text x="849" y="136" fontSize="7.5" style={mono} textAnchor="middle" fill={PURPLE} opacity="0.85">(the output)</text>
         <rect x="744" y="150" width="110" height="34" rx="7" {...box} />
@@ -727,10 +724,10 @@ function ModesFigure() {
         <text x="799" y="177" fontSize="8.5" style={mono} textAnchor="middle" fill="currentColor">suggest_replacement</text>
         <path d="M786 124 C 786 134, 786 140, 786 148" fill="none" stroke={PURPLE} strokeWidth="1.1" markerEnd="url(#md-arrow)" />
         <path d="M812 150 C 812 140, 812 134, 812 126" fill="none" stroke={PURPLE} strokeWidth="1.1" markerEnd="url(#md-arrow)" />
-        <text x="740" y="140" fontSize="8" style={mono} textAnchor="end" fill={PURPLE} opacity="0.9">as many calls</text>
-        <text x="740" y="151" fontSize="8" style={mono} textAnchor="end" fill={PURPLE} opacity="0.9">as it needs</text>
-        <text x="640" y="196" fontSize="8.5" style={mono} fill="currentColor" opacity="0.7">ends by calling the built-in finish_task tool;</text>
-        <text x="640" y="208" fontSize="8.5" style={mono} fill="currentColor" opacity="0.7">what it hands over, typed by output_schema, is the output</text>
+        <text x="740" y="140" fontSize="8" style={mono} textAnchor="end" fill={PURPLE} opacity="0.9">{t("as many calls")}</text>
+        <text x="740" y="151" fontSize="8" style={mono} textAnchor="end" fill={PURPLE} opacity="0.9">{t("as it needs")}</text>
+        <text x="640" y="196" fontSize="8.5" style={mono} fill="currentColor" opacity="0.7">{t("ends by calling the built-in finish_task tool;")}</text>
+        <text x="640" y="208" fontSize="8.5" style={mono} fill="currentColor" opacity="0.7">{t("what it hands over, typed by output_schema, is the output")}</text>
       </svg>
     </figure>
   );
@@ -755,18 +752,18 @@ function TaskFigure() {
         </defs>
         {/* in */}
         <rect x="14" y="96" width="130" height="40" rx="8" {...box} />
-        <text x="79" y="113" fontSize="9.5" style={mono} textAnchor="middle" fill="currentColor">refused direction</text>
-        <text x="79" y="127" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.6">title, angle, hook, style</text>
+        <text x="79" y="113" fontSize="9.5" style={mono} textAnchor="middle" fill="currentColor">{t("refused direction")}</text>
+        <text x="79" y="127" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.6">{t("title, angle, hook, style")}</text>
         <line x1="144" y1="116" x2="228" y2="116" stroke="currentColor" strokeWidth="1.2" markerEnd="url(#tk-arrow)" />
-        <text x="186" y="108" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.7">route BLOCK</text>
+        <text x="186" y="108" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.7">{t("route BLOCK")}</text>
 
         {/* the agent */}
         <rect x="230" y="30" width="360" height="172" rx="14" fill={tint(PURPLE, 0.06)} stroke={PURPLE} strokeWidth="1.3" />
-        <text x="246" y="50" fontSize="11" style={mono} fill={PURPLE}>quarantine</text>
+        <text x="246" y="50" fontSize="11" style={mono} fill={PURPLE}>{t("quarantine")}</text>
         <text x="574" y="50" fontSize="8.5" style={mono} textAnchor="end" fill={PURPLE} opacity="0.9">mode="task"</text>
         <rect x="250" y="96" width="90" height="40" rx="8" fill={tint(PURPLE, 0.12)} stroke={PURPLE} />
         <text x="295" y="113" fontSize="9.5" style={mono} textAnchor="middle" fill={PURPLE}>model</text>
-        <text x="295" y="127" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.6">rewrites, checks</text>
+        <text x="295" y="127" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.6">{t("rewrites, checks")}</text>
         <rect x="400" y="86" width="170" height="60" rx="8" {...box} />
         <text x="485" y="102" fontSize="8.5" style={mono} textAnchor="middle" fill="currentColor" opacity="0.6">tools=[…]</text>
         <text x="485" y="118" fontSize="9.5" style={mono} textAnchor="middle" fill="currentColor">find_policy_hits</text>
@@ -774,11 +771,11 @@ function TaskFigure() {
         <path d="M340 108 C 360 108, 370 104, 398 104" fill="none" stroke={PURPLE} strokeWidth="1.1" markerEnd="url(#tk-arrow-p)" />
         <path d="M398 128 C 370 128, 360 124, 342 124" fill="none" stroke={PURPLE} strokeWidth="1.1" markerEnd="url(#tk-arrow-p)" />
         <text x="369" y="98" fontSize="7.5" style={mono} textAnchor="middle" fill={PURPLE}>call</text>
-        <text x="369" y="140" fontSize="7.5" style={mono} textAnchor="middle" fill={PURPLE}>result</text>
-        <text x="410" y="170" fontSize="8.5" style={mono} fill="currentColor" opacity="0.7">as many rounds as it needs,</text>
-        <text x="410" y="182" fontSize="8.5" style={mono} fill="currentColor" opacity="0.7">until title and angle are clean</text>
+        <text x="369" y="140" fontSize="7.5" style={mono} textAnchor="middle" fill={PURPLE}>{t("result")}</text>
+        <text x="410" y="170" fontSize="8.5" style={mono} fill="currentColor" opacity="0.7">{t("as many rounds as it needs,")}</text>
+        <text x="410" y="182" fontSize="8.5" style={mono} fill="currentColor" opacity="0.7">{t("until title and angle are clean")}</text>
         <text x="250" y="170" fontSize="8.5" style={mono} fill={PURPLE}>then · finish_task(…)</text>
-        <text x="250" y="182" fontSize="8" style={mono} fill="currentColor" opacity="0.6">the built-in tool task mode adds</text>
+        <text x="250" y="182" fontSize="8" style={mono} fill="currentColor" opacity="0.6">{t("the built-in tool task mode adds")}</text>
 
         {/* out */}
         <line x1="590" y1="116" x2="670" y2="116" stroke={PURPLE} strokeWidth="1.3" markerEnd="url(#tk-arrow-p)" />
@@ -786,10 +783,10 @@ function TaskFigure() {
         <rect x="672" y="86" width="150" height="60" rx="8" fill={tint(PURPLE, 0.08)} stroke={PURPLE} strokeOpacity="0.7" />
         <text x="747" y="102" fontSize="8.5" style={mono} textAnchor="middle" fill={PURPLE} opacity="0.9">output_schema</text>
         <text x="747" y="118" fontSize="9.5" style={mono} textAnchor="middle" fill="currentColor">CleanedDirection</text>
-        <text x="747" y="134" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.6">title, angle, hook</text>
+        <text x="747" y="134" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.6">{t("title, angle, hook")}</text>
         <line x1="822" y1="116" x2="858" y2="116" stroke="currentColor" strokeWidth="1.2" markerEnd="url(#tk-arrow)" />
         <rect x="860" y="102" width="68" height="28" rx="8" {...box} />
-        <text x="894" y="120" fontSize="9.5" style={mono} textAnchor="middle" fill="currentColor">scripter</text>
+        <text x="894" y="120" fontSize="9.5" style={mono} textAnchor="middle" fill="currentColor">{t("scripter")}</text>
       </svg>
     </figure>
   );
@@ -811,19 +808,18 @@ function TaskNode() {
   return (
     <div className="space-y-12">
       <StepHeader
-        kicker="Step 5c · Agent modes and the task node"
+        kicker={t("Step 5c · Agent modes and the task node")}
         color={RED}
-        title="Autonomous remediation in task mode."
-        blurb="Unlike single-turn agents that return immediate structured responses, task-mode agents run autonomous tool-use loops until explicit completion criteria are met. When policy violations occur, quarantine iterates with analysis tools until the payload is sanitized."
+        title={t("Autonomous remediation in task mode.")}
+        blurb={t("Unlike single-turn agents that return immediate structured responses, task-mode agents run autonomous tool-use loops until explicit completion criteria are met. When policy violations occur, quarantine iterates with analysis tools until the payload is sanitized.")}
       />
 
       <In delay={0.1}>
         <section className="rounded-3xl border border-hairline bg-card p-6">
-          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">Agent execution modes</p>
-          <h2 className="font-display mt-2 text-2xl">chat, single_turn, and task modes.</h2>
+          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">{t("Agent execution modes")}</p>
+          <h2 className="font-display mt-2 text-2xl">{t("chat, single_turn, and task modes.")}</h2>
           <p className="mt-2 max-w-3xl text-sm text-fg-muted">
-            The <code className="font-mono text-fg">mode</code> parameter controls an Agent's execution lifecycle. While root conversational agents require <code className="font-mono text-fg">chat</code> mode, graph nodes typically operate in <code className="font-mono text-fg">single_turn</code> mode. For complex multi-step reasoning, <code className="font-mono text-fg">task</code> mode enables autonomous tool calling until explicit completion is reached.
-          </p>
+            {tx("The {0} parameter controls an Agent's execution lifecycle. While root conversational agents require {1} mode, graph nodes typically operate in {2} mode. For complex multi-step reasoning, {3} mode enables autonomous tool calling until explicit completion is reached.", [<code className="font-mono text-fg">mode</code>, <code className="font-mono text-fg">chat</code>, <code className="font-mono text-fg">single_turn</code>, <code className="font-mono text-fg">task</code>])}</p>
           <div className="mt-4 grid gap-3 md:grid-cols-3">
             {MODES.map((m) => (
               <div key={m.mode} className="rounded-2xl border border-hairline bg-overlay p-4">
@@ -832,7 +828,7 @@ function TaskNode() {
                 </div>
                 <p className="mt-2 text-xs text-fg-muted">{m.what}</p>
                 <p className="mt-2 text-xs">
-                  <span className="text-fg-muted">In this lab · </span>
+                  <span className="text-fg-muted">{t("In this lab ·")}</span>
                   {m.who}
                 </p>
               </div>
@@ -846,13 +842,12 @@ function TaskNode() {
 
       <In delay={0.2}>
         <section className="rounded-3xl border border-hairline bg-card p-6">
-          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">Autonomous remediation</p>
-          <h2 className="font-display mt-2 text-2xl">Iterative policy remediation and graph reconnection.</h2>
+          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">{t("Autonomous remediation")}</p>
+          <h2 className="font-display mt-2 text-2xl">{t("Iterative policy remediation and graph reconnection.")}</h2>
           <p className="mt-2 max-w-3xl text-sm text-fg-muted">
-            In 5b, blocked candidates abruptly terminated the pipeline. Rebuilding quarantine as a task-mode agent enables automatic payload remediation. The agent repeatedly inspects the payload with <code className="font-mono text-fg">find_policy_hits</code> and substitutes approved terms using <code className="font-mono text-fg">suggest_replacement</code> until the text passes validation, then forwards the cleaned candidate to the scripter.
-          </p>
+            {tx("In 5b, blocked candidates abruptly terminated the pipeline. Rebuilding quarantine as a task-mode agent enables automatic payload remediation. The agent repeatedly inspects the payload with {0} and substitutes approved terms using {1} until the text passes validation, then forwards the cleaned candidate to the scripter.", [<code className="font-mono text-fg">find_policy_hits</code>, <code className="font-mono text-fg">suggest_replacement</code>])}</p>
           <div className="mt-4 max-w-3xl overflow-hidden rounded-2xl border border-hairline bg-input">
-            <div className="border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">The replacement list · data, like the policy</div>
+            <div className="border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">{t("The replacement list · data, like the policy")}</div>
             <pre className="overflow-x-auto px-4 py-3 font-mono text-[11px] leading-relaxed text-fg">
               <code>{CODE_REPLACEMENTS}</code>
             </pre>
@@ -863,8 +858,8 @@ function TaskNode() {
       <In delay={0.3}>
         <EditPanel
           key={skel}
-          label="Edit 1 of 2"
-          title="Configure quarantine as a task-mode agent."
+          label={t("Edit 1 of 2")}
+          title={t("Configure quarantine as a task-mode agent.")}
           intro={
             <>
               Upgrade <code className="font-mono text-fg">quarantine</code> from a stub function to an autonomous Agent. Click the button below to insert the Agent definition, then provide the three required parameters, including <code className="font-mono text-fg">mode="task"</code>,{" "}
@@ -878,20 +873,20 @@ function TaskNode() {
               </div>
               <div className="grid gap-4 lg:grid-cols-2">
                 <div className="overflow-hidden rounded-2xl border border-hairline bg-input">
-                  <div className="border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">tools · agent/cleanup_tools.py</div>
+                  <div className="border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">{t("tools · agent/cleanup_tools.py")}</div>
                   <pre className="max-h-[420px] overflow-auto px-4 py-3 font-mono text-[11px] leading-relaxed text-fg">
                     <code>{CODE_TOOLS}</code>
                   </pre>
                 </div>
                 <div className="space-y-4">
                   <div className="overflow-hidden rounded-2xl border border-hairline bg-input">
-                    <div className="border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">instruction · QUARANTINE_INSTRUCTION, abridged</div>
+                    <div className="border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">{t("instruction · QUARANTINE_INSTRUCTION, abridged")}</div>
                     <pre className="overflow-x-auto px-4 py-3 font-mono text-[11px] leading-relaxed text-fg">
                       <code>{CODE_QUARANTINE_INSTRUCTION}</code>
                     </pre>
                   </div>
                   <div className="overflow-hidden rounded-2xl border border-hairline bg-input">
-                    <div className="border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">output_schema · what finish_task must carry</div>
+                    <div className="border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">{t("output_schema · what finish_task must carry")}</div>
                     <pre className="overflow-x-auto px-4 py-3 font-mono text-[11px] leading-relaxed text-fg">
                       <code>{CODE_CLEANED}</code>
                     </pre>
@@ -899,19 +894,18 @@ function TaskNode() {
                 </div>
               </div>
               <p className="max-w-3xl text-sm text-fg-muted">
-                Task mode equips the agent with autonomous tool execution, concluding when the agent invokes <code className="font-mono text-fg">finish_task</code>. ADK automatically injects this completion tool, validating its arguments against <code className="font-mono text-fg">output_schema</code> to emit a strongly typed <code className="font-mono text-fg">CleanedDirection</code>.
-              </p>
+                {tx("Task mode equips the agent with autonomous tool execution, concluding when the agent invokes {0}. ADK automatically injects this completion tool, validating its arguments against {1} to emit a strongly typed {2}.", [<code className="font-mono text-fg">finish_task</code>, <code className="font-mono text-fg">output_schema</code>, <code className="font-mono text-fg">CleanedDirection</code>])}</p>
               <div className="flex flex-col gap-3 rounded-2xl border border-hairline bg-card p-4 md:flex-row md:items-center md:justify-between">
                 <p className="text-sm text-fg-muted">
                   {!status
                     ? "…"
                     : status.quarantine_kind === "function"
-                      ? "Update quarantine to an Agent first. Click here →"
+                      ? t("Update quarantine to an Agent first. Click here →")
                       : status.quarantine_kind === "task agent"
-                        ? "quarantine is a task agent."
+                        ? t("quarantine is a task agent.")
                         : status.quarantine_kind
-                          ? "The skeleton is in place. Add the three arguments in the editor below."
-                          : "quarantine is missing from stage3_router/agent.py. Open the hints and paste the complete node into the editor."}
+                          ? t("The skeleton is in place. Add the three arguments in the editor below.")
+                          : t("quarantine is missing from stage3_router/agent.py. Open the hints and paste the complete node into the editor.")}
                   {skelError && <span className="mt-1 block text-vibe-red">{skelError}</span>}
                 </p>
                 <button
@@ -933,13 +927,11 @@ function TaskNode() {
                   className="flex shrink-0 items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-white disabled:opacity-40"
                   style={{ background: AMBER }}
                 >
-                  {skelBusy ? <RefreshCw size={15} className="animate-spin" /> : <ArrowRight size={15} />}
-                  Put the Agent skeleton in place
-                </button>
+                  {tx("{0}Put the Agent skeleton in place", [skelBusy ? <RefreshCw size={15} className="animate-spin" /> : <ArrowRight size={15} />])}</button>
               </div>
             </div>
           }
-          pill={status ? (taskOk ? "task agent ✓" : status.quarantine_kind ? `quarantine is a ${status.quarantine_kind}` : "quarantine is None") : "…"}
+          pill={status ? (taskOk ? t("task agent ✓") : status.quarantine_kind ? tf("quarantine is a {0}", status.quarantine_kind) : t("quarantine is None")) : "…"}
           ok={taskOk}
           hint={hintA}
           setHint={setHintA}
@@ -961,10 +953,10 @@ function TaskNode() {
 
       <In delay={0.35}>
         <EditPanel
-          label="Edit 2 of 2"
-          title="Route sanitized directions to the scripter."
+          label={t("Edit 2 of 2")}
+          title={t("Route sanitized directions to the scripter.")}
           intro={<>Update the workflow topology in <code className="font-mono text-fg">stage3_router/agent.py</code> by adding an edge tuple from <code className="font-mono text-fg">quarantine</code> to <code className="font-mono text-fg">scripter</code>. The scripter now receives compliant input from either the direct OK route or the remediated quarantine output.</>}
-          pill={status ? (rerouteOk ? "quarantine → scripter ✓" : "no edge from quarantine yet") : "…"}
+          pill={status ? (rerouteOk ? t("quarantine → scripter ✓") : t("no edge from quarantine yet")) : "…"}
           ok={rerouteOk}
           hint={hintB}
           setHint={setHintB}
@@ -984,13 +976,13 @@ function TaskNode() {
 
       <In delay={0.4}>
         <section className="rounded-3xl border border-hairline bg-card p-6">
-          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">The graph now</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">{t("The graph now")}</p>
           <RouterFigure reroute />
         </section>
       </In>
 
       <In delay={0.45}>
-        <LoadCheck app="stage3_router" intro="Save both edits, then verify module loading to confirm the updated workflow graph topology is valid." />
+        <LoadCheck app="stage3_router" intro={t("Save both edits, then verify module loading to confirm the updated workflow graph topology is valid.")} />
       </In>
 
       <In delay={0.5}>
@@ -998,34 +990,34 @@ function TaskNode() {
           app="stage3_router"
           open={open}
           setOpen={setOpen}
-          title="Validate autonomous remediation on policy violation."
-          intro="Trigger the policy-violating branch to observe quarantine autonomously iterating with its tools to clean the direction before forwarding it to the scripter."
+          title={t("Validate autonomous remediation on policy violation.")}
+          intro={t("Trigger the policy-violating branch to observe quarantine autonomously iterating with its tools to clean the direction before forwarding it to the scripter.")}
           idea={idea}
           setIdea={setIdea}
-          stepTitles={["Select candidate 4 to trigger quarantine", "Observe autonomous tool remediation"]}
+          stepTitles={[t("Select candidate 4 to trigger quarantine"), t("Observe autonomous tool remediation")]}
           steps={[
-            "Select candidate 4 in the approval form. Candidate 4 contains terms that trigger the policy gate. The policy_check node routes execution to quarantine.",
-            "Inspect the quarantine event stream as the agent calls find_policy_hits, invokes suggest_replacement to rewrite prohibited terms, re-validates the text, and finally calls finish_task with the sanitized CleanedDirection. Execution then advances to scripter to generate the script for the sanitized direction.",
+            t("Select candidate 4 in the approval form. Candidate 4 contains terms that trigger the policy gate. The policy_check node routes execution to quarantine."),
+            t("Inspect the quarantine event stream as the agent calls find_policy_hits, invokes suggest_replacement to rewrite prohibited terms, re-validates the text, and finally calls finish_task with the sanitized CleanedDirection. Execution then advances to scripter to generate the script for the sanitized direction."),
           ]}
         />
       </In>
 
       <In delay={0.6}>
-        <VerifyPanel checking={checking} onCheck={check} intro="Read from this step's app file and its sessions in runs/sessions.db.">
-          <CheckRow ok={taskOk} label="quarantine is a task-mode Agent">
-            {status ? (status.quarantine_kind ? `a ${status.quarantine_kind}` : "Edit 1 above.") : "…"}
+        <VerifyPanel checking={checking} onCheck={check} intro={t("Read from this step's app file and its sessions in runs/sessions.db.")}>
+          <CheckRow ok={taskOk} label={t("quarantine is a task-mode Agent")}>
+            {status ? (status.quarantine_kind ? `a ${status.quarantine_kind}` : t("Edit 1 above.")) : "…"}
           </CheckRow>
-          <CheckRow ok={rerouteOk} label="quarantine continues to the scripter">
-            {status ? (rerouteOk ? "(quarantine, scripter) is in the edge list." : "Edit 2 above.") : "…"}
+          <CheckRow ok={rerouteOk} label={t("quarantine continues to the scripter")}>
+            {status ? (rerouteOk ? "(quarantine, scripter) is in the edge list." : t("Edit 2 above.")) : "…"}
           </CheckRow>
-          <CheckRow ok={looped} label="It worked with its tools and finished the task">
-            {Object.keys(calls).length ? Object.entries(calls).map(([k, v]) => `${k} ×${v}`).join("  ·  ") : "No quarantine tool calls yet."}
+          <CheckRow ok={looped} label={t("It worked with its tools and finished the task")}>
+            {Object.keys(calls).length ? Object.entries(calls).map(([k, v]) => `${k} ×${v}`).join("  ·  ") : t("No quarantine tool calls yet.")}
           </CheckRow>
-          <CheckRow ok={!!status?.cleaned} label="finish_task carried a cleaned direction">
-            {status?.cleaned ? status.cleaned.title : "Not yet."}
+          <CheckRow ok={!!status?.cleaned} label={t("finish_task carried a cleaned direction")}>
+            {status?.cleaned ? status.cleaned.title : t("Not yet.")}
           </CheckRow>
-          <CheckRow ok={!!status?.cleaned_script_title} label="The scripter wrote the script for it">
-            {status?.cleaned_script_title ? `script title · ${status.cleaned_script_title}` : "Not yet."}
+          <CheckRow ok={!!status?.cleaned_script_title} label={t("The scripter wrote the script for it")}>
+            {status?.cleaned_script_title ? tf("script title · {0}", status.cleaned_script_title) : t("Not yet.")}
           </CheckRow>
         </VerifyPanel>
       </In>

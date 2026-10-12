@@ -1,3 +1,4 @@
+import { t, tf } from "../i18n";
 import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 import { Check, X } from "lucide-react";
@@ -36,16 +37,15 @@ export function DoneBanner({
         </span>
         <div>
           <p className="text-sm font-bold" style={{ color: tone }}>
-            {failed ? `The command exited with ${exit}` : "Finished"}
+            {failed ? tf("The command exited with {0}", exit) : t("Finished")}
           </p>
-          <p className="mt-0.5 text-xs text-fg-muted">{failed ? "The output above says why." : message}</p>
+          <p className="mt-0.5 text-xs text-fg-muted">{failed ? t("The output above says why.") : message}</p>
         </div>
       </div>
       <div className="flex shrink-0 items-center gap-2">
         {extra}
         <button onClick={onClose} className="rounded-xl px-5 py-2.5 text-sm font-bold text-white" style={{ background: tone }} autoFocus>
-          Close
-        </button>
+          {t("Close")}</button>
       </div>
     </motion.div>
   );

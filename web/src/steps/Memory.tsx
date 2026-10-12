@@ -1,3 +1,4 @@
+import { t, tf, tx } from "../i18n";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -27,7 +28,7 @@ const RED = COLORS.red;
 type Part = "a" | "b";
 const PARTS: { id: Part; label: string }[] = [
   { id: "a", label: "Memory Bank" },
-  { id: "b", label: "Callbacks" },
+  { id: "b", label: t("Callbacks") },
 ];
 
 export function Memory() {
@@ -48,7 +49,7 @@ export function Memory() {
         )}
         {idx < PARTS.length - 1 && (
           <Link to={`/step/memory/${PARTS[idx + 1].id}`} className="flex items-center gap-2 rounded-full px-5 py-2 text-xs font-bold text-white" style={{ background: PURPLE }}>
-            Continue to 6{PARTS[idx + 1].id} · {PARTS[idx + 1].label} <ArrowRight size={14} />
+            {t("Continue to 6")}{PARTS[idx + 1].id} · {PARTS[idx + 1].label} <ArrowRight size={14} />
           </Link>
         )}
       </div>
@@ -74,7 +75,7 @@ function WorkflowFigure() {
   const edge = (x1: number, y1: number, x2: number, y2: number, color = "currentColor", dashed = false) => <line key={`${x1}${y1}${x2}${y2}`} x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeOpacity={color === "currentColor" ? 0.55 : 0.9} strokeWidth="1.2" strokeDasharray={dashed ? "4 3" : undefined} markerEnd="url(#wf-arrow)" />;
   return (
     <figure className="m-0 mt-4">
-      <svg viewBox="0 0 1016 250" className="h-auto w-full text-fg" role="img" aria-label="The workflow with memory callbacks where START fans out to scan_trends and read_backlog, join_research, propose_directions with before_model_callback recall_taste, direction_gate, persist_direction, policy_check routing OK to scripter with after_agent_callback remember_pick and BLOCK to quarantine, which continues to scripter.">
+      <svg viewBox="0 0 1016 250" className="h-auto w-full text-fg" role="img" aria-label={t("The workflow with memory callbacks where START fans out to scan_trends and read_backlog, join_research, propose_directions with before_model_callback recall_taste, direction_gate, persist_direction, policy_check routing OK to scripter with after_agent_callback remember_pick and BLOCK to quarantine, which continues to scripter.")}>
         <defs>
           <marker id="wf-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
             <path d="M0 0 L10 5 L0 10 z" fill="currentColor" />
@@ -104,11 +105,11 @@ function WorkflowFigure() {
         {edge(821, 108, 852, 170, RED)}
         <text x="828" y="150" fontSize="8.5" fontFamily="var(--font-mono)" fill={RED}>BLOCK</text>
         <path d="M966 175 C 995 175, 995 55, 968 55" fill="none" stroke={PURPLE} strokeOpacity="0.8" strokeWidth="1.2" strokeDasharray="4 3" markerEnd="url(#wf-arrow)" />
-        <text x="996" y="118" fontSize="8" fontFamily="var(--font-mono)" fill={PURPLE} textAnchor="middle" transform="rotate(90 996 118)">cleaned</text>
-        <text x="375" y="230" fontSize="9" fontFamily="var(--font-mono)" textAnchor="middle" fill="currentColor" opacity="0.6">reads the bank before its model call</text>
-        <text x="880" y="230" fontSize="9" fontFamily="var(--font-mono)" textAnchor="middle" fill="currentColor" opacity="0.6">writes the pick after its turn</text>
+        <text x="996" y="118" fontSize="8" fontFamily="var(--font-mono)" fill={PURPLE} textAnchor="middle" transform="rotate(90 996 118)">{t("cleaned")}</text>
+        <text x="375" y="230" fontSize="9" fontFamily="var(--font-mono)" textAnchor="middle" fill="currentColor" opacity="0.6">{t("reads the bank before its model call")}</text>
+        <text x="880" y="230" fontSize="9" fontFamily="var(--font-mono)" textAnchor="middle" fill="currentColor" opacity="0.6">{t("writes the pick after its turn")}</text>
       </svg>
-      <figcaption className="mt-2 text-xs text-fg-muted">The highlighted agents attach lifecycle callbacks while preserving existing edge topology.</figcaption>
+      <figcaption className="mt-2 text-xs text-fg-muted">{t("The highlighted agents attach lifecycle callbacks while preserving existing edge topology.")}</figcaption>
     </figure>
   );
 }
@@ -130,7 +131,7 @@ function SourceToggle({ path, label }: { path: string; label: string }) {
   return (
     <div className="mt-4 min-w-0 flex-1 basis-[320px]">
       <button onClick={toggle} className="rounded-xl border border-hairline bg-overlay px-4 py-2 text-left font-mono text-xs text-fg-muted hover:text-fg">
-        {open ? "Hide the code" : "Show the code"} · {label}
+        {open ? t("Hide the code") : t("Show the code")} · {label}
       </button>
       {open && (
         <div className="mt-3 overflow-hidden rounded-2xl border border-hairline bg-input">
@@ -175,24 +176,23 @@ function BankLedger({ title, refreshKey = 0 }: { title: string; refreshKey?: num
     <section className="rounded-3xl border border-hairline bg-card p-6">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
-          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">The bank</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">{t("The bank")}</p>
           <h2 className="font-display mt-2 text-2xl">{title}</h2>
-          <p className="mt-1 max-w-2xl text-sm text-fg-muted">Reads the bank in your project, oldest memory first. The same call the callback makes before propose_directions runs.</p>
+          <p className="mt-1 max-w-2xl text-sm text-fg-muted">{t("Reads the bank in your project, oldest memory first. The same call the callback makes before propose_directions runs.")}</p>
         </div>
         <button onClick={load} className="flex items-center gap-2 rounded-xl border border-hairline bg-overlay px-4 py-2 font-mono text-xs text-fg-muted hover:text-fg">
-          <RefreshCw size={13} className={loading ? "animate-spin" : ""} /> Show the bank
-        </button>
+          <RefreshCw size={13} className={loading ? "animate-spin" : ""} /> {t("Show the bank")} </button>
       </div>
       {failed && (
         <div className="mt-4 rounded-xl border p-3 font-mono text-[11.5px]" style={{ borderColor: tint(RED, 0.4), color: RED, background: tint(RED, 0.06) }}>
           {failed}
-          <span className="mt-1 block opacity-80">the learning center's log is runs/lab.log</span>
+          <span className="mt-1 block opacity-80">{t("the learning center's log is runs/lab.log")}</span>
         </div>
       )}
       {bank && !failed && (
         <div className="mt-4 rounded-2xl border border-hairline bg-overlay p-4">
           {!bank.connected ? (
-            <p className="text-sm text-fg-muted">No bank yet. Run the first command above.</p>
+            <p className="text-sm text-fg-muted">{t("No bank yet. Run the first command above.")}</p>
           ) : bank.error ? (
             <p className="font-mono text-xs" style={{ color: RED }}>{bank.error}</p>
           ) : (
@@ -209,7 +209,7 @@ function BankLedger({ title, refreshKey = 0 }: { title: string; refreshKey?: num
                     <span className="ml-2">{m.fact}</span>
                   </li>
                 ))}
-                {bank.memories.length === 0 && <li className="text-sm text-fg-muted">Empty. Run the load command.</li>}
+                {bank.memories.length === 0 && <li className="text-sm text-fg-muted">{t("Empty. Run the load command.")}</li>}
               </ul>
             </>
           )}
@@ -222,16 +222,16 @@ function BankLedger({ title, refreshKey = 0 }: { title: string; refreshKey?: num
 type BankCmd = "connect" | "load" | "list" | "reset";
 /** What each command leaves behind, said when it finishes. */
 const BANK_DONE: Record<BankCmd, string> = {
-  connect: "The bank exists in your project and this lab is connected to it. Next, load the creator's history.",
-  load: "The creator's history is in the bank, consolidated into facts. Next, list what it kept.",
-  list: "That is everything the bank holds for this creator, oldest first.",
-  reset: "Every memory in the creator's scope is deleted. The bank itself is still there.",
+  connect: t("The bank exists in your project and this lab is connected to it. Next, load the creator's history."),
+  load: t("The creator's history is in the bank, consolidated into facts. Next, list what it kept."),
+  list: t("That is everything the bank holds for this creator, oldest first."),
+  reset: t("Every memory in the creator's scope is deleted. The bank itself is still there."),
 };
 
 const BANK_COMMANDS: { cmd: BankCmd; line: string; what: string }[] = [
-  { cmd: "connect", line: "python -m agent.platform.bank", what: "Creates the Agent Runtime that hosts the bank, once, and prints the scope and the topics. Runs again as connect." },
-  { cmd: "load", line: "python -m agent.platform.bank load", what: "Seeds four past sessions, oldest first, including two animal picks with one stated rule, one gadget pick, and one fantasy pick." },
-  { cmd: "list", line: "python -m agent.platform.bank list", what: "Everything the bank holds for the creator, oldest first. Compare it with the four sessions." },
+  { cmd: "connect", line: "python -m agent.platform.bank", what: t("Creates the Agent Runtime that hosts the bank, once, and prints the scope and the topics. Runs again as connect.") },
+  { cmd: "load", line: "python -m agent.platform.bank load", what: t("Seeds four past sessions, oldest first, including two animal picks with one stated rule, one gadget pick, and one fantasy pick.") },
+  { cmd: "list", line: "python -m agent.platform.bank list", what: t("Everything the bank holds for the creator, oldest first. Compare it with the four sessions.") },
 ];
 
 /** The bank commands, run here as the same `python -m agent.platform.bank` process a
@@ -257,13 +257,13 @@ function BankRunner({ onDone }: { onDone: () => void }) {
         runId.current = null;
         seenRunning.current = true;
         setRunning(true);
-        setLines(["a bank command is already running on this server; its remaining output appears here"]);
+        setLines([t("a bank command is already running on this server; its remaining output appears here")]);
       }
     });
   }, []);
   useEffect(() => {
     if (!running) return;
-    const t = setInterval(async () => {
+    const timer = setInterval(async () => {
       const st = await api.bankStatus();
       if (st.running) {
         seenRunning.current = true;
@@ -280,7 +280,7 @@ function BankRunner({ onDone }: { onDone: () => void }) {
           // Either the worker has not registered yet or it is still going.
           if (++waitedFor.current > 120) {
             setRunning(false);
-            setLines((l) => [...l, `lost track of the command · read runs/bank_run.log`]);
+            setLines((l) => [...l, t("lost track of the command · read runs/bank_run.log")]);
           }
           return;
         }
@@ -299,7 +299,7 @@ function BankRunner({ onDone }: { onDone: () => void }) {
       }
       onDone();
     }, 1500);
-    return () => clearInterval(t);
+    return () => clearInterval(timer);
   }, [running, onDone]);
   const run = async (cmd: BankCmd) => {
     setLines([]);
@@ -311,14 +311,14 @@ function BankRunner({ onDone }: { onDone: () => void }) {
     } catch (e) {
       // a failed request used to reject inside the click handler, so the page
       // showed nothing at all and the button looked dead
-      setLines([`could not reach the learning center: ${(e as Error).message}`,
-                "Is it still running? Its log is runs/lab.log; scripts/start.sh starts it again."]);
+      setLines([tf("could not reach the learning center: {0}", (e as Error).message),
+                t("Is it still running? Its log is runs/lab.log; scripts/start.sh starts it again.")]);
       setExit(1);
       setRunning(false);
       return;
     }
     if (!r.ok) {
-      setLines([`could not start: ${r.detail}. Wait for it to finish; the buttons enable again when it exits.`]);
+      setLines([tf("could not start: {0}. Wait for it to finish; the buttons enable again when it exits.", r.detail)]);
       // refused because another worker is live: watch that one instead
       runId.current = null;
       seenRunning.current = true;
@@ -344,10 +344,10 @@ function BankRunner({ onDone }: { onDone: () => void }) {
                   setTimeout(() => setCopied(null), 1200);
                 }}
                 className="flex min-w-0 flex-1 items-center justify-between gap-3 rounded-lg border border-hairline bg-input px-3 py-2 text-left font-mono text-xs text-fg hover:border-vibe-cyan/60"
-                title="copy for a terminal"
+                title={t("copy for a terminal")}
               >
                 <span className="truncate">{c.line}</span>
-                <span className="shrink-0 text-[10px] text-fg-muted">{copied === c.cmd ? "copied" : "copy"}</span>
+                <span className="shrink-0 text-[10px] text-fg-muted">{copied === c.cmd ? t("copied") : "copy"}</span>
               </button>
               <button
                 onClick={() => run(c.cmd)}
@@ -392,7 +392,7 @@ function BankOverlay({ cmd, lines, running, exit, onClose }: { cmd: BankCmd; lin
   const done = !running && exit !== null;
   const failed = done && exit !== 0;
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)" }} role="dialog" aria-modal="true" aria-label={cmd === "connect" ? "Creating the Memory Bank" : "Loading the creator's history"}>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)" }} role="dialog" aria-modal="true" aria-label={cmd === "connect" ? t("Creating the Memory Bank") : t("Loading the creator's history")}>
       <motion.div initial={{ y: 16, scale: 0.98 }} animate={{ y: 0, scale: 1 }} className="w-full max-w-3xl overflow-hidden rounded-3xl border border-hairline bg-card shadow-2xl">
         <div className="flex items-center justify-between border-b border-hairline px-5 py-3">
           <div className="flex items-center gap-3">
@@ -400,7 +400,7 @@ function BankOverlay({ cmd, lines, running, exit, onClose }: { cmd: BankCmd; lin
             <span className="font-mono text-xs text-fg">{BANK_COMMANDS.find((c) => c.cmd === cmd)?.line}</span>
           </div>
           <span className="font-mono text-[11px]" style={{ color: failed ? RED : done ? GREEN : "var(--fg-muted)" }}>
-            {done ? (failed ? `exited with ${exit}` : "done") : "running on this server…"}
+            {done ? (failed ? tf("exited with {0}", exit) : "done") : t("running on this server…")}
           </span>
         </div>
         <div className="p-5">
@@ -411,15 +411,15 @@ function BankOverlay({ cmd, lines, running, exit, onClose }: { cmd: BankCmd; lin
           ) : (
             <p className="text-sm text-fg-muted">
               {cmd === "list"
-                ? "Everything the bank holds for this creator, oldest first. The ledger below shows the same rows once you close this."
-                : "Deleting every memory in the creator's scope. The bank itself stays."}
+                ? t("Everything the bank holds for this creator, oldest first. The ledger below shows the same rows once you close this.")
+                : t("Deleting every memory in the creator's scope. The bank itself stays.")}
             </p>
           )}
         </div>
         <div className="border-t border-hairline bg-input">
           <div className="flex items-center justify-between border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">
-            <span>output</span>
-            <span className="normal-case tracking-normal">the whole run is in runs/bank_run.log</span>
+            <span>{t("output")}</span>
+            <span className="normal-case tracking-normal">{t("the whole run is in runs/bank_run.log")}</span>
           </div>
           <pre className="max-h-40 overflow-auto px-4 py-3 font-mono text-[11px] leading-relaxed text-fg">{clean.slice(-30).join("\n") || "starting… the first call to your project can take a few seconds"}</pre>
         </div>
@@ -427,7 +427,7 @@ function BankOverlay({ cmd, lines, running, exit, onClose }: { cmd: BankCmd; lin
           <DoneBanner failed={failed} exit={exit} onClose={onClose} message={BANK_DONE[cmd]} />
         ) : (
           <div className="flex items-center justify-end gap-3 border-t border-hairline px-5 py-3">
-            <span className="text-xs text-fg-muted">The page is locked until the command finishes.</span>
+            <span className="text-xs text-fg-muted">{t("The page is locked until the command finishes.")}</span>
           </div>
         )}
       </motion.div>
@@ -447,28 +447,26 @@ function ConnectAnimation({ lines, done }: { lines: string[]; done: boolean }) {
     <motion.g key={label} initial={{ opacity: 0.2, y: 8 }} animate={done ? { opacity: 1, y: 0 } : { opacity: [0.2, 1, 1, 0.2], y: [8, 0, 0, 8] }} transition={{ duration: 3.6, delay, ...loop }}>
       <rect x={x - 70} y={104} width={140} height={44} rx={12} fill={tint(color, 0.12)} stroke={ok ? color : "var(--hairline)"} strokeWidth={1.4} />
       <text x={x} y={124} textAnchor="middle" fontSize={11} fontFamily="var(--font-mono)" fill={ok ? color : "currentColor"}>{label}</text>
-      <text x={x} y={140} textAnchor="middle" fontSize={9} fontFamily="var(--font-mono)" fill="currentColor" opacity={0.6}>{ok ? "created" : "creating…"}</text>
+      <text x={x} y={140} textAnchor="middle" fontSize={9} fontFamily="var(--font-mono)" fill="currentColor" opacity={0.6}>{ok ? t("created") : "creating…"}</text>
     </motion.g>
   );
   return (
     <div>
       <p className="text-sm text-fg-muted">
-        Creating an Agent Runtime in your project to host the bank, then attaching the two memory topics. The first run takes about half a
-        minute; every later run reconnects to the cached resource.
-      </p>
-      <svg viewBox="0 0 620 180" className="mt-3 h-auto w-full text-fg" role="img" aria-label="An Agent Runtime is created in the project, then the CREATOR_TASTE and CHANNEL_RULES topics are attached to its Memory Bank.">
+        {t("Creating an Agent Runtime in your project to host the bank, then attaching the two memory topics. The first run takes about half a minute; every later run reconnects to the cached resource.")}</p>
+      <svg viewBox="0 0 620 180" className="mt-3 h-auto w-full text-fg" role="img" aria-label={t("An Agent Runtime is created in the project, then the CREATOR_TASTE and CHANNEL_RULES topics are attached to its Memory Bank.")}>
         <rect x="10" y="14" width="600" height="156" rx="16" fill="var(--overlay)" stroke="var(--hairline)" />
-        <text x="26" y="36" fontSize="10" fontFamily="var(--font-mono)" fill="currentColor" opacity="0.6">GOOGLE CLOUD · your project · us-central1</text>
+        <text x="26" y="36" fontSize="10" fontFamily="var(--font-mono)" fill="currentColor" opacity="0.6">{t("GOOGLE CLOUD · your project · us-central1")}</text>
         <motion.g initial={{ opacity: 0.2, scale: 0.9 }} animate={done ? { opacity: 1, scale: 1 } : { opacity: [0.2, 1, 1, 0.2], scale: [0.9, 1, 1, 0.9] }} transition={{ duration: 3.6, ...loop }} style={{ transformOrigin: "120px 92px" }}>
           <rect x="40" y="52" width="160" height="80" rx="14" fill={tint(PURPLE, 0.12)} stroke={created ? PURPLE : "var(--hairline)"} strokeWidth={1.6} />
-          <text x="120" y="82" textAnchor="middle" fontSize="12" fontFamily="var(--font-mono)" fill={PURPLE}>Agent Runtime</text>
+          <text x="120" y="82" textAnchor="middle" fontSize="12" fontFamily="var(--font-mono)" fill={PURPLE}>{t("Agent Runtime")}</text>
           <text x="120" y="100" textAnchor="middle" fontSize="10" fontFamily="var(--font-mono)" fill="currentColor" opacity="0.7">Memory Bank</text>
           <text x="120" y="118" textAnchor="middle" fontSize="9" fontFamily="var(--font-mono)" fill="currentColor" opacity="0.55">{created ? "vibestudio-membank" : "creating…"}</text>
         </motion.g>
         <motion.path d="M200 92 L 260 92" stroke="currentColor" strokeOpacity="0.5" strokeWidth="1.2" strokeDasharray="4 3" initial={{ pathLength: 0 }} animate={done ? { pathLength: 1 } : { pathLength: [0, 1, 1, 0] }} transition={{ duration: 3.6, delay: 0.6, ...loop }} />
         {stage("CREATOR_TASTE", topics, 340, 1.0, AMBER)}
         {stage("CHANNEL_RULES", topics, 520, 1.6, CYAN)}
-        <text x="430" y="72" textAnchor="middle" fontSize="9.5" fontFamily="var(--font-mono)" fill="currentColor" opacity="0.6">memory topics · what a memory may be about</text>
+        <text x="430" y="72" textAnchor="middle" fontSize="9.5" fontFamily="var(--font-mono)" fill="currentColor" opacity="0.6">{t("memory topics · what a memory may be about")}</text>
       </svg>
     </div>
   );
@@ -490,16 +488,13 @@ function LoadAnimation({ lines, done }: { lines: string[]; done: boolean }) {
     { name: "fantasy", from: 4, to: 4, color: PURPLE },
   ];
   const loop = done ? { repeat: 0 } : { repeat: Infinity };
-  const stages = ["extract", "embed", "consolidate"];
+  const stages = [t("extract"), t("embed"), t("consolidate")];
   return (
     <div>
       <p className="text-sm text-fg-muted">
-        Each past session is one <code className="font-mono text-fg">memories.generate</code> call. Memory Bank extracts the facts with a
-        Gemini model, embeds them so it can find the memories they resemble, and consolidates them so a session either creates a memory or
-        updates one under the two topics.
-      </p>
-      <svg viewBox="0 0 620 210" className="mt-3 h-auto w-full text-fg" role="img" aria-label="Twelve past sessions in three eras flow into the CREATOR_TASTE and CHANNEL_RULES topics of the Memory Bank as memories are created or updated.">
-        <text x="14" y="22" fontSize="10" fontFamily="var(--font-mono)" fill="currentColor" opacity="0.6">Four past sessions · oldest first</text>
+        {tx("Each past session is one {0} call. Memory Bank extracts the facts with a Gemini model, embeds them so it can find the memories they resemble, and consolidates them so a session either creates a memory or updates one under the two topics.", [<code className="font-mono text-fg">memories.generate</code>])}</p>
+      <svg viewBox="0 0 620 210" className="mt-3 h-auto w-full text-fg" role="img" aria-label={t("Twelve past sessions in three eras flow into the CREATOR_TASTE and CHANNEL_RULES topics of the Memory Bank as memories are created or updated.")}>
+        <text x="14" y="22" fontSize="10" fontFamily="var(--font-mono)" fill="currentColor" opacity="0.6">{t("Four past sessions · oldest first")}</text>
         {eras.map((e, i) => (
           <g key={e.name}>
             <rect x="14" y={34 + i * 56} width="150" height="44" rx="10" fill={tint(e.color, 0.08)} stroke={e.color} strokeOpacity="0.6" />
@@ -533,15 +528,15 @@ function LoadAnimation({ lines, done }: { lines: string[]; done: boolean }) {
         <g>
           <rect x="458" y="34" width="150" height="52" rx="10" fill={tint(AMBER, 0.08)} stroke={AMBER} strokeOpacity="0.8" />
           <text x="470" y="54" fontSize="11" fontFamily="var(--font-mono)" fill={AMBER}>CREATOR_TASTE</text>
-          <text x="470" y="72" fontSize="9.5" fontFamily="var(--font-mono)" fill="currentColor" opacity="0.7">{created} created · {updated} updated</text>
+          <text x="470" y="72" fontSize="9.5" fontFamily="var(--font-mono)" fill="currentColor" opacity="0.7">{tx("{0} created · {1} updated", [created, updated])}</text>
           <rect x="458" y="98" width="150" height="52" rx="10" fill={tint(CYAN, 0.08)} stroke={CYAN} strokeOpacity="0.8" />
           <text x="470" y="118" fontSize="11" fontFamily="var(--font-mono)" fill={CYAN}>CHANNEL_RULES</text>
-          <text x="470" y="136" fontSize="9.5" fontFamily="var(--font-mono)" fill="currentColor" opacity="0.7">from the stated rule</text>
+          <text x="470" y="136" fontSize="9.5" fontFamily="var(--font-mono)" fill="currentColor" opacity="0.7">{t("from the stated rule")}</text>
         </g>
         <rect x="14" y="192" width="594" height="8" rx="4" fill="var(--overlay)" stroke="var(--hairline)" />
         <motion.rect x="14" y="192" height="8" rx="4" fill={PURPLE} initial={{ width: 0 }} animate={{ width: (594 * n) / total }} transition={{ duration: 0.6 }} />
         {failed > 0 && (
-          <text x="608" y="186" textAnchor="end" fontSize="9.5" fontFamily="var(--font-mono)" fill={RED}>{failed} session{failed === 1 ? "" : "s"} failed · run load again later</text>
+          <text x="608" y="186" textAnchor="end" fontSize="9.5" fontFamily="var(--font-mono)" fill={RED}>{tx("{0} session{1} failed · run load again later", [failed, failed === 1 ? "" : "s"])}</text>
         )}
       </svg>
     </div>
@@ -591,7 +586,7 @@ function BankFigure() {
   const mono = { fontFamily: "var(--font-mono)" } as const;
   return (
     <figure className="m-0 min-w-[840px]">
-      <svg viewBox="0 0 940 318" role="img" aria-label="The scripter's callback hands one exchange to Memory Bank with memories.generate. Memory Bank, an Agent Runtime resource on GEAP, keeps facts under a scope of app_name and user_id and two topics, CREATOR_TASTE and CHANNEL_RULES. Inside, a Gemini model extracts facts, the facts are embedded, and similar facts are consolidated into one memory. propose_directions' callback reads them back with memories.retrieve by scope. Documents go to RAG Engine; a person's preferences go here." className="h-auto w-full text-fg">
+      <svg viewBox="0 0 940 318" role="img" aria-label={t("The scripter's callback hands one exchange to Memory Bank with memories.generate. Memory Bank, an Agent Runtime resource on GEAP, keeps facts under a scope of app_name and user_id and two topics, CREATOR_TASTE and CHANNEL_RULES. Inside, a Gemini model extracts facts, the facts are embedded, and similar facts are consolidated into one memory. propose_directions' callback reads them back with memories.retrieve by scope. Documents go to RAG Engine; a person's preferences go here.")} className="h-auto w-full text-fg">
         <defs>
           <marker id="mb-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
             <path d="M0 0 L10 5 L0 10 z" fill="currentColor" />
@@ -603,59 +598,59 @@ function BankFigure() {
 
         {/* write side */}
         <rect x="14" y="70" width="150" height="58" rx="8" {...box} />
-        <text x="89" y="88" fontSize="9.5" style={mono} textAnchor="middle" fill="currentColor">scripter · after the run</text>
+        <text x="89" y="88" fontSize="9.5" style={mono} textAnchor="middle" fill="currentColor">{t("scripter · after the run")}</text>
         <text x="89" y="103" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.65">"the creator picked X (angle)…"</text>
-        <text x="89" y="117" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.65">one exchange, as events</text>
+        <text x="89" y="117" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.65">{t("one exchange, as events")}</text>
         <line x1="164" y1="99" x2="248" y2="99" stroke={PURPLE} strokeWidth="1.3" markerEnd="url(#mb-arrow-p)" />
         <text x="206" y="91" fontSize="8" style={mono} textAnchor="middle" fill={PURPLE}>memories.generate</text>
-        <text x="206" y="112" fontSize="7.5" style={mono} textAnchor="middle" fill="currentColor" opacity="0.6">the write</text>
+        <text x="206" y="112" fontSize="7.5" style={mono} textAnchor="middle" fill="currentColor" opacity="0.6">{t("the write")}</text>
 
         {/* the bank */}
         <rect x="250" y="18" width="440" height="230" rx="14" fill={tint(PURPLE, 0.05)} stroke={PURPLE} strokeWidth="1.3" />
         <text x="266" y="38" fontSize="11" style={mono} fill={PURPLE}>Memory Bank</text>
-        <text x="674" y="38" fontSize="8.5" style={mono} textAnchor="end" fill="currentColor" opacity="0.6">an Agent Runtime resource on GEAP</text>
+        <text x="674" y="38" fontSize="8.5" style={mono} textAnchor="end" fill="currentColor" opacity="0.6">{t("an Agent Runtime resource on GEAP")}</text>
         <rect x="266" y="50" width="196" height="40" rx="8" {...box} />
-        <text x="276" y="65" fontSize="8.5" style={mono} fill="currentColor" opacity="0.65">scope · whose memories</text>
-        <text x="276" y="81" fontSize="9" style={mono} fill="currentColor">{'{app_name, user_id}'} · the creator</text>
+        <text x="276" y="65" fontSize="8.5" style={mono} fill="currentColor" opacity="0.65">{t("scope · whose memories")}</text>
+        <text x="276" y="81" fontSize="9" style={mono} fill="currentColor">{tx("{0} · the creator", ['{app_name, user_id}'])}</text>
         <rect x="478" y="50" width="196" height="40" rx="8" {...box} />
-        <text x="488" y="65" fontSize="8.5" style={mono} fill="currentColor" opacity="0.65">topics · what a memory may be about</text>
-        <text x="488" y="81" fontSize="9" style={mono} fill="currentColor">CREATOR_TASTE · CHANNEL_RULES</text>
+        <text x="488" y="65" fontSize="8.5" style={mono} fill="currentColor" opacity="0.65">{t("topics · what a memory may be about")}</text>
+        <text x="488" y="81" fontSize="9" style={mono} fill="currentColor">{t("CREATOR_TASTE · CHANNEL_RULES")}</text>
         {/* pipeline */}
         <rect x="266" y="112" width="120" height="40" rx="8" fill={tint(PURPLE, 0.1)} stroke={PURPLE} strokeOpacity="0.7" />
-        <text x="326" y="128" fontSize="9.5" style={mono} textAnchor="middle" fill={PURPLE}>extract</text>
-        <text x="326" y="142" fontSize="7.5" style={mono} textAnchor="middle" fill="currentColor" opacity="0.65">a Gemini model, per topic</text>
+        <text x="326" y="128" fontSize="9.5" style={mono} textAnchor="middle" fill={PURPLE}>{t("extract")}</text>
+        <text x="326" y="142" fontSize="7.5" style={mono} textAnchor="middle" fill="currentColor" opacity="0.65">{t("a Gemini model, per topic")}</text>
         <line x1="386" y1="132" x2="408" y2="132" stroke="currentColor" strokeWidth="1.1" markerEnd="url(#mb-arrow)" />
         <rect x="410" y="112" width="120" height="40" rx="8" fill={tint(PURPLE, 0.1)} stroke={PURPLE} strokeOpacity="0.7" />
-        <text x="470" y="128" fontSize="9.5" style={mono} textAnchor="middle" fill={PURPLE}>embed</text>
-        <text x="470" y="142" fontSize="7.5" style={mono} textAnchor="middle" fill="currentColor" opacity="0.65">to find what it resembles</text>
+        <text x="470" y="128" fontSize="9.5" style={mono} textAnchor="middle" fill={PURPLE}>{t("embed")}</text>
+        <text x="470" y="142" fontSize="7.5" style={mono} textAnchor="middle" fill="currentColor" opacity="0.65">{t("to find what it resembles")}</text>
         <line x1="530" y1="132" x2="552" y2="132" stroke="currentColor" strokeWidth="1.1" markerEnd="url(#mb-arrow)" />
         <rect x="554" y="112" width="120" height="40" rx="8" fill={tint(PURPLE, 0.1)} stroke={PURPLE} strokeOpacity="0.7" />
-        <text x="614" y="128" fontSize="9.5" style={mono} textAnchor="middle" fill={PURPLE}>consolidate</text>
-        <text x="614" y="142" fontSize="7.5" style={mono} textAnchor="middle" fill="currentColor" opacity="0.65">merge with a match</text>
+        <text x="614" y="128" fontSize="9.5" style={mono} textAnchor="middle" fill={PURPLE}>{t("consolidate")}</text>
+        <text x="614" y="142" fontSize="7.5" style={mono} textAnchor="middle" fill="currentColor" opacity="0.65">{t("merge with a match")}</text>
         {/* the memories */}
         <line x1="614" y1="152" x2="614" y2="170" stroke="currentColor" strokeWidth="1.1" markerEnd="url(#mb-arrow)" />
         <rect x="266" y="172" width="408" height="62" rx="8" {...box} />
-        <text x="276" y="187" fontSize="8.5" style={mono} fill="currentColor" opacity="0.65">memories · one fact each, under the scope, tagged with a topic</text>
+        <text x="276" y="187" fontSize="8.5" style={mono} fill="currentColor" opacity="0.65">{t("memories · one fact each, under the scope, tagged with a topic")}</text>
         <text x="276" y="204" fontSize="8.5" style={mono} fill={PURPLE}>CREATOR_TASTE</text>
-        <text x="380" y="204" fontSize="8.5" style={mono} fill="currentColor">picks small-magic scenes; was gadgets, then animals</text>
+        <text x="380" y="204" fontSize="8.5" style={mono} fill="currentColor">{t("picks small-magic scenes; was gadgets, then animals")}</text>
         <text x="276" y="221" fontSize="8.5" style={mono} fill={PURPLE}>CHANNEL_RULES</text>
-        <text x="380" y="221" fontSize="8.5" style={mono} fill="currentColor">no text on screen; nothing that mocks a competitor</text>
+        <text x="380" y="221" fontSize="8.5" style={mono} fill="currentColor">{t("no text on screen; nothing that mocks a competitor")}</text>
 
         {/* read side */}
         <line x1="690" y1="99" x2="774" y2="99" stroke={PURPLE} strokeWidth="1.3" markerEnd="url(#mb-arrow-p)" />
         <text x="732" y="91" fontSize="8" style={mono} textAnchor="middle" fill={PURPLE}>memories.retrieve</text>
-        <text x="732" y="112" fontSize="7.5" style={mono} textAnchor="middle" fill="currentColor" opacity="0.6">the read, by scope</text>
+        <text x="732" y="112" fontSize="7.5" style={mono} textAnchor="middle" fill="currentColor" opacity="0.6">{t("the read, by scope")}</text>
         <rect x="776" y="70" width="150" height="58" rx="8" {...box} />
         <text x="851" y="88" fontSize="9.5" style={mono} textAnchor="middle" fill="currentColor">propose_directions</text>
-        <text x="851" y="103" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.65">reads every memory in the scope</text>
-        <text x="851" y="117" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.65">before its model call</text>
+        <text x="851" y="103" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.65">{t("reads every memory in the scope")}</text>
+        <text x="851" y="117" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.65">{t("before its model call")}</text>
 
         {/* the contrast */}
         <line x1="14" y1="270" x2="926" y2="270" stroke="var(--hairline)" />
-        <text x="14" y="290" fontSize="8.5" style={mono} fill="currentColor" opacity="0.65">what goes where</text>
-        <text x="140" y="290" fontSize="8.5" style={mono} fill="currentColor">documents, transcripts → RAG Engine</text>
-        <text x="420" y="290" fontSize="8.5" style={mono} fill={PURPLE}>a person's preferences → Memory Bank</text>
-        <text x="14" y="306" fontSize="8" style={mono} fill="currentColor" opacity="0.55">not a document store, not analytics — facts about one user</text>
+        <text x="14" y="290" fontSize="8.5" style={mono} fill="currentColor" opacity="0.65">{t("what goes where")}</text>
+        <text x="140" y="290" fontSize="8.5" style={mono} fill="currentColor">{t("documents, transcripts → RAG Engine")}</text>
+        <text x="420" y="290" fontSize="8.5" style={mono} fill={PURPLE}>{t("a person's preferences → Memory Bank")}</text>
+        <text x="14" y="306" fontSize="8" style={mono} fill="currentColor" opacity="0.55">{t("not a document store, not analytics — facts about one user")}</text>
       </svg>
     </figure>
   );
@@ -669,7 +664,7 @@ function GenerateFigure() {
   const mono = { fontFamily: "var(--font-mono)" } as const;
   return (
     <figure className="m-0 min-w-[840px]">
-      <svg viewBox="0 0 940 292" role="img" aria-label="One memories.generate call. The exchange text goes in with the scope. A Gemini model extracts facts, one per topic that applies, including a CREATOR_TASTE fact and, when the text states a rule, a CHANNEL_RULES fact; anything outside the two topics is dropped. Each fact is embedded and compared with the memories already in the scope; a close match updates that memory, no match creates a new one. The response lists each generated memory with its action, CREATED or UPDATED." className="h-auto w-full text-fg">
+      <svg viewBox="0 0 940 292" role="img" aria-label={t("One memories.generate call. The exchange text goes in with the scope. A Gemini model extracts facts, one per topic that applies, including a CREATOR_TASTE fact and, when the text states a rule, a CHANNEL_RULES fact; anything outside the two topics is dropped. Each fact is embedded and compared with the memories already in the scope; a close match updates that memory, no match creates a new one. The response lists each generated memory with its action, CREATED or UPDATED.")} className="h-auto w-full text-fg">
         <defs>
           <marker id="gn-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
             <path d="M0 0 L10 5 L0 10 z" fill="currentColor" />
@@ -690,37 +685,37 @@ function GenerateFigure() {
 
         {/* extract with topics */}
         <rect x="240" y="40" width="200" height="130" rx="10" fill={tint(PURPLE, 0.08)} stroke={PURPLE} strokeOpacity="0.8" />
-        <text x="340" y="58" fontSize="9.5" style={mono} textAnchor="middle" fill={PURPLE}>extract · a Gemini model</text>
-        <text x="340" y="72" fontSize="7.5" style={mono} textAnchor="middle" fill="currentColor" opacity="0.65">reads the text once per topic</text>
+        <text x="340" y="58" fontSize="9.5" style={mono} textAnchor="middle" fill={PURPLE}>{t("extract · a Gemini model")}</text>
+        <text x="340" y="72" fontSize="7.5" style={mono} textAnchor="middle" fill="currentColor" opacity="0.65">{t("reads the text once per topic")}</text>
         <rect x="252" y="82" width="176" height="34" rx="6" {...box} />
         <text x="262" y="96" fontSize="8.5" style={mono} fill={PURPLE}>CREATOR_TASTE</text>
-        <text x="262" y="109" fontSize="7.5" style={mono} fill="currentColor" opacity="0.7">what they pick, how it moves</text>
+        <text x="262" y="109" fontSize="7.5" style={mono} fill="currentColor" opacity="0.7">{t("what they pick, how it moves")}</text>
         <rect x="252" y="122" width="176" height="34" rx="6" {...box} />
         <text x="262" y="136" fontSize="8.5" style={mono} fill={PURPLE}>CHANNEL_RULES</text>
-        <text x="262" y="149" fontSize="7.5" style={mono} fill="currentColor" opacity="0.7">standing instructions</text>
+        <text x="262" y="149" fontSize="7.5" style={mono} fill="currentColor" opacity="0.7">{t("standing instructions")}</text>
 
         {/* facts out */}
         <line x1="428" y1="99" x2="470" y2="86" stroke="currentColor" strokeWidth="1.1" markerEnd="url(#gn-arrow)" />
         <line x1="428" y1="139" x2="470" y2="150" stroke="currentColor" strokeOpacity="0.5" strokeWidth="1.1" strokeDasharray="4 3" markerEnd="url(#gn-arrow)" />
         <rect x="472" y="66" width="200" height="40" rx="8" {...box} />
-        <text x="482" y="81" fontSize="8.5" style={mono} fill="currentColor">fact · picks small-magic scenes</text>
-        <text x="482" y="96" fontSize="7.5" style={mono} fill="currentColor" opacity="0.65">tagged CREATOR_TASTE</text>
+        <text x="482" y="81" fontSize="8.5" style={mono} fill="currentColor">{t("fact · picks small-magic scenes")}</text>
+        <text x="482" y="96" fontSize="7.5" style={mono} fill="currentColor" opacity="0.65">{t("tagged CREATOR_TASTE")}</text>
         <rect x="472" y="134" width="200" height="34" rx="8" fill="none" stroke="var(--hairline)" strokeDasharray="4 3" />
-        <text x="482" y="149" fontSize="8.5" style={mono} fill="currentColor" opacity="0.6">no rule stated tonight</text>
-        <text x="482" y="161" fontSize="7.5" style={mono} fill="currentColor" opacity="0.5">nothing for CHANNEL_RULES</text>
-        <text x="572" y="196" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.6">"a script was written" · outside both topics, dropped</text>
+        <text x="482" y="149" fontSize="8.5" style={mono} fill="currentColor" opacity="0.6">{t("no rule stated tonight")}</text>
+        <text x="482" y="161" fontSize="7.5" style={mono} fill="currentColor" opacity="0.5">{t("nothing for CHANNEL_RULES")}</text>
+        <text x="572" y="196" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.6">{t("\"a script was written\" · outside both topics, dropped")}</text>
 
         {/* embed + compare */}
         <line x1="672" y1="86" x2="712" y2="86" stroke="currentColor" strokeWidth="1.1" markerEnd="url(#gn-arrow)" />
         <rect x="714" y="40" width="212" height="130" rx="10" fill={tint(PURPLE, 0.08)} stroke={PURPLE} strokeOpacity="0.8" />
-        <text x="820" y="58" fontSize="9.5" style={mono} textAnchor="middle" fill={PURPLE}>embed, then compare</text>
-        <text x="820" y="72" fontSize="7.5" style={mono} textAnchor="middle" fill="currentColor" opacity="0.65">with the memories already in the scope</text>
+        <text x="820" y="58" fontSize="9.5" style={mono} textAnchor="middle" fill={PURPLE}>{t("embed, then compare")}</text>
+        <text x="820" y="72" fontSize="7.5" style={mono} textAnchor="middle" fill="currentColor" opacity="0.65">{t("with the memories already in the scope")}</text>
         <rect x="726" y="82" width="188" height="34" rx="6" {...box} />
-        <text x="736" y="96" fontSize="8.5" style={mono} fill="currentColor">close match → UPDATED</text>
-        <text x="736" y="109" fontSize="7.5" style={mono} fill="currentColor" opacity="0.7">"was gadgets" becomes "now small magic"</text>
+        <text x="736" y="96" fontSize="8.5" style={mono} fill="currentColor">{t("close match → UPDATED")}</text>
+        <text x="736" y="109" fontSize="7.5" style={mono} fill="currentColor" opacity="0.7">{t("\"was gadgets\" becomes \"now small magic\"")}</text>
         <rect x="726" y="122" width="188" height="34" rx="6" {...box} />
-        <text x="736" y="136" fontSize="8.5" style={mono} fill="currentColor">no match → CREATED</text>
-        <text x="736" y="149" fontSize="7.5" style={mono} fill="currentColor" opacity="0.7">a new memory under the scope</text>
+        <text x="736" y="136" fontSize="8.5" style={mono} fill="currentColor">{t("no match → CREATED")}</text>
+        <text x="736" y="149" fontSize="7.5" style={mono} fill="currentColor" opacity="0.7">{t("a new memory under the scope")}</text>
 
         {/* response */}
         <line x1="820" y1="170" x2="820" y2="212" stroke={PURPLE} strokeWidth="1.2" markerEnd="url(#gn-arrow-p)" />
@@ -738,16 +733,16 @@ function TheBank() {
   return (
     <div className="space-y-12">
       <StepHeader
-        kicker="Step 6a · Memory Bank"
+        kicker={t("Step 6a · Memory Bank")}
         color={PURPLE}
-        title="Cross-session personalization with Memory Bank."
-        blurb="Standard LLM interactions are stateless across distinct user sessions. Memory Bank introduces persistent episodic and semantic user memory, automatically extracting preferences, consolidating duplicate facts, and providing scoped retrieval without cluttering prompt context."
+        title={t("Cross-session personalization with Memory Bank.")}
+        blurb={t("Standard LLM interactions are stateless across distinct user sessions. Memory Bank introduces persistent episodic and semantic user memory, automatically extracting preferences, consolidating duplicate facts, and providing scoped retrieval without cluttering prompt context.")}
       />
 
       <In delay={0.1}>
         <section className="rounded-3xl border border-hairline bg-card p-6">
-          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">Memory about a person</p>
-          <h2 className="font-display mt-2 text-2xl">Scoped entity memory architecture.</h2>
+          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">{t("Memory about a person")}</p>
+          <h2 className="font-display mt-2 text-2xl">{t("Scoped entity memory architecture.")}</h2>
           <p className="mt-2 max-w-3xl text-sm text-fg-muted">
             Memory Bank is an Agent Runtime service that persists structured user attributes across sessions. Ingestion extracts facts via Gemini, generates semantic embeddings, and consolidates new information against existing records to prevent duplication. Retrieval queries stored facts scoped by application and user ID across custom topics (CREATOR_TASTE and CHANNEL_RULES).
           </p>
@@ -759,11 +754,10 @@ function TheBank() {
 
       <In delay={0.2}>
         <section className="rounded-3xl border border-hairline bg-card p-6">
-          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">MemoryBank configuration</p>
-          <h2 className="font-display mt-2 text-2xl">Scope definitions and ingestion lifecycle.</h2>
+          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">{t("MemoryBank configuration")}</p>
+          <h2 className="font-display mt-2 text-2xl">{t("Scope definitions and ingestion lifecycle.")}</h2>
           <p className="mt-2 max-w-3xl text-sm text-fg-muted">
-            Saving is the <code className="font-mono text-fg">memories.generate</code> call in <code className="font-mono text-fg">remember</code>. The underlying ingestion process executes as follows.
-          </p>
+            {tx("Saving is the {0} call in {1}. The underlying ingestion process executes as follows.", [<code className="font-mono text-fg">memories.generate</code>, <code className="font-mono text-fg">remember</code>])}</p>
           <div className="mt-4 overflow-x-auto">
             <GenerateFigure />
           </div>
@@ -782,20 +776,17 @@ function TheBank() {
             </div>
           </div>
           <p className="mt-4 max-w-3xl text-sm text-fg-muted">
-            Ingestion executes a single <code className="font-mono text-fg">memories.generate</code> call with the conversation payload and scope identifier. Memory Bank uses Gemini to extract key facts, then computes embeddings to evaluate similarity against existing entries. This semantic comparison drives consolidation—merging updates into matching records rather than duplicating entries—and returns status flags including CREATED, UPDATED, or NOOP. Retrieval executes <code className="font-mono text-fg">memories.retrieve</code> against the scope to recall all active facts before model inference.
-          </p>
+            {tx("Ingestion executes a single {0} call with the conversation payload and scope identifier. Memory Bank uses Gemini to extract key facts, then computes embeddings to evaluate similarity against existing entries. This semantic comparison drives consolidation—merging updates into matching records rather than duplicating entries—and returns status flags including CREATED, UPDATED, or NOOP. Retrieval executes {1} against the scope to recall all active facts before model inference.", [<code className="font-mono text-fg">memories.generate</code>, <code className="font-mono text-fg">memories.retrieve</code>])}</p>
         </section>
       </In>
 
       <In delay={0.3}>
         <section className="rounded-3xl border border-hairline bg-card p-6">
           <p className="font-mono text-[11px] uppercase tracking-[0.3em]" style={{ color: PURPLE }}>
-            Console
-          </p>
-          <h2 className="font-display mt-2 text-2xl">Provision Memory Bank and seed historical interactions.</h2>
+            {t("Console")}</p>
+          <h2 className="font-display mt-2 text-2xl">{t("Provision Memory Bank and seed historical interactions.")}</h2>
           <p className="mt-2 max-w-3xl text-sm text-fg-muted">
-            Execute the setup commands below to provision the Memory Bank resource on GEAP and seed historical session interactions. Ingestion processes past sessions sequentially, demonstrating how consolidation extracts and refines preferences across successive runs.
-          </p>
+            {t("Execute the setup commands below to provision the Memory Bank resource on GEAP and seed historical session interactions. Ingestion processes past sessions sequentially, demonstrating how consolidation extracts and refines preferences across successive runs.")}</p>
           <BankRunner onDone={() => setTick((t) => t + 1)} />
           <div className="flex flex-wrap gap-3">
             <SourceToggle path="agent/platform/bank.py" label="agent/platform/bank.py · the console — HISTORY and load()" />
@@ -805,7 +796,7 @@ function TheBank() {
       </In>
 
       <In delay={0.4}>
-        <BankLedger title="Consolidated memory records." refreshKey={tick} />
+        <BankLedger title={t("Consolidated memory records.")} refreshKey={tick} />
       </In>
     </div>
   );
@@ -814,9 +805,9 @@ function TheBank() {
 /* ───────────────────────── 6b ───────────────────────── */
 
 const CALLBACKS = [
-  { pair: "before_agent_callback / after_agent_callback", when: "Around the whole turn of an Agent.", sees: "CallbackContext carrying state, the session, and invocation details.", override: "Return Content to replace the agent's reply, or None to keep it." },
-  { pair: "before_model_callback / after_model_callback", when: "Around each model call the agent makes.", sees: "The LlmRequest about to go out, or the LlmResponse that came back.", override: "Return an LlmResponse to skip or replace the model's answer, or None to proceed." },
-  { pair: "before_tool_callback / after_tool_callback", when: "Around each tool call.", sees: "The tool, its arguments, and its result.", override: "Return a dict to replace the tool's result, or None to proceed." },
+  { pair: t("before_agent_callback / after_agent_callback"), when: t("Around the whole turn of an Agent."), sees: t("CallbackContext carrying state, the session, and invocation details."), override: t("Return Content to replace the agent's reply, or None to keep it.") },
+  { pair: t("before_model_callback / after_model_callback"), when: t("Around each model call the agent makes."), sees: t("The LlmRequest about to go out, or the LlmResponse that came back."), override: t("Return an LlmResponse to skip or replace the model's answer, or None to proceed.") },
+  { pair: t("before_tool_callback / after_tool_callback"), when: t("Around each tool call."), sees: t("The tool, its arguments, and its result."), override: t("Return a dict to replace the tool's result, or None to proceed.") },
 ];
 
 const CALLBACK_POINTS = [
@@ -895,13 +886,13 @@ function CallbacksFigure() {
   );
   return (
     <figure className="m-0 min-w-[860px]">
-      <svg viewBox="0 0 940 246" role="img" aria-label="One agent run from left to right: before_agent, then before_model, the model call, after_model, then, when the model asks for a tool, before_tool, the tool call, after_tool, and finally after_agent. The workflow uses before_model on propose_directions, where recall_taste adds the memories to the request, and after_agent on scripter, where remember_pick hands the pick to Memory Bank. A callback that returns None lets the run continue; a value replaces what would come next." className="h-auto w-full text-fg">
+      <svg viewBox="0 0 940 246" role="img" aria-label={t("One agent run from left to right: before_agent, then before_model, the model call, after_model, then, when the model asks for a tool, before_tool, the tool call, after_tool, and finally after_agent. The workflow uses before_model on propose_directions, where recall_taste adds the memories to the request, and after_agent on scripter, where remember_pick hands the pick to Memory Bank. A callback that returns None lets the run continue; a value replaces what would come next.")} className="h-auto w-full text-fg">
         <defs>
           <marker id="cb-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
             <path d="M0 0 L10 5 L0 10 z" fill="currentColor" />
           </marker>
         </defs>
-        <text x="20" y="22" fontSize="8.5" style={mono} fill="currentColor" opacity="0.65">one agent node runs · each hook is an Agent argument named &lt;hook&gt;_callback</text>
+        <text x="20" y="22" fontSize="8.5" style={mono} fill="currentColor" opacity="0.65">{t("one agent node runs · each hook is an Agent argument named &lt;hook&gt;_callback")}</text>
         <path d="M20 44 L20 36 L906 36 L906 44" fill="none" stroke="currentColor" strokeOpacity="0.5" strokeWidth="1" />
         {pill(20, "before_agent")}
         {arrow(112, 126)}
@@ -922,12 +913,12 @@ function CallbacksFigure() {
         {bracket(470, 778, 146, "around a tool call · only when the model asks for one, once per call")}
         {/* the two used here */}
         <line x1="174" y1="126" x2="174" y2="186" stroke={PURPLE} strokeWidth="1.1" strokeDasharray="3 3" />
-        <text x="20" y="200" fontSize="8.5" style={mono} fill={PURPLE}>before_model on propose_directions · recall_taste</text>
-        <text x="20" y="213" fontSize="8" style={mono} fill="currentColor" opacity="0.7">reads the bank and appends the memories to the request, then returns None</text>
+        <text x="20" y="200" fontSize="8.5" style={mono} fill={PURPLE}>{t("before_model on propose_directions · recall_taste")}</text>
+        <text x="20" y="213" fontSize="8" style={mono} fill="currentColor" opacity="0.7">{t("reads the bank and appends the memories to the request, then returns None")}</text>
         <line x1="860" y1="126" x2="860" y2="186" stroke={PURPLE} strokeWidth="1.1" strokeDasharray="3 3" />
-        <text x="906" y="200" fontSize="8.5" style={mono} textAnchor="end" fill={PURPLE}>after_agent on scripter · remember_pick</text>
-        <text x="906" y="213" fontSize="8" style={mono} textAnchor="end" fill="currentColor" opacity="0.7">hands the pick to Memory Bank, then returns None</text>
-        <text x="463" y="238" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.6">return None continues as normal · return a value replaces what would have come next</text>
+        <text x="906" y="200" fontSize="8.5" style={mono} textAnchor="end" fill={PURPLE}>{t("after_agent on scripter · remember_pick")}</text>
+        <text x="906" y="213" fontSize="8" style={mono} textAnchor="end" fill="currentColor" opacity="0.7">{t("hands the pick to Memory Bank, then returns None")}</text>
+        <text x="463" y="238" fontSize="8" style={mono} textAnchor="middle" fill="currentColor" opacity="0.6">{t("return None continues as normal · return a value replaces what would have come next")}</text>
       </svg>
     </figure>
   );
@@ -957,8 +948,8 @@ function TheCallbacks() {
   }, [snapshot?.updated_at, check]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!open) return;
-    const t = setInterval(check, 4000);
-    return () => clearInterval(t);
+    const timer = setInterval(check, 4000);
+    return () => clearInterval(timer);
   }, [open, check]);
   const recallOk = status?.recall_wired ?? false;
   const rememberOk = status?.remember_wired ?? false;
@@ -968,27 +959,26 @@ function TheCallbacks() {
   return (
     <div className="space-y-12">
       <StepHeader
-        kicker="Step 6b · Callbacks"
+        kicker={t("Step 6b · Callbacks")}
         color={PURPLE}
-        title="Agent lifecycle callbacks."
-        blurb="ADK lifecycle callbacks inject programmatic logic at deterministic points during execution, wrapping agent turns, individual LLM inference calls, and tool invocations. Callbacks enable memory injection and persistence without altering core workflow routing."
+        title={t("Agent lifecycle callbacks.")}
+        blurb={t("ADK lifecycle callbacks inject programmatic logic at deterministic points during execution, wrapping agent turns, individual LLM inference calls, and tool invocations. Callbacks enable memory injection and persistence without altering core workflow routing.")}
       />
 
       <In delay={0.05}>
         <section className="rounded-3xl border border-hairline bg-card p-6">
-          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">The workflow so far</p>
-          <h2 className="font-display mt-2 text-2xl">Execution graph with memory lifecycle hooks.</h2>
+          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">{t("The workflow so far")}</p>
+          <h2 className="font-display mt-2 text-2xl">{t("Execution graph with memory lifecycle hooks.")}</h2>
           <WorkflowFigure />
         </section>
       </In>
 
       <In delay={0.1}>
         <section className="rounded-3xl border border-hairline bg-card p-6">
-          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">ADK callbacks</p>
-          <h2 className="font-display mt-2 text-2xl">Interception points across agent execution.</h2>
+          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">{t("ADK callbacks")}</p>
+          <h2 className="font-display mt-2 text-2xl">{t("Interception points across agent execution.")}</h2>
           <p className="mt-2 max-w-3xl text-sm text-fg-muted">
-            Callbacks are functions registered directly onto <code className="font-mono text-fg">Agent</code> configurations. ADK invokes them deterministically with active execution context. Returning <code className="font-mono text-fg">None</code> permits default execution to proceed, while returning an explicit value intercepts and overrides the operation. Callbacks serve as the primary mechanism for guardrails, telemetry, and dynamic prompt conditioning.
-          </p>
+            {tx("Callbacks are functions registered directly onto {0} configurations. ADK invokes them deterministically with active execution context. Returning {1} permits default execution to proceed, while returning an explicit value intercepts and overrides the operation. Callbacks serve as the primary mechanism for guardrails, telemetry, and dynamic prompt conditioning.", [<code className="font-mono text-fg">Agent</code>, <code className="font-mono text-fg">None</code>])}</p>
           <div className="mt-4 overflow-x-auto">
             <CallbacksFigure />
           </div>
@@ -996,10 +986,10 @@ function TheCallbacks() {
             <table className="w-full text-left text-sm">
               <thead className="font-mono text-[10px] uppercase tracking-wider text-fg-muted">
                 <tr>
-                  <th className="py-2 pr-4">Pair</th>
-                  <th className="py-2 pr-4">When</th>
-                  <th className="py-2 pr-4">What it sees</th>
-                  <th className="py-2">Return value</th>
+                  <th className="py-2 pr-4">{t("Pair")}</th>
+                  <th className="py-2 pr-4">{t("When")}</th>
+                  <th className="py-2 pr-4">{t("What it sees")}</th>
+                  <th className="py-2">{t("Return value")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-hairline">
@@ -1034,20 +1024,19 @@ function TheCallbacks() {
 
       <In delay={0.2}>
         <section className="rounded-3xl border border-hairline bg-card p-6">
-          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">The callbacks</p>
-          <h2 className="font-display mt-2 text-2xl">Memory recall and persistence callbacks.</h2>
+          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">{t("The callbacks")}</p>
+          <h2 className="font-display mt-2 text-2xl">{t("Memory recall and persistence callbacks.")}</h2>
           <p className="mt-2 max-w-3xl text-sm text-fg-muted">
-            <code className="font-mono text-fg">recall_taste</code> retrieves active memory facts scoped to the creator, appends them to the incoming LLM request payload to steer direction proposals, and caches the retrieved facts in session state. Following script generation, <code className="font-mono text-fg">remember_pick</code> reads the chosen direction from state and dispatches the selection to Memory Bank for consolidation. Both callbacks return <code className="font-mono text-fg">None</code>, allowing the standard execution pipeline to proceed unimpeded.
-          </p>
+            {tx("{0} retrieves active memory facts scoped to the creator, appends them to the incoming LLM request payload to steer direction proposals, and caches the retrieved facts in session state. Following script generation, {1} reads the chosen direction from state and dispatches the selection to Memory Bank for consolidation. Both callbacks return {2}, allowing the standard execution pipeline to proceed unimpeded.", [<code className="font-mono text-fg">recall_taste</code>, <code className="font-mono text-fg">remember_pick</code>, <code className="font-mono text-fg">None</code>])}</p>
           <div className="mt-4 grid gap-4">
             <div className="overflow-hidden rounded-2xl border border-hairline bg-input">
-              <div className="border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">before the model call of propose_directions</div>
+              <div className="border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">{t("before the model call of propose_directions")}</div>
               <pre className="max-h-[420px] overflow-auto px-4 py-3 font-mono text-[11px] leading-relaxed text-fg">
                 <code>{CODE_RECALL}</code>
               </pre>
             </div>
             <div className="overflow-hidden rounded-2xl border border-hairline bg-input">
-              <div className="border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">after the scripter's turn</div>
+              <div className="border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">{t("after the scripter's turn")}</div>
               <pre className="max-h-[420px] overflow-auto px-4 py-3 font-mono text-[11px] leading-relaxed text-fg">
                 <code>{CODE_REMEMBER_PICK}</code>
               </pre>
@@ -1058,10 +1047,10 @@ function TheCallbacks() {
 
       <In delay={0.3}>
         <EditPanel
-          label="Edit 1 of 2"
-          title="Attach recall callback to propose_directions."
+          label={t("Edit 1 of 2")}
+          title={t("Attach recall callback to propose_directions.")}
           intro={<>In <code className="font-mono text-fg">stage4_memory/agent.py</code>, register the recall hook on <code className="font-mono text-fg">propose_directions</code> by adding <code className="font-mono text-fg">before_model_callback=recall_taste</code>.</>}
-          pill={status ? (recallOk ? "recall_taste wired ✓" : status.recall_kw ? `before_model_callback=${status.recall_kw}` : "no before_model_callback") : "…"}
+          pill={status ? (recallOk ? t("recall_taste wired ✓") : status.recall_kw ? `before_model_callback=${status.recall_kw}` : t("no before_model_callback")) : "…"}
           ok={recallOk}
           hint={hintA}
           setHint={setHintA}
@@ -1081,10 +1070,10 @@ function TheCallbacks() {
 
       <In delay={0.35}>
         <EditPanel
-          label="Edit 2 of 2"
-          title="Attach persistence callback to scripter."
+          label={t("Edit 2 of 2")}
+          title={t("Attach persistence callback to scripter.")}
           intro={<>Register the memory persistence hook on <code className="font-mono text-fg">scripter</code> by adding <code className="font-mono text-fg">after_agent_callback=remember_pick</code>.</>}
-          pill={status ? (rememberOk ? "remember_pick wired ✓" : status.remember_kw ? `after_agent_callback=${status.remember_kw}` : "no after_agent_callback") : "…"}
+          pill={status ? (rememberOk ? t("remember_pick wired ✓") : status.remember_kw ? `after_agent_callback=${status.remember_kw}` : t("no after_agent_callback")) : "…"}
           ok={rememberOk}
           hint={hintB}
           setHint={setHintB}
@@ -1103,7 +1092,7 @@ function TheCallbacks() {
       </In>
 
       <In delay={0.4}>
-        <LoadCheck app="stage4_memory" intro="Save both edits, then verify module loading to confirm the agent callback configurations import cleanly." />
+        <LoadCheck app="stage4_memory" intro={t("Save both edits, then verify module loading to confirm the agent callback configurations import cleanly.")} />
       </In>
 
       <In delay={0.45}>
@@ -1111,33 +1100,33 @@ function TheCallbacks() {
           app="stage4_memory"
           open={open}
           setOpen={setOpen}
-          title="Execute workflow and verify memory conditioning."
-          intro="Execute the workflow with an empty prompt to observe propose_directions conditioning its proposals exclusively on recalled memory preferences, then verify the scripter writes the selection back to the bank."
+          title={t("Execute workflow and verify memory conditioning.")}
+          intro={t("Execute the workflow with an empty prompt to observe propose_directions conditioning its proposals exclusively on recalled memory preferences, then verify the scripter writes the selection back to the bank.")}
           idea={idea}
           setIdea={setIdea}
           steps={[
-            "Send an empty message. Open the propose_directions event to confirm the request carries a MEMORY block with the three eras. Candidates 1 to 3 lean toward fantasy, reflecting the most recent taste, while trends suggest something else. Select a candidate.",
-            "After the scripter finishes, the memory write executes. Click Show the bank below to verify that a memory changed or was added reflecting tonight's selection. Run again with an idea of your own and observe the proposals adapt.",
+            t("Send an empty message. Open the propose_directions event to confirm the request carries a MEMORY block with the three eras. Candidates 1 to 3 lean toward fantasy, reflecting the most recent taste, while trends suggest something else. Select a candidate."),
+            t("After the scripter finishes, the memory write executes. Click Show the bank below to verify that a memory changed or was added reflecting tonight's selection. Run again with an idea of your own and observe the proposals adapt."),
           ]}
         />
       </In>
 
       <In delay={0.5}>
-        <VerifyPanel checking={checking} onCheck={check} intro="Read from stage4_memory/agent.py, runs/memorybank.json, and the latest stage4_memory session's state.">
+        <VerifyPanel checking={checking} onCheck={check} intro={t("Read from stage4_memory/agent.py, runs/memorybank.json, and the latest stage4_memory session's state.")}>
           <CheckRow ok={recallOk} label="propose_directions has before_model_callback=recall_taste">
-            {status ? (recallOk ? "Found in the file." : "Edit 1 above.") : "…"}
+            {status ? (recallOk ? t("Found in the file.") : t("Edit 1 above.")) : "…"}
           </CheckRow>
           <CheckRow ok={rememberOk} label="scripter has after_agent_callback=remember_pick">
-            {status ? (rememberOk ? "Found in the file." : "Edit 2 above.") : "…"}
+            {status ? (rememberOk ? t("Found in the file.") : t("Edit 2 above.")) : "…"}
           </CheckRow>
-          <CheckRow ok={!!status?.bank_connected} label="A Memory Bank is connected">
+          <CheckRow ok={!!status?.bank_connected} label={t("A Memory Bank is connected")}>
             {status ? (status.bank_connected ? "runs/memorybank.json names the Agent Runtime." : "Run python -m agent.platform.bank first (6a).") : "…"}
           </CheckRow>
-          <CheckRow ok={facts.length > 0} label="propose_directions read memories on the latest run">
-            {facts.length ? `Retrieved ${facts.length} memories · newest · ${facts[facts.length - 1].fact.slice(0, 90)}` : "None read yet."}
+          <CheckRow ok={facts.length > 0} label={t("propose_directions read memories on the latest run")}>
+            {facts.length ? tf("Retrieved {0} memories · newest · {1}", facts.length, facts[facts.length - 1].fact.slice(0, 90)) : t("None read yet.")}
           </CheckRow>
-          <CheckRow ok={written.some((w) => w.action && w.action !== "ERROR")} label="The scripter wrote tonight's pick to the bank">
-            {written.length ? written.map((w) => `${w.action}${w.fact ? ` · ${w.fact.slice(0, 70)}` : ""}`).join("  ·  ") : status?.direction ? "The write runs after the scripter; wait for the run to finish." : "Not yet."}
+          <CheckRow ok={written.some((w) => w.action && w.action !== "ERROR")} label={t("The scripter wrote tonight's pick to the bank")}>
+            {written.length ? written.map((w) => `${w.action}${w.fact ? ` · ${w.fact.slice(0, 70)}` : ""}`).join("  ·  ") : status?.direction ? t("The write runs after the scripter; wait for the run to finish.") : t("Not yet.")}
           </CheckRow>
         </VerifyPanel>
       </In>

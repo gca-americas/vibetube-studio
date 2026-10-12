@@ -1,0 +1,3316 @@
+{
+ "\"a script was written\" · outside both topics, dropped": [
+  "steps/Memory.tsx"
+ ],
+ "\"type\": \"object\"": [
+  "steps/FanOut.tsx"
+ ],
+ "\"was gadgets\" becomes \"now small magic\"": [
+  "steps/Memory.tsx"
+ ],
+ "# the edge that reads a route": [
+  "steps/PolicyGate.tsx"
+ ],
+ "1 · your idea": [
+  "steps/FanOut.tsx"
+ ],
+ "2 · the run": [
+  "steps/FanOut.tsx"
+ ],
+ "3 · read what came back": [
+  "steps/FanOut.tsx"
+ ],
+ "A BLOCK run reached quarantine": [
+  "steps/PolicyGate.tsx"
+ ],
+ "A JSON schema. adk web renders it as the form, and ADK validates the answer against it before the graph resumes. Here one field, pick.": [
+  "steps/FanOut.tsx"
+ ],
+ "A Memory Bank is connected": [
+  "steps/Memory.tsx"
+ ],
+ "A RAG Engine corpus is created in the project and the text-embedding-005 model is attached to it.": [
+  "steps/Rag.tsx"
+ ],
+ "A conversation. Each user message is a turn; the model decides when to call tools, when to ask, and when to stop. Required for a root agent; not allowed after another node.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "A function node whose return names the outgoing edge. The edge list maps each route name to a destination.": [
+  "steps/FanOut.tsx"
+ ],
+ "A long-running tool": [
+  "steps/Video.tsx",
+  "steps/registry.tsx"
+ ],
+ "A pause with an id.": [
+  "steps/FanOut.tsx"
+ ],
+ "A pipeline: research, then choose, where the person is asked; then the policy check, which refuses a bad direction before the render; then the script, the render, where the run waits with nothing kept alive; and a record at the end. Memory and the audience's comments feed the research.": [
+  "steps/Story.tsx"
+ ],
+ "A production pipeline as an explicit graph.": [
+  "steps/Overview.tsx"
+ ],
+ "A published clip on vibetube.dev": [
+  "steps/Summary.tsx"
+ ],
+ "A question goes to a corpus of documents; only the few passages that fit come back and the model reads those.": [
+  "steps/Rag.tsx"
+ ],
+ "A scene in a few words. It is reused through the lab.": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "A second chain from START. Two chains leaving START run in parallel.": [
+  "steps/FanOut.tsx"
+ ],
+ "A state store in the middle with three keys. propose_directions writes candidates and persist_direction reads it; persist_direction writes direction and scripter reads it; store_video writes render_url and the app reads it. No edge carries any of them.": [
+  "steps/Summary.tsx"
+ ],
+ "A yes-or-no pause for the thumbnail, the other decision in this pipeline. Yours has the same three arguments; only the message, the properties, and the payload change.": [
+  "steps/FanOut.tsx"
+ ],
+ "ADK agent architecture": [
+  "steps/SinglePrompt.tsx",
+  "steps/registry.tsx"
+ ],
+ "ADK assigns it when the yield runs.": [
+  "steps/FanOut.tsx"
+ ],
+ "ADK callbacks": [
+  "steps/Memory.tsx"
+ ],
+ "ADK is Google's code-first framework for building agents in Python. An agent is a model plus the context it reasons with, the tools and collaborators it acts through, and the callbacks that wrap each call. Click any piece.": [
+  "steps/AdkGlance.tsx"
+ ],
+ "ADK lifecycle callbacks inject programmatic logic at deterministic points during execution, wrapping agent turns, individual LLM inference calls, and tool invocations. Callbacks enable memory injection and persistence without altering core workflow routing.": [
+  "steps/Memory.tsx"
+ ],
+ "ASK IT SOMETHING": [
+  "steps/Rag.tsx"
+ ],
+ "Access the live service endpoint to initiate end-to-end runs. Submit prompt concepts, resolve policy approval gates, monitor asynchronous video generation, and publish completed assets. The application executes the complete ADK workflow on serverless infrastructure.": [
+  "steps/Deploy.tsx"
+ ],
+ "Active Service Endpoint": [
+  "steps/Deploy.tsx"
+ ],
+ "Add direction_gate to the workflow.": [
+  "steps/FanOut.tsx"
+ ],
+ "Add the tools to the agent.": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "After Step 5c, the refused direction is cleaned and continues to the scripter instead of ending the run.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "After edit 1: the fan-out, the join, a State: candidates chip, and the run completes. No form.": [
+  "steps/FanOut.tsx"
+ ],
+ "After edit 2: the run stops on an adk_request_input event with a small form. Type 1 in pick and press Submit. The graph resumes; with the gate as the last node, the run ends after your answer.": [
+  "steps/FanOut.tsx"
+ ],
+ "After the scripter finishes, inspect render_desk's event stream. Observe the function call to render_submit with the composed prompt, followed by the pending receipt response and the WAITING reply. Execution halts without advancing to store_video until resumed.": [
+  "steps/Video.tsx"
+ ],
+ "After the scripter finishes, the memory write executes. Click Show the bank below to verify that a memory changed or was added reflecting tonight's selection. Run again with an idea of your own and observe the proposals adapt.": [
+  "steps/Memory.tsx"
+ ],
+ "Agent Runtime": [
+  "steps/Memory.tsx"
+ ],
+ "Agent execution modes": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Agent lifecycle callbacks.": [
+  "steps/Memory.tsx"
+ ],
+ "Agent modes and lifecycle callbacks: chat, single_turn, and task modes as graph nodes, with interceptors.": [
+  "steps/Overview.tsx"
+ ],
+ "Agent modes and the task node": [
+  "steps/PolicyGate.tsx",
+  "steps/registry.tsx"
+ ],
+ "Agent nodes": [
+  "steps/FanOut.tsx",
+  "steps/registry.tsx"
+ ],
+ "Agentic orchestration": [
+  "steps/Story.tsx"
+ ],
+ "Agentic workflow fundamentals": [
+  "steps/registry.tsx"
+ ],
+ "Allocates a warm instance with session affinity enabled to maintain workflow session continuity within the hosting process. Target environment variables ingest configuration from {0} alongside provisioned resource identifiers in {1} and {2}.": [
+  "steps/Deploy.tsx"
+ ],
+ "An ADK Workflow executes end-to-end video production, managing parallel research, human-in-the-loop pauses, asynchronous video generation, and Cloud Run deployment.": [
+  "steps/Overview.tsx"
+ ],
+ "An ADK Workflow structures execution as a directed graph. Nodes represent discrete units of work, and edges define deterministic sequencing. The edge list governs orchestration, constraining model execution to dedicated nodes.": [
+  "steps/FanOut.tsx"
+ ],
+ "An ADK agent at a glance.": [
+  "steps/AdkGlance.tsx"
+ ],
+ "An Agent Runtime is created in the project, then the CREATOR_TASTE and CHANNEL_RULES topics are attached to its Memory Bank.": [
+  "steps/Memory.tsx"
+ ],
+ "An LLM call. Used as a node it runs in single_turn mode: one call, structured output, no conversation.": [
+  "steps/FanOut.tsx"
+ ],
+ "An OK run reached the scripter": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Another hint": [
+  "steps/FanOut.tsx",
+  "steps/SinglePrompt.tsx"
+ ],
+ "Another process reads the pending call from the session store, waits for Veo, and resumes the same session with a function_response for that call's id. With a real render this takes a minute or three; the stand-in finishes in seconds.": [
+  "steps/Video.tsx"
+ ],
+ "Answer a run with candidate 4.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Answered, but store_video has not written state.": [
+  "steps/Video.tsx"
+ ],
+ "Append persist_direction to the workflow chain.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Append read_feedback to the parallel fan-out.": [
+  "steps/Rag.tsx"
+ ],
+ "Append render pipeline to the workflow chain.": [
+  "steps/Video.tsx"
+ ],
+ "Architecture & Topology": [
+  "steps/Deploy.tsx"
+ ],
+ "Around each model call the agent makes.": [
+  "steps/Memory.tsx"
+ ],
+ "Around each tool call.": [
+  "steps/Memory.tsx"
+ ],
+ "Around the whole turn of an Agent.": [
+  "steps/Memory.tsx"
+ ],
+ "Asking adk web…": [
+  "components/LoadCheck.tsx"
+ ],
+ "Asks you only for the decisions that need your judgment.": [
+  "steps/Story.tsx"
+ ],
+ "Asynchronous execution with LongRunningFunctionTool.": [
+  "steps/Video.tsx"
+ ],
+ "Attach persistence callback to scripter.": [
+  "steps/Memory.tsx"
+ ],
+ "Attach recall callback to propose_directions.": [
+  "steps/Memory.tsx"
+ ],
+ "Autonomous remediation": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Autonomous remediation in task mode.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Back to start": [
+  "components/StepShell.tsx"
+ ],
+ "Before you edit": [
+  "steps/FanOut.tsx"
+ ],
+ "Before you run": [
+  "components/LoadCheck.tsx",
+  "steps/FanOut.tsx"
+ ],
+ "Both readers ran": [
+  "steps/FanOut.tsx"
+ ],
+ "Both readers run, then the join releases.": [
+  "steps/FanOut.tsx"
+ ],
+ "Both tools are in the file": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "Branch destinations": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Build the research fan-out.": [
+  "steps/FanOut.tsx"
+ ],
+ "Built into ADK. Waits until every incoming branch has reported, then passes all of their outputs on as one dict.": [
+  "steps/FanOut.tsx"
+ ],
+ "CREATOR_TASTE · CHANNEL_RULES": [
+  "steps/Memory.tsx"
+ ],
+ "CallbackContext carrying state, the session, and invocation details.": [
+  "steps/Memory.tsx"
+ ],
+ "Callbacks": [
+  "steps/Memory.tsx",
+  "steps/registry.tsx"
+ ],
+ "Callbacks are functions registered directly onto {0} configurations. ADK invokes them deterministically with active execution context. Returning {1} permits default execution to proceed, while returning an explicit value intercepts and overrides the operation. Callbacks serve as the primary mechanism for guardrails, telemetry, and dynamic prompt conditioning.": [
+  "steps/Memory.tsx"
+ ],
+ "Callbacks that run your deterministic code before and after the agent, before and after each model call, and before and after each tool call: before_agent/after_agent, before_model/after_model, before_tool/after_tool. Guardrails the model is not trusted to enforce on itself.": [
+  "steps/AdkGlance.tsx"
+ ],
+ "Check again": [
+  "steps/FanOut.tsx",
+  "steps/SinglePrompt.tsx"
+ ],
+ "Check the session event log to confirm that the agent runs as expected and triggers both research tools. Results update automatically when you submit messages.": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "Check the workflow loads": [
+  "components/LoadCheck.tsx",
+  "steps/FanOut.tsx"
+ ],
+ "Click NEW SESSION, submit the prompt again, and select candidate 4. Candidate 4 contains policy-violating terminology. The policy_check node detects the infraction, emits the BLOCK route, and halts execution in quarantine without invoking the scripter.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Click on your video.": [
+  "steps/Summary.tsx"
+ ],
+ "Close": [
+  "components/DoneBanner.tsx",
+  "steps/AdkGlance.tsx"
+ ],
+ "Cloud Storage": [
+  "steps/Rag.tsx"
+ ],
+ "Cloud Trace · the spans": [
+  "steps/Deploy.tsx"
+ ],
+ "Collaboration": [
+  "steps/AdkGlance.tsx"
+ ],
+ "Complete production workflow topology where START fans out to scan_trends, read_backlog, and read_feedback, synchronizing at join_research before propose_directions. The direction_gate suspends for human review, followed by persist_direction and policy_check routing to either scripter or quarantine. The workflow concludes at render_desk and store_video. Select a node to inspect architectural details.": [
+  "steps/Summary.tsx"
+ ],
+ "Complete workflow topology and architectural summary.": [
+  "steps/Summary.tsx"
+ ],
+ "Complete. 4b writes them into stage1_fanout/agent.py and runs it.": [
+  "steps/FanOut.tsx"
+ ],
+ "Completed {0} BLOCK route{1}{2}": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Completed {0} OK route{1} so far": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Comprehensive review of the production workflow topology, from initial idea fan-out to long-running video asset delivery. Inspect each node to review underlying architectural patterns, state contracts, and lifecycle hooks.": [
+  "steps/Summary.tsx"
+ ],
+ "Concepts": [
+  "steps/Summary.tsx"
+ ],
+ "Configure quarantine as a task-mode agent.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Configure the agent's tool list with external Python functions, trigger inference in ADK Web, and evaluate the execution trace in the session store.": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "Connect an ADK Agent node downstream of the research join. The agent accepts the synchronized research dictionary, synthesizes platform trends and backlog ideas, and emits four structured, schema-validated creative directions.": [
+  "steps/FanOut.tsx"
+ ],
+ "Connect router branches to the execution graph.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Console": [
+  "steps/Memory.tsx",
+  "steps/Rag.tsx",
+  "steps/Video.tsx"
+ ],
+ "Consolidated memory records.": [
+  "steps/Memory.tsx"
+ ],
+ "Construct FunctionResponse to resume execution.": [
+  "steps/Video.tsx"
+ ],
+ "Context": [
+  "steps/AdkGlance.tsx"
+ ],
+ "Context architecture across State, Memory Bank, and RAG.": [
+  "steps/Rag.tsx"
+ ],
+ "Context that belongs to one agent rides a callback on that agent. Research that produces data before the model runs is a node in the fan-out.": [
+  "steps/Summary.tsx"
+ ],
+ "Continue to 3": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "Continue to 4": [
+  "steps/FanOut.tsx"
+ ],
+ "Continue to 5": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Continue to 6": [
+  "steps/Memory.tsx"
+ ],
+ "Continue to 7": [
+  "steps/Rag.tsx"
+ ],
+ "Continue to 8": [
+  "steps/Video.tsx"
+ ],
+ "Coordinate concurrent research retrieval across platform trends and backlog ideas. Instantiate an ADK JoinNode to synchronize parallel reader branches and consolidate incoming payloads into a unified research dictionary.": [
+  "steps/FanOut.tsx"
+ ],
+ "Copy": [
+  "steps/FanOut.tsx",
+  "steps/SinglePrompt.tsx"
+ ],
+ "Core architectural concepts by module.": [
+  "steps/Summary.tsx"
+ ],
+ "Creates the Agent Runtime that hosts the bank, once, and prints the scope and the topics. Runs again as connect.": [
+  "steps/Memory.tsx"
+ ],
+ "Creates the corpus in your project, once, with text-embedding-005 as its embedding model. Runs again as connect.": [
+  "steps/Rag.tsx"
+ ],
+ "Creating a RAG Engine corpus in your project, with {0} as the model that turns passages and questions into vectors. The managed vector database is set to serverless first; a fresh project defaults to a provisioned mode that some regions cannot allocate. The first run takes about twenty seconds; every later run reconnects to the cached resource.": [
+  "steps/Rag.tsx"
+ ],
+ "Creating an Agent Runtime in your project to host the bank, then attaching the two memory topics. The first run takes about half a minute; every later run reconnects to the cached resource.": [
+  "steps/Memory.tsx"
+ ],
+ "Creating the Memory Bank": [
+  "steps/Memory.tsx"
+ ],
+ "Creating the corpus": [
+  "steps/Rag.tsx"
+ ],
+ "Creator backlog": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "Cross-session personalization with Memory Bank.": [
+  "steps/Memory.tsx"
+ ],
+ "Currently, the workflow executes from end to end without pausing. When an idea prompt is submitted, the reader nodes run in parallel, the join consolidates the research, and {0} emits four candidate directions as terminal output. To prevent the pipeline from advancing without human confirmation, you will append {1} to the execution chain and configure it to suspend execution until a choice is submitted.": [
+  "steps/FanOut.tsx"
+ ],
+ "Curriculum Overview": [
+  "steps/Summary.tsx"
+ ],
+ "Data that travels with the request for a frontend to display. Here the candidates. adk web ignores it; VibeStudio reads it during execution.": [
+  "steps/FanOut.tsx"
+ ],
+ "Decoupled asynchronous processing lifecycle.": [
+  "steps/Video.tsx"
+ ],
+ "Define the agent node.": [
+  "steps/FanOut.tsx"
+ ],
+ "Define the join.": [
+  "steps/FanOut.tsx"
+ ],
+ "Defining a JoinNode": [
+  "steps/FanOut.tsx"
+ ],
+ "Deleting every memory in the creator's scope. The bank itself stays.": [
+  "steps/Memory.tsx"
+ ],
+ "Deliver completed asset and resume execution.": [
+  "steps/Video.tsx"
+ ],
+ "Delivered · render_status {0}{1}": [
+  "steps/Video.tsx"
+ ],
+ "Delivered. adk web does not re-read a session on its own, so the frame above still shows the run ending at the receipt.": [
+  "steps/Video.tsx"
+ ],
+ "Delivering the render": [
+  "steps/Video.tsx"
+ ],
+ "Dense embeddings and vector similarity.": [
+  "steps/Rag.tsx"
+ ],
+ "Deploy": [
+  "steps/registry.tsx"
+ ],
+ "Deploy again": [
+  "steps/Deploy.tsx"
+ ],
+ "Deploy to Cloud Run": [
+  "steps/Deploy.tsx"
+ ],
+ "Deploying to Cloud Run.": [
+  "steps/Deploy.tsx"
+ ],
+ "Deployment": [
+  "steps/Deploy.tsx"
+ ],
+ "Deployment command": [
+  "steps/Deploy.tsx"
+ ],
+ "Design rules the graph follows": [
+  "steps/Summary.tsx"
+ ],
+ "Deterministic conditional routing.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Deterministic semantic retrieval node.": [
+  "steps/Rag.tsx"
+ ],
+ "Directions": [
+  "steps/FanOut.tsx"
+ ],
+ "Download the clip": [
+  "steps/Video.tsx"
+ ],
+ "Downstream nodes require the candidate selected at the approval gate. Session state provides cross-node data persistence across the workflow execution lifecycle.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Each context layer serves a distinct architectural purpose. Session State maintains transient run variables such as candidates and render receipts. Memory Bank stores consolidated episodic and profile facts for a given user. RAG Engine indexes external unstructured documents to support semantic similarity search.": [
+  "steps/Rag.tsx"
+ ],
+ "Each past session is one {0} call. Memory Bank extracts the facts with a Gemini model, embeds them so it can find the memories they resemble, and consolidates them so a session either creates a memory or updates one under the two topics.": [
+  "steps/Memory.tsx"
+ ],
+ "Earlier steps": [
+  "components/CatchUp.tsx"
+ ],
+ "Edit 1 above.": [
+  "steps/FanOut.tsx",
+  "steps/Memory.tsx",
+  "steps/PolicyGate.tsx"
+ ],
+ "Edit 1 of 1": [
+  "steps/Rag.tsx",
+  "steps/Video.tsx"
+ ],
+ "Edit 1 of 2": [
+  "steps/FanOut.tsx",
+  "steps/Memory.tsx",
+  "steps/PolicyGate.tsx",
+  "steps/Video.tsx"
+ ],
+ "Edit 2 above.": [
+  "steps/FanOut.tsx",
+  "steps/Memory.tsx",
+  "steps/PolicyGate.tsx"
+ ],
+ "Edit 2 of 2": [
+  "steps/FanOut.tsx",
+  "steps/Memory.tsx",
+  "steps/PolicyGate.tsx",
+  "steps/Video.tsx"
+ ],
+ "Edit the highlighted line above and save.": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "Eight attempts, seventy seconds apart, across submit, check, and download operations for Veo. {0} and {1} in {2} configure these intervals.": [
+  "steps/Video.tsx"
+ ],
+ "Embeds the question and returns the five passages nearest to it, with their distance. Lower is closer.": [
+  "steps/Rag.tsx"
+ ],
+ "Empty. Run the load command.": [
+  "steps/Memory.tsx",
+  "steps/Rag.tsx"
+ ],
+ "End-to-end execution and out-of-band delivery.": [
+  "steps/Video.tsx"
+ ],
+ "End-to-end workflow automation.": [
+  "steps/Story.tsx"
+ ],
+ "Enter the studio": [
+  "steps/registry.tsx"
+ ],
+ "Evaluate response limitations": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "Every field maps to a piece on the left; the comments name them. The agent you meet next, in 3b, uses three of these fields: model, instruction, and tools.": [
+  "steps/AdkGlance.tsx"
+ ],
+ "Every memory in the creator's scope is deleted. The bank itself is still there.": [
+  "steps/Memory.tsx"
+ ],
+ "Every pending render this server can find in the stage6_video sessions, showing the session, the call id, and the Veo operation the delivery would ask about.": [
+  "steps/Video.tsx"
+ ],
+ "Every resume is one function_response carrying the call's id, whoever sends it: a page, a console, another process, after a restart.": [
+  "steps/Summary.tsx"
+ ],
+ "Every video, every week": [
+  "steps/Story.tsx"
+ ],
+ "Everything the bank holds for the creator, oldest first. Compare it with the four sessions.": [
+  "steps/Memory.tsx"
+ ],
+ "Everything the bank holds for this creator, oldest first. The ledger below shows the same rows once you close this.": [
+  "steps/Memory.tsx"
+ ],
+ "Execute both routing branches.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Execute the setup commands below to provision the Memory Bank resource on GEAP and seed historical session interactions. Ingestion processes past sessions sequentially, demonstrating how consolidation extracts and refines preferences across successive runs.": [
+  "steps/Memory.tsx"
+ ],
+ "Execute the workflow and inspect session state.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Execute the workflow with an empty prompt to observe propose_directions conditioning its proposals exclusively on recalled memory preferences, then verify the scripter writes the selection back to the bank.": [
+  "steps/Memory.tsx"
+ ],
+ "Execute two sessions to validate both conditional branches, testing the compliant path to scripter as well as quarantine interception.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Execute workflow and inspect multi-source research.": [
+  "steps/Rag.tsx"
+ ],
+ "Execute workflow and verify memory conditioning.": [
+  "steps/Memory.tsx"
+ ],
+ "Execute workflow to verify receipt suspension.": [
+  "steps/Video.tsx"
+ ],
+ "Executing semantic similarity queries.": [
+  "steps/Rag.tsx"
+ ],
+ "Execution flow before the approval gate.": [
+  "steps/FanOut.tsx"
+ ],
+ "Execution graph with memory lifecycle hooks.": [
+  "steps/Memory.tsx"
+ ],
+ "Exercise": [
+  "steps/FanOut.tsx"
+ ],
+ "Expanding the research fan-out.": [
+  "steps/Rag.tsx"
+ ],
+ "Extending the graph with state persistence.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "External worker polling and session resumption.": [
+  "steps/Video.tsx"
+ ],
+ "Finished": [
+  "components/DoneBanner.tsx"
+ ],
+ "Five passages": [
+  "steps/Rag.tsx"
+ ],
+ "Found in agent/graph.py.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Found in the file.": [
+  "steps/Memory.tsx"
+ ],
+ "Found in the function body.": [
+  "steps/FanOut.tsx"
+ ],
+ "Four past sessions · oldest first": [
+  "steps/Memory.tsx"
+ ],
+ "Four stages showing find the receipt, wait for Veo, answer by id, and the graph continues.": [
+  "steps/Video.tsx"
+ ],
+ "Full agents nested inside this one, invoked as steps of its work.": [
+  "steps/AdkGlance.tsx"
+ ],
+ "Function nodes and a join.": [
+  "steps/FanOut.tsx"
+ ],
+ "FunctionResponse built ✓": [
+  "steps/Video.tsx"
+ ],
+ "GEAP RAG Engine": [
+  "steps/Rag.tsx"
+ ],
+ "GEAP RAG Engine infrastructure covering corpus management, document chunking, and text-embedding-004 vector search; parallel retrieval reader integrated into JoinNode synchronization; grounded multi-modal generation": [
+  "steps/Summary.tsx"
+ ],
+ "GET /api/lab/trends · ten right now": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "GOOGLE CLOUD · GEAP · your project · us-central1": [
+  "steps/Rag.tsx"
+ ],
+ "GOOGLE CLOUD · your project · us-central1": [
+  "steps/Memory.tsx",
+  "steps/Rag.tsx"
+ ],
+ "Gemini · config.MODEL": [
+  "steps/FanOut.tsx"
+ ],
+ "Gemini · the agent nodes": [
+  "steps/Deploy.tsx"
+ ],
+ "Generative models can execute each of these tasks individually: Gemini researches and writes scripts, while Veo renders video clips.": [
+  "steps/Story.tsx"
+ ],
+ "Go to {0} and select the event you are in.": [
+  "steps/Summary.tsx"
+ ],
+ "Google Drive": [
+  "steps/Rag.tsx"
+ ],
+ "Graph architecture and execution chains": [
+  "steps/FanOut.tsx",
+  "steps/registry.tsx"
+ ],
+ "Graph engineering foundations: Workflow, edge tuples, START, JoinNode for parallel fan-out, and deterministic router nodes.": [
+  "steps/Overview.tsx"
+ ],
+ "Graphs pause for people and for receipts, never for a wait. RequestInput and the pending tool call both suspend the run; nothing stays alive on a timer.": [
+  "steps/Summary.tsx"
+ ],
+ "Grounding agents with RAG Engine.": [
+  "steps/Rag.tsx"
+ ],
+ "Half a chain. scan_trends would finish and nothing would carry its output into the join.": [
+  "steps/FanOut.tsx"
+ ],
+ "Here the payload is {0}. {1} is the list the first line of the function built: the four candidates the propose_directions returned, each a plain dict with a title, an angle, and a hook. The line after it writes the same list to shared state for the next node. Putting it in the payload as well means a frontend can show the four choices next to the form without reading state.": [
+  "steps/FanOut.tsx"
+ ],
+ "Hide adk web": [
+  "steps/FanOut.tsx",
+  "steps/SinglePrompt.tsx"
+ ],
+ "Hide the code": [
+  "steps/Memory.tsx",
+  "steps/Rag.tsx",
+  "steps/Video.tsx"
+ ],
+ "Hierarchical agent memory: Session state via parameter binding and persistent GEAP Memory Bank context.": [
+  "steps/Overview.tsx"
+ ],
+ "Hint": [
+  "steps/FanOut.tsx",
+  "steps/SinglePrompt.tsx"
+ ],
+ "Hints shown": [
+  "steps/FanOut.tsx",
+  "steps/SinglePrompt.tsx"
+ ],
+ "How it moves": [
+  "steps/Video.tsx"
+ ],
+ "How the search works": [
+  "steps/Rag.tsx"
+ ],
+ "Human in the loop.": [
+  "steps/FanOut.tsx"
+ ],
+ "Human-in-the-loop": [
+  "steps/registry.tsx"
+ ],
+ "Human-in-the-loop orchestration: RequestInput to suspend workflows for human decisions and resume with structured schemas.": [
+  "steps/Overview.tsx"
+ ],
+ "Implement conditional routing logic.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "In 5b, blocked candidates abruptly terminated the pipeline. Rebuilding quarantine as a task-mode agent enables automatic payload remediation. The agent repeatedly inspects the payload with {0} and substitutes approved terms using {1} until the text passes validation, then forwards the cleaned candidate to the scripter.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "In agent/deliver.py.": [
+  "steps/Video.tsx"
+ ],
+ "In the edge list.": [
+  "steps/Video.tsx"
+ ],
+ "In this lab ·": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Indexing splits the file into passages, embeds each passage into a vector, and stores the vectors. Vector proximity corresponds to semantic similarity.": [
+  "steps/Rag.tsx"
+ ],
+ "Ingestion executes a single {0} call with the conversation payload and scope identifier. Memory Bank uses Gemini to extract key facts, then computes embeddings to evaluate similarity against existing entries. This semantic comparison drives consolidation—merging updates into matching records rather than duplicating entries—and returns status flags including CREATED, UPDATED, or NOOP. Retrieval executes {1} against the scope to recall all active facts before model inference.": [
+  "steps/Memory.tsx"
+ ],
+ "Initialize RAG corpus and ingest document chunks.": [
+  "steps/Rag.tsx"
+ ],
+ "Injecting massive document sets directly into prompt contexts degrades performance and escalates token costs. RAG decouples indexing from inference by pre-chunking source files and embedding them once into vector space. At runtime, targeted semantic queries retrieve only the top relevant passages, maintaining consistent context window utilization regardless of total corpus scale.": [
+  "steps/Rag.tsx"
+ ],
+ "Inspect the State tab in adk web. The candidates array was persisted by the gate; direction, angle, hook, and user:prefs are merged by persist_direction. The verification panel reads these persisted keys directly.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Inspect the quarantine event stream as the agent calls find_policy_hits, invokes suggest_replacement to rewrite prohibited terms, re-validates the text, and finally calls finish_task with the sanitized CleanedDirection. Execution then advances to scripter to generate the script for the sanitized direction.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Integrate semantic corpus retrieval directly into the parallel execution fan-out. By appending read_feedback as a third concurrent reader node, the join synchronizes structured feedback alongside trends and backlog data before direction synthesis.": [
+  "steps/Rag.tsx"
+ ],
+ "Integrating policy inspection into the chain.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Interception points across agent execution.": [
+  "steps/Memory.tsx"
+ ],
+ "Interceptor": [
+  "steps/AdkGlance.tsx"
+ ],
+ "Introduce an architectural approval gate before triggering downstream actions that incur cost or publish media. In ADK, yielding RequestInput suspends workflow execution and persists session state until an external response satisfies the validation schema.": [
+  "steps/FanOut.tsx"
+ ],
+ "Is it still running? Its log is runs/lab.log; scripts/start.sh starts it again.": [
+  "steps/Deploy.tsx",
+  "steps/Memory.tsx",
+  "steps/Rag.tsx",
+  "steps/Video.tsx"
+ ],
+ "It returned four typed candidates": [
+  "steps/FanOut.tsx"
+ ],
+ "It worked with its tools and finished the task": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Iterative policy remediation and graph reconnection.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Jira": [
+  "steps/Rag.tsx"
+ ],
+ "Knowledge base": [
+  "steps/Rag.tsx"
+ ],
+ "Knowledge grounding: GEAP RAG Engine corpus integrated as a parallel retrieval node for audience feedback.": [
+  "steps/Overview.tsx"
+ ],
+ "Language": [
+  "components/TopNav.tsx"
+ ],
+ "Latest reply": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "Leaves a record of every run: what was cited, what was refused, what shipped.": [
+  "steps/Story.tsx"
+ ],
+ "Left: propose_directions with a before_model_callback that reads Memory Bank, the creator's taste, context for that one agent. Right: read_feedback, a node in the fan-out beside the other readers, that reads the RAG corpus and hands data to the join before any model runs.": [
+  "steps/Summary.tsx"
+ ],
+ "Lists the pending renders across stage6_video sessions, showing session, call id, and operation.": [
+  "steps/Video.tsx"
+ ],
+ "Loading the comments": [
+  "steps/Rag.tsx"
+ ],
+ "Loading the creator's history": [
+  "steps/Memory.tsx"
+ ],
+ "Long-running operations such as media synthesis should not block graph worker processes synchronously. Wrapping tool functions in LongRunningFunctionTool allows the node to submit jobs, record pending receipts in session storage, and suspend execution safely until asynchronous workers complete.": [
+  "steps/Video.tsx"
+ ],
+ "Long-running workflows and deployment: LongRunningFunctionTool receipts, resuming by ID, and Cloud Run deployment.": [
+  "steps/Overview.tsx"
+ ],
+ "Long-term memory that persists across sessions. Lives outside the agent, in a MemoryService such as GEAP Memory Bank.": [
+  "steps/AdkGlance.tsx"
+ ],
+ "LongRunningFunctionTool protocol, pending receipt generation, asynchronous workflow suspension at agent nodes; decoupled delivery resumption by call_id across independent processes; Veo video generation API with exponential backoff": [
+  "steps/Summary.tsx"
+ ],
+ "Make direction_gate wait for a person.": [
+  "steps/FanOut.tsx"
+ ],
+ "Managed RAG infrastructure on Google Cloud.": [
+  "steps/Rag.tsx"
+ ],
+ "Memory Bank lifecycle covering episodic ingestion, LLM consolidation, and custom user-scoped topics; memories.generate and retrieve APIs; before_model_callback dynamic context injection and after_agent_callback preference extraction": [
+  "steps/Summary.tsx"
+ ],
+ "Memory Bank · the callbacks": [
+  "steps/Deploy.tsx"
+ ],
+ "Memory Bank · the creator's taste": [
+  "steps/Summary.tsx"
+ ],
+ "Memory about a person": [
+  "steps/Memory.tsx"
+ ],
+ "Memory recall and persistence callbacks.": [
+  "steps/Memory.tsx"
+ ],
+ "MemoryBank configuration": [
+  "steps/Memory.tsx"
+ ],
+ "Monolithic agent": [
+  "steps/registry.tsx"
+ ],
+ "Monolithic agent specification": [
+  "steps/SinglePrompt.tsx",
+  "steps/registry.tsx"
+ ],
+ "Nearby vectors represent similar semantics, so the dragon comment returns for a query that never explicitly mentions dragon.": [
+  "steps/Rag.tsx"
+ ],
+ "Next": [
+  "steps/Video.tsx"
+ ],
+ "No bank yet. Run the first command above.": [
+  "steps/Memory.tsx"
+ ],
+ "No candidates yet.": [
+  "steps/Rag.tsx"
+ ],
+ "No corpus yet. Run the first command above.": [
+  "steps/Rag.tsx"
+ ],
+ "No node events yet.": [
+  "steps/FanOut.tsx"
+ ],
+ "No quarantine tool calls yet.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "No run reached the desk yet.": [
+  "steps/Video.tsx"
+ ],
+ "No run yet.": [
+  "steps/Rag.tsx"
+ ],
+ "Node kinds in this lab": [
+  "steps/FanOut.tsx"
+ ],
+ "Nodes and edges.": [
+  "steps/FanOut.tsx"
+ ],
+ "Nodes share state by key name. candidates, direction, render_url move through the graph without being passed between nodes.": [
+  "steps/Summary.tsx"
+ ],
+ "None in the latest session yet.": [
+  "steps/FanOut.tsx"
+ ],
+ "None read yet.": [
+  "steps/Memory.tsx"
+ ],
+ "Not in state yet.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Not in this run. The model is not obliged to; run again.": [
+  "steps/Rag.tsx"
+ ],
+ "Not yet.": [
+  "steps/FanOut.tsx",
+  "steps/Memory.tsx",
+  "steps/PolicyGate.tsx"
+ ],
+ "Nothing pending.": [
+  "steps/Video.tsx"
+ ],
+ "Nothing reformats the join's dict. The node after it, in 4c, is an agent, and an agent node receives its {0} as its message: a dict arrives as JSON, which the model reads directly.": [
+  "steps/FanOut.tsx"
+ ],
+ "Observe autonomous tool remediation": [
+  "steps/PolicyGate.tsx"
+ ],
+ "One Veo clip per run{0}. Set {1} in {2} to take the same path at no cost.": [
+  "steps/Video.tsx"
+ ],
+ "One agent run from left to right: before_agent, then before_model, the model call, after_model, then, when the model asks for a tool, before_tool, the tool call, after_tool, and finally after_agent. The workflow uses before_model on propose_directions, where recall_taste adds the memories to the request, and after_agent on scripter, where remember_pick hands the pick to Memory Bank. A callback that returns None lets the run continue; a value replaces what would come next.": [
+  "steps/Memory.tsx"
+ ],
+ "One chain is the whole change. The run stops inside render_desk and the session keeps the receipt; store_video runs when the delivery resumes it.": [
+  "steps/Video.tsx"
+ ],
+ "One chain runs its nodes in order. This makes the readers sequential; the graph runs them in parallel.": [
+  "steps/FanOut.tsx"
+ ],
+ "One chain: START, then scan_trends, then the join.": [
+  "steps/FanOut.tsx"
+ ],
+ "One edge is the whole change — START to read_feedback to the join. The join now waits for three readers.": [
+  "steps/Rag.tsx"
+ ],
+ "One memories.generate call. The exchange text goes in with the scope. A Gemini model extracts facts, one per topic that applies, including a CREATOR_TASTE fact and, when the text states a rule, a CHANNEL_RULES fact; anything outside the two topics is dropped. Each fact is embedded and compared with the memories already in the scope; a close match updates that memory, no match creates a new one. The response lists each generated memory with its action, CREATED or UPDATED.": [
+  "steps/Memory.tsx"
+ ],
+ "One model call": [
+  "steps/PolicyGate.tsx"
+ ],
+ "One model call per run: propose_directions. After edit 1 the run completes with the candidates in state. After edit 2 it stops on a form built from your response_schema.": [
+  "steps/FanOut.tsx"
+ ],
+ "One model call, no conversation. Input from the previous node, one structured object out. The default for an agent used as a node.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "One {0} call. RAG Engine splits the file into passages a few comments long, embeds each passage with the corpus's model, and stores the vectors. The index answers a few seconds to two minutes after the upload; the command probes it with a query until it does.{1}": [
+  "steps/Rag.tsx"
+ ],
+ "Open Vibe Studio": [
+  "steps/Deploy.tsx"
+ ],
+ "Open adk web": [
+  "steps/FanOut.tsx",
+  "steps/SinglePrompt.tsx"
+ ],
+ "Open adk web and talk to the agent.": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "Open join_research's event. Its output is one dict: a scan_trends key with ten trending topics, and a read_backlog key with the fifteen backlog notes and your idea.": [
+  "steps/FanOut.tsx"
+ ],
+ "Open the propose_directions event: one model call, one structured reply, four candidates with a title, an angle, and a hook each. Read candidate 4: its title carries a word the channel refuses. Nothing asks you anything yet; 4d adds the node that stops the graph and shows them to you.": [
+  "steps/FanOut.tsx"
+ ],
+ "Open the read_feedback event to verify the query matches your idea, with the output containing the five nearest passages. Open join_research to confirm the bundle includes the third key. Then inspect propose_directions to observe candidates 1 to 3 aligning with audience feedback citations.": [
+  "steps/Rag.tsx"
+ ],
+ "Output": [
+  "steps/AdkGlance.tsx"
+ ],
+ "Outside the agent · external state": [
+  "steps/AdkGlance.tsx"
+ ],
+ "Pair": [
+  "steps/Memory.tsx"
+ ],
+ "Parallel research fan-out": [
+  "steps/FanOut.tsx",
+  "steps/registry.tsx"
+ ],
+ "Parallel synchronization with three reader nodes.": [
+  "steps/Rag.tsx"
+ ],
+ "Pending receipts and session suspension mechanics.": [
+  "steps/Video.tsx"
+ ],
+ "Pending. The run ended here; deliver below.": [
+  "steps/Video.tsx"
+ ],
+ "Per-conversation state and the event log: the working memory of the current run. Lives outside the agent, in a SessionService.": [
+  "steps/AdkGlance.tsx"
+ ],
+ "Persist chosen direction to session state.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Pick one candidate and let the run finish. Then submit the same idea again to compare. The retrieved passages remain identical while the proposed candidates vary, demonstrating deterministic retrieval paired with probabilistic generation.": [
+  "steps/Rag.tsx"
+ ],
+ "Pick one of four directions.": [
+  "steps/Overview.tsx"
+ ],
+ "Platform trends": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "Post your video.": [
+  "steps/Summary.tsx"
+ ],
+ "Pre-deployment checklist": [
+  "steps/Deploy.tsx"
+ ],
+ "Production deployment architecture.": [
+  "steps/Deploy.tsx"
+ ],
+ "Production scripting vs. quarantine remediation.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Provision Memory Bank and seed historical interactions.": [
+  "steps/Memory.tsx"
+ ],
+ "Publish the clip when it lands.": [
+  "steps/Overview.tsx"
+ ],
+ "Put this block back as the lab shipped it, TODO line and all. Your edits to it are gone.": [
+  "components/CodeEditor.tsx"
+ ],
+ "Python call": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "RAG Engine could not provision a corpus for this project right now: {0}. The lab continues without audience feedback; run the first command again later.": [
+  "steps/Rag.tsx"
+ ],
+ "RAG Engine runs on GEAP with a corpus containing an embedding model and a vector store, alongside files imported from local disk, Cloud Storage, Google Drive, Slack, Jira, or SharePoint.": [
+  "steps/Rag.tsx"
+ ],
+ "RAG Engine · corpus": [
+  "steps/Rag.tsx"
+ ],
+ "RAG Engine · read_feedback": [
+  "steps/Deploy.tsx"
+ ],
+ "RAG Engine · the comments": [
+  "steps/Summary.tsx"
+ ],
+ "RAG Engine · vibestudio-feedback": [
+  "steps/Rag.tsx"
+ ],
+ "RAG · MEANING IN, MEANING OUT": [
+  "steps/Rag.tsx"
+ ],
+ "REST /api/*": [
+  "steps/Deploy.tsx"
+ ],
+ "Read from agent/graph.py, this step's app file, and its sessions in runs/sessions.db.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Read from agent/graph.py, this step's app file, and the latest stage3_router session's state.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Read from runs/ragcorpus.json, this step's app file, and the latest stage5_rag session's events.": [
+  "steps/Rag.tsx"
+ ],
+ "Read from stage2_direction/agent.py and the latest stage2_direction session.": [
+  "steps/FanOut.tsx"
+ ],
+ "Read from stage4_memory/agent.py, runs/memorybank.json, and the latest stage4_memory session's state.": [
+  "steps/Memory.tsx"
+ ],
+ "Read from the file and the stage1_fanout sessions in runs/sessions.db. Every node's output is an event; these rows count them.": [
+  "steps/FanOut.tsx"
+ ],
+ "Read from the two files and the stage2_direction sessions in runs/sessions.db.": [
+  "steps/FanOut.tsx"
+ ],
+ "Read from this step's app file and its sessions in runs/sessions.db.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Read from this step's app file, the latest stage6_video session's events and state, and runs/state.json.": [
+  "steps/Video.tsx"
+ ],
+ "Read the file from disk again. Unsaved edits here are dropped.": [
+  "components/CodeEditor.tsx"
+ ],
+ "Read the stage 1 graph, then click the {0} entries that describe it. {1} of the options describe a different graph; each one explains what it would change.": [
+  "steps/FanOut.tsx"
+ ],
+ "Reads the bank in your project, oldest memory first. The same call the callback makes before propose_directions runs.": [
+  "steps/Memory.tsx"
+ ],
+ "Reads the corpus in your project, displaying the resource name and the files in it. Passages are not listed by the API; the query command shows them.": [
+  "steps/Rag.tsx"
+ ],
+ "Reads the creator's backlog, fifteen ideas in agent/backlog.txt, and takes tonight's idea from your message. Both travel together into the join.": [
+  "steps/FanOut.tsx"
+ ],
+ "Reads what is trending: ten of 250 trends, each a format paired with a look, with a heat score. A different ten every run.": [
+  "steps/FanOut.tsx"
+ ],
+ "Refresh adk web": [
+  "steps/Video.tsx"
+ ],
+ "Refuses a bad direction before it costs money.": [
+  "steps/Story.tsx"
+ ],
+ "Reload adk web": [
+  "components/LoadedBadge.tsx"
+ ],
+ "Reload the code": [
+  "components/LoadedBadge.tsx"
+ ],
+ "Remembers what you picked last time, and reads what the audience said.": [
+  "steps/Story.tsx"
+ ],
+ "Replace the empty list with the chains.": [
+  "steps/FanOut.tsx"
+ ],
+ "RequestInput in place ✓": [
+  "steps/FanOut.tsx"
+ ],
+ "Research nodes executing prior to proposal generation operate in parallel fan-out chains. Adding an edge from START through {0} to {1} configures the join node to synchronize all three inputs into a unified dictionary.": [
+  "steps/Rag.tsx"
+ ],
+ "Retrieval over documents": [
+  "steps/Rag.tsx"
+ ],
+ "Retrieval-Augmented Generation grounds model reasoning on unstructured corpus data. Using GEAP RAG Engine, documents are ingested, chunked, and embedded into a managed vector store, enabling semantic passage retrieval during workflow execution.": [
+  "steps/Rag.tsx"
+ ],
+ "Retrieve": [
+  "steps/Rag.tsx"
+ ],
+ "Retrieved {0} memories · newest · {1}": [
+  "steps/Memory.tsx"
+ ],
+ "Return Content to replace the agent's reply, or None to keep it.": [
+  "steps/Memory.tsx"
+ ],
+ "Return a dict to replace the tool's result, or None to proceed.": [
+  "steps/Memory.tsx"
+ ],
+ "Return an LlmResponse to skip or replace the model's answer, or None to proceed.": [
+  "steps/Memory.tsx"
+ ],
+ "Return value": [
+  "steps/Memory.tsx"
+ ],
+ "Reversed. Edges run left to right; a reader reports to the join, it does not run after it.": [
+  "steps/FanOut.tsx"
+ ],
+ "Root or standalone conversational agents.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Route sanitized directions to the scripter.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Router nodes introduce deterministic control flow without incurring LLM inference costs. By evaluating payloads against explicit policy rules, the router directs execution branches conditionally via dictionary edge mapping.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Routing is plain code and policy is data. The gate is a function and a text file, decided before any money is spent.": [
+  "steps/Summary.tsx"
+ ],
+ "Run first.": [
+  "steps/FanOut.tsx"
+ ],
+ "Run it": [
+  "steps/FanOut.tsx",
+  "steps/SinglePrompt.tsx"
+ ],
+ "Run it after each edit.": [
+  "steps/FanOut.tsx"
+ ],
+ "Run stage 2 in adk web.": [
+  "steps/FanOut.tsx"
+ ],
+ "Run the commands below to provision the corpus resource, upload audience comment documents with 120-token chunking, and test semantic retrieval against the indexed vector database.": [
+  "steps/Rag.tsx"
+ ],
+ "Run the delivery below. When it finishes, click Refresh adk web to reopen the session. The function_response and store_video follow the pending call, committing render_url to state.": [
+  "steps/Video.tsx"
+ ],
+ "Run the first command in 7a.": [
+  "steps/Rag.tsx"
+ ],
+ "Run the workflow in adk web.": [
+  "steps/FanOut.tsx"
+ ],
+ "Runs the routine steps on its own, in a fixed order.": [
+  "steps/Story.tsx"
+ ],
+ "Runs when the delivery resumes the session.": [
+  "steps/Video.tsx"
+ ],
+ "Runtime environment": [
+  "steps/Deploy.tsx"
+ ],
+ "SSE /api/events": [
+  "steps/Deploy.tsx"
+ ],
+ "START fans out to scan_trends and read_backlog, both join at join_research": [
+  "steps/FanOut.tsx"
+ ],
+ "START fans out to scan_trends and read_backlog, two function nodes; both feed join_research, a JoinNode.": [
+  "steps/FanOut.tsx"
+ ],
+ "START → both readers → join_research": [
+  "steps/FanOut.tsx"
+ ],
+ "Sample RequestInput": [
+  "steps/FanOut.tsx"
+ ],
+ "Sample router": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Save both edits above, then click the button. It loads your saved file the way adk web will and tells you either that it loads or what ADK objects to, so a missing argument or a stray bracket is caught here rather than in the run.": [
+  "steps/FanOut.tsx"
+ ],
+ "Save both edits above, then verify module loading to confirm the updated router edges compile cleanly.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Save both edits, then click the button. It loads stage1_fanout the way adk web will and tells you either that it loads or what ADK objects to.": [
+  "steps/FanOut.tsx"
+ ],
+ "Save both edits, then verify module loading to confirm the agent callback configurations import cleanly.": [
+  "steps/Memory.tsx"
+ ],
+ "Save both edits, then verify module loading to confirm the updated workflow graph topology is valid.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Save both edits, then verify module loading to ensure the workflow graph imports cleanly without syntax or configuration errors.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Save now": [
+  "components/CodeEditor.tsx"
+ ],
+ "Save the tools edit, then click the button. It loads stage0_prompt the way adk web will and tells you either that it loads or what ADK objects to.": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "Save, then click the button. It loads stage2_direction the way adk web will and tells you either that it loads or what ADK objects to.": [
+  "steps/FanOut.tsx"
+ ],
+ "Save, then verify module loading to confirm the completed pipeline edges import cleanly without errors.": [
+  "steps/Video.tsx"
+ ],
+ "Save, then verify module loading to confirm the updated edge list and reader imports compile cleanly.": [
+  "steps/Rag.tsx"
+ ],
+ "Saving is the {0} call in {1}. The underlying ingestion process executes as follows.": [
+  "steps/Memory.tsx"
+ ],
+ "Scope definitions and ingestion lifecycle.": [
+  "steps/Memory.tsx"
+ ],
+ "Scoped entity memory architecture.": [
+  "steps/Memory.tsx"
+ ],
+ "Script title · {0}": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Seeds four past sessions, oldest first, including two animal picks with one stated rule, one gadget pick, and one fantasy pick.": [
+  "steps/Memory.tsx"
+ ],
+ "Select candidate 4 in the approval form. Candidate 4 contains terms that trigger the policy gate. The policy_check node routes execution to quarantine.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Select candidate 4 to trigger quarantine": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Select or hover a node to inspect its architectural pattern, implementation details, and learning module.": [
+  "steps/Summary.tsx"
+ ],
+ "Self-certified safety": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "Semantic chunking and token efficiency.": [
+  "steps/Rag.tsx"
+ ],
+ "Send an empty message. Open the propose_directions event to confirm the request carries a MEMORY block with the three eras. Candidates 1 to 3 lean toward fantasy, reflecting the most recent taste, while trends suggest something else. Select a candidate.": [
+  "steps/Memory.tsx"
+ ],
+ "Send an idea prompt and submit your direction choice. Following script generation, render_desk initiates the video render and the workflow suspends execution with a pending receipt.{0}": [
+  "steps/Video.tsx"
+ ],
+ "Send this in the chat box": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "Send your idea in the chat box": [
+  "steps/FanOut.tsx"
+ ],
+ "Session state is the merged result of every {0} in the run. adk web shows it in the State tab, and a function node's parameters are bound from it by name.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Session state persistence.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Share it": [
+  "steps/Summary.tsx"
+ ],
+ "Share it on social media and say what you made: the idea you started from, and the video the workflow made of it.": [
+  "steps/Summary.tsx"
+ ],
+ "Show the bank": [
+  "steps/Memory.tsx"
+ ],
+ "Show the code": [
+  "steps/Memory.tsx",
+  "steps/Rag.tsx",
+  "steps/Video.tsx"
+ ],
+ "Show the corpus": [
+  "steps/Rag.tsx"
+ ],
+ "Single-agent orchestration with function tools; function_call and function_response mechanics; architectural limitations of unstructured natural language coordination between pipeline stages": [
+  "steps/Summary.tsx"
+ ],
+ "Six chores arranged in a ring around one person: research the trend, comb the backlog, choose a direction, check the policy, write the script, render the clip. The ring repeats every week. Gemini can do the research, the backlog and the script alone; Veo can render alone; choosing and checking are the person's.": [
+  "steps/Story.tsx"
+ ],
+ "Slack": [
+  "steps/Rag.tsx"
+ ],
+ "Something else wrote this file. Show it as it is now; your unsaved edits here are dropped.": [
+  "components/CodeEditor.tsx"
+ ],
+ "Standard LLM interactions are stateless across distinct user sessions. Memory Bank introduces persistent episodic and semantic user memory, automatically extracting preferences, consolidating duplicate facts, and providing scoped retrieval without cluttering prompt context.": [
+  "steps/Memory.tsx"
+ ],
+ "Start building": [
+  "steps/registry.tsx"
+ ],
+ "Start the third chain from the join.": [
+  "steps/FanOut.tsx"
+ ],
+ "State and Router": [
+  "steps/registry.tsx"
+ ],
+ "State lives and dies with the run. Memory Bank rewrites facts as it learns. RAG Engine keeps the text as written and finds the passages that fit a question.": [
+  "steps/Rag.tsx"
+ ],
+ "State persistence architecture": [
+  "steps/PolicyGate.tsx"
+ ],
+ "State persistence via store_video.": [
+  "steps/Video.tsx"
+ ],
+ "Step": [
+  "steps/Summary.tsx"
+ ],
+ "Step 1 · The story": [
+  "steps/Story.tsx"
+ ],
+ "Step 10 · Summary": [
+  "steps/Summary.tsx"
+ ],
+ "Step 2 · What you build today": [
+  "steps/Overview.tsx"
+ ],
+ "Step 3 · Monolithic Agent Architecture": [
+  "steps/Summary.tsx"
+ ],
+ "Step 3a · ADK agent architecture": [
+  "steps/AdkGlance.tsx"
+ ],
+ "Step 3b · Monolithic agent specification": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "Step 3c · Tools in Agent": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "Step 4 · Agentic Workflow Fundamentals": [
+  "steps/Summary.tsx"
+ ],
+ "Step 4a · Graph architecture and execution chains": [
+  "steps/FanOut.tsx",
+  "steps/Summary.tsx"
+ ],
+ "Step 4b · Parallel research fan-out": [
+  "steps/FanOut.tsx",
+  "steps/Summary.tsx"
+ ],
+ "Step 4c · Agent nodes": [
+  "steps/FanOut.tsx",
+  "steps/Summary.tsx"
+ ],
+ "Step 4d · Human-in-the-loop": [
+  "steps/FanOut.tsx",
+  "steps/Summary.tsx"
+ ],
+ "Step 5 · State Management & Conditional Routing": [
+  "steps/Summary.tsx"
+ ],
+ "Step 5a · Workflow State": [
+  "steps/PolicyGate.tsx",
+  "steps/Summary.tsx"
+ ],
+ "Step 5b · The router node": [
+  "steps/PolicyGate.tsx",
+  "steps/Summary.tsx"
+ ],
+ "Step 5c · Agent modes and the task node": [
+  "steps/PolicyGate.tsx",
+  "steps/Summary.tsx"
+ ],
+ "Step 6 · Long-Term Memory Bank": [
+  "steps/Summary.tsx"
+ ],
+ "Step 6a · Memory Bank": [
+  "steps/Memory.tsx"
+ ],
+ "Step 6b · Callbacks": [
+  "steps/Memory.tsx"
+ ],
+ "Step 7a · RAG Engine": [
+  "steps/Rag.tsx"
+ ],
+ "Step 7b · The third reader": [
+  "steps/Rag.tsx",
+  "steps/Summary.tsx"
+ ],
+ "Step 8 · Long-Running Video Generation": [
+  "steps/Summary.tsx"
+ ],
+ "Step 8a edit.": [
+  "steps/Video.tsx"
+ ],
+ "Step 8a second edit.": [
+  "steps/Video.tsx"
+ ],
+ "Step 8a · A long-running tool": [
+  "steps/Summary.tsx",
+  "steps/Video.tsx"
+ ],
+ "Step 8b · render_desk in the graph": [
+  "steps/Summary.tsx",
+  "steps/Video.tsx"
+ ],
+ "Step 9 · Deploy": [
+  "steps/Deploy.tsx"
+ ],
+ "Step 9 · Production Deployment Architecture": [
+  "steps/Summary.tsx"
+ ],
+ "Step {0} of {1}": [
+  "components/StepShell.tsx"
+ ],
+ "Steps 2 to 8: you build the Workflow in the workbench. Step 9: the graph inside VibeStudio, an app, deployed to Cloud Run. The video it makes is published on vibetube.dev.": [
+  "steps/Story.tsx"
+ ],
+ "Structured session state binding.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Submit": [
+  "steps/FanOut.tsx"
+ ],
+ "Submit '2' in the approval gate form. A state delta event follows the gate, and persist_direction outputs the resolved candidate dictionary before the run terminates.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Submit an idea prompt to observe parallel execution across all three research readers. The join consolidates the three streams into a unified research bundle that steers candidate proposal generation.": [
+  "steps/Rag.tsx"
+ ],
+ "Submit the idea and select candidate 1, 2, or 3. These candidates adhere to channel policy. The policy_check node emits the OK route, triggering scripter to generate the structured Script payload.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Summary": [
+  "steps/registry.tsx"
+ ],
+ "Suspends the graph until a person answers. The schema is what a frontend renders as a form.": [
+  "steps/FanOut.tsx"
+ ],
+ "Switch to dark mode": [
+  "components/TopNav.tsx"
+ ],
+ "Switch to light mode": [
+  "components/TopNav.tsx"
+ ],
+ "System topology across Cloud Run and GEAP platform services.": [
+  "steps/Deploy.tsx"
+ ],
+ "Takes the newest pending render, polls Veo until the clip exists, writes the result to runs/state.json, and resumes the session with a function_response for the call's id. The graph continues; the nodes it runs print here.": [
+  "steps/Video.tsx"
+ ],
+ "Task mode equips the agent with autonomous tool execution, concluding when the agent invokes {0}. ADK automatically injects this completion tool, validating its arguments against {1} to emit a strongly typed {2}.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "That is every pending render in the session store. Run the delivery to answer the newest one.": [
+  "steps/Video.tsx"
+ ],
+ "That is everything the bank holds for this creator, oldest first.": [
+  "steps/Memory.tsx"
+ ],
+ "The ADK Runner executes workflow graphs asynchronously on a dedicated worker thread with an isolated event loop, ensuring long-running node execution does not block HTTP request processing. Each ADK event stream item folds into the aggregate run state and broadcasts downstream via SSE, streaming node transitions, gate suspensions with option candidates, render receipts, polling status checks, video deliveries, and publication events. The frontend renders workflow topologies dynamically via {0}, reflecting the current state of {1}.": [
+  "steps/Deploy.tsx"
+ ],
+ "The LLM the agent runs on, for example Gemini. It performs the reasoning; everything else feeds or constrains it.": [
+  "steps/AdkGlance.tsx"
+ ],
+ "The LlmRequest about to go out, or the LlmResponse that came back.": [
+  "steps/Memory.tsx"
+ ],
+ "The agent node ran after the join": [
+  "steps/FanOut.tsx"
+ ],
+ "The agent ran": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "The app owns the loop, not the graph: a Runner drives it, an event stream shows it, the graph itself does not know a page exists.": [
+  "steps/Summary.tsx"
+ ],
+ "The app, holding the page, a Runner and an event stream, drives the graph and shows its events. The graph, in its own box, has no arrow back to the page.": [
+  "steps/Summary.tsx"
+ ],
+ "The arguments of an agent node.": [
+  "steps/FanOut.tsx"
+ ],
+ "The backlog reached the join": [
+  "steps/FanOut.tsx"
+ ],
+ "The backlog, and what is trending.": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "The bank": [
+  "steps/Memory.tsx"
+ ],
+ "The bank exists in your project and this lab is connected to it. Next, load the creator's history.": [
+  "steps/Memory.tsx"
+ ],
+ "The callbacks": [
+  "steps/Memory.tsx"
+ ],
+ "The chain ends at propose_directions, so each run is one model call and ends with its four candidates as the workflow's output.": [
+  "steps/FanOut.tsx"
+ ],
+ "The chain from the join reaches it": [
+  "steps/FanOut.tsx"
+ ],
+ "The clip was delivered to the pending call and the run finished. adk web still shows the run ending at the receipt until the session is reloaded.": [
+  "steps/Video.tsx"
+ ],
+ "The command exited with {0}": [
+  "components/DoneBanner.tsx"
+ ],
+ "The comments are split into passages, embedded, and indexed. Next, ask the corpus a question.": [
+  "steps/Rag.tsx"
+ ],
+ "The corpus": [
+  "steps/Rag.tsx"
+ ],
+ "The corpus exists in your project and this lab is connected to it. Next, load the comments.": [
+  "steps/Rag.tsx"
+ ],
+ "The creator's history is in the bank, consolidated into facts. Next, list what it kept.": [
+  "steps/Memory.tsx"
+ ],
+ "The dev UI opens with stage1_fanout selected. It draws the graph from your edge list, and each node's output arrives as its own event. No model call in this stage.": [
+  "steps/FanOut.tsx"
+ ],
+ "The docs are split into passages, each passage is embedded into a vector by text-embedding-005 and stored; a question is embedded the same way and the nearest passages come back.": [
+  "steps/Rag.tsx"
+ ],
+ "The edit above.": [
+  "steps/Rag.tsx",
+  "steps/Video.tsx"
+ ],
+ "The external delivery worker records asset metadata to {0}. When the workflow resumes, {1} reads the output file and writes {2} and {3} directly into session state, ensuring the workflow session maintains a complete record of the generated artifact.": [
+  "steps/Video.tsx"
+ ],
+ "The fan-out, the join, then propose_directions lights and the run ends.": [
+  "steps/FanOut.tsx"
+ ],
+ "The final instruction asks the model to confirm the direction with the creator. Because this is prompt text rather than a deterministic boundary, the model can easily be steered to bypass human approval.": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "The finished workflow: START fans out to scan_trends, read_backlog and read_feedback, then join_research, propose_directions, direction_gate, persist_direction, policy_check routing OK to scripter and BLOCK to quarantine, render_desk, store_video.": [
+  "steps/Overview.tsx"
+ ],
+ "The first agent node.": [
+  "steps/FanOut.tsx"
+ ],
+ "The four shapes an edge entry takes. A chain: START, scan_trends, join_research run in that order. Two entries from the same source: scan_trends and read_backlog both start when START finishes, at the same time. Two chains arriving at a JoinNode: join_research waits for both, then one chain continues. A dictionary target: policy_check's route name, OK or BLOCK, picks which edge is taken.": [
+  "steps/FanOut.tsx"
+ ],
+ "The graph": [
+  "steps/Rag.tsx"
+ ],
+ "The graph after this part. START fans out to scan_trends and read_backlog, then join_research, propose_directions, direction_gate, and the new persist_direction.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "The graph enforces deterministic research retrieval. Both reader chains originate at START, ensuring both execute concurrently on every run. The join barrier synchronizes the branches and passes an aggregated dictionary to downstream nodes.": [
+  "steps/FanOut.tsx"
+ ],
+ "The graph now": [
+  "steps/PolicyGate.tsx"
+ ],
+ "The graph so far": [
+  "steps/PolicyGate.tsx"
+ ],
+ "The graph suspended": [
+  "steps/FanOut.tsx"
+ ],
+ "The graph to build": [
+  "steps/FanOut.tsx"
+ ],
+ "The highlighted agents attach lifecycle callbacks while preserving existing edge topology.": [
+  "steps/Memory.tsx"
+ ],
+ "The highlighted line has an empty {0}. Put the two functions defined above it into that list. Saving writes the file; adk web reloads the agent on the next message.": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "The instruction asked for agreement first. See whether it holds.": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "The instruction · abridged": [
+  "steps/FanOut.tsx"
+ ],
+ "The join fired once with both outputs": [
+  "steps/FanOut.tsx"
+ ],
+ "The join has nothing to wait for. The readers never run.": [
+  "steps/FanOut.tsx"
+ ],
+ "The lab continues without audience feedback. Run 7a's first command again later.": [
+  "steps/Rag.tsx"
+ ],
+ "The model works with its tools for as many calls as it needs and ends by calling the built-in finish_task tool. What it hands to finish_task, typed by output_schema, is the node's output.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "The monolithic prompt baseline.": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "The node": [
+  "steps/Rag.tsx"
+ ],
+ "The node after render_desk": [
+  "steps/Video.tsx"
+ ],
+ "The nodes": [
+  "steps/FanOut.tsx"
+ ],
+ "The only thing that resumes it is a {0} carrying that id. adk web sends one when you submit the form. The response is validated against your schema, the graph picks up at the gate, and the answer becomes the next node's {1}. A chat message to the workflow is a new turn, not an answer, which is why the pause cannot be talked past.": [
+  "steps/FanOut.tsx"
+ ],
+ "The output above says why.": [
+  "components/DoneBanner.tsx"
+ ],
+ "The output schema": [
+  "steps/FanOut.tsx"
+ ],
+ "The page is locked until the command finishes.": [
+  "steps/Memory.tsx",
+  "steps/Rag.tsx",
+  "steps/Video.tsx"
+ ],
+ "The person's answer becomes the next node's {0}. That node is code, not a model: {1} reads {2} by name, passing directly into downstream deterministic validation logic. Free text would hand downstream nodes a parsing problem, and each would solve it differently. A {3} settles the shape once, at the pause, and ADK validates the answer against it before the graph resumes.": [
+  "steps/FanOut.tsx"
+ ],
+ "The pieces": [
+  "steps/FanOut.tsx"
+ ],
+ "The pipeline grounds content generation using two external data sources. {0} contains the creator's archived concept notes, stored one per line. Platform trends are simulated from a catalog of 250 active formats and visual styles, sampling ten scored entries per invocation. The agent synthesizes these sources, aligning the creator's backlog notes with current platform momentum.": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "The production pipeline delivers:": [
+  "steps/Story.tsx"
+ ],
+ "The prompt shown to the person.": [
+  "steps/FanOut.tsx"
+ ],
+ "The property, for edit 1:": [
+  "steps/FanOut.tsx"
+ ],
+ "The question is embedded with the same model the passages were, and the nearest passages come back with their distance. The results panel below keeps them once you close this.": [
+  "steps/Rag.tsx"
+ ],
+ "The readers · function nodes": [
+  "steps/FanOut.tsx"
+ ],
+ "The replacement list · data, like the policy": [
+  "steps/PolicyGate.tsx"
+ ],
+ "The research functions are defined in {0}. ADK inspects functions passed to {1} and automatically generates schema declarations from their signatures and docstrings. During inference, the model emits a {2} event. The runtime executes the local Python function and injects a corresponding {3} event back into the context window.": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "The returned {0} dictates branch dispatch. The payload is forwarded to the node mapped by the selected route key in the edge dictionary. In {1}, {2} identifies prohibited terms in the title and angle, preparing the route decision.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "The router node": [
+  "steps/PolicyGate.tsx",
+  "steps/registry.tsx"
+ ],
+ "The router returns a route name; the edge dict maps each name to a node. In Step 5b, a blocked direction ends the run.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "The same schema acts as a frontend contract. ADK Web renders it as a form, while the production VibeStudio application renders the same schema as a radio list, and a chat bot or a phone app could render it without any change to the graph. {0} travels with the request for that frontend to display.": [
+  "steps/FanOut.tsx"
+ ],
+ "The schema is rendered as the form, the answer is validated against it, and the next node reads the same key.": [
+  "steps/FanOut.tsx"
+ ],
+ "The schema is the part that matters for the rest of the graph. The model's reply is validated against it, so the node after propose_directions receives a {0} object with exactly four candidates, not free text. In 4d that node is a pause that shows the four titles to a person.": [
+  "steps/FanOut.tsx"
+ ],
+ "The scripter wrote the script for it": [
+  "steps/PolicyGate.tsx"
+ ],
+ "The scripter wrote tonight's pick to the bank": [
+  "steps/Memory.tsx"
+ ],
+ "The scripter · an agent node": [
+  "steps/PolicyGate.tsx"
+ ],
+ "The scripter's callback hands one exchange to Memory Bank with memories.generate. Memory Bank, an Agent Runtime resource on GEAP, keeps facts under a scope of app_name and user_id and two topics, CREATOR_TASTE and CHANNEL_RULES. Inside, a Gemini model extracts facts, the facts are embedded, and similar facts are consolidated into one memory. propose_directions' callback reads them back with memories.retrieve by scope. Documents go to RAG Engine; a person's preferences go here.": [
+  "steps/Memory.tsx"
+ ],
+ "The scripter's instruction · abridged": [
+  "steps/PolicyGate.tsx"
+ ],
+ "The scripter's output schema": [
+  "steps/PolicyGate.tsx"
+ ],
+ "The skeleton is in place. Add the three arguments in the editor below.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "The sources": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "The stage 2 chain runs from START through the two readers, the join and propose_directions to direction_gate, where the run is paused waiting for a function_response. persist_direction is shown dashed below the gate.": [
+  "steps/FanOut.tsx"
+ ],
+ "The story": [
+  "steps/registry.tsx"
+ ],
+ "The system prompt: the agent's standing directive, persona, and rules.": [
+  "steps/AdkGlance.tsx"
+ ],
+ "The third reader": [
+  "steps/Rag.tsx",
+  "steps/registry.tsx"
+ ],
+ "The tool": [
+  "steps/Video.tsx"
+ ],
+ "The tool, its arguments, and its result.": [
+  "steps/Memory.tsx"
+ ],
+ "The two edges are in the file": [
+  "steps/FanOut.tsx"
+ ],
+ "The video": [
+  "steps/registry.tsx"
+ ],
+ "The web frontend never interfaces with ADK directly or accesses disk storage. The FastAPI server hosts the ADK Runner, render poller, asset publishing pipeline, and session state. Outbound model inference, semantic memory, vector retrieval, and video generation dispatch to GEAP platform services in the same project.": [
+  "steps/Deploy.tsx"
+ ],
+ "The workflow extends the research fan-out, join synchronization, direction proposer, and approval gate. This stage appends {0} after the gate, mapping the selected choice into state for downstream nodes to read.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "The workflow invokes propose_directions, suspends execution at direction_gate, and resumes upon form submission to persist selected attributes into session state.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "The workflow keeps the operation id, not a wait. The delivery answers that id from wherever it runs, even after a restart.": [
+  "steps/Video.tsx"
+ ],
+ "The workflow process writes the pending call and stops. The delivery process reads it, polls Veo, and answers it; the answer restarts the workflow.": [
+  "steps/Video.tsx"
+ ],
+ "The workflow ran": [
+  "steps/FanOut.tsx"
+ ],
+ "The workflow so far": [
+  "steps/Memory.tsx"
+ ],
+ "The workflow with audience feedback retrieval where START fans out to scan_trends, read_backlog and the new read_feedback, all into join_research, then propose_directions, direction_gate, persist_direction, policy_check routing OK to scripter and BLOCK to quarantine, which continues to scripter.": [
+  "steps/Rag.tsx"
+ ],
+ "The workflow with memory callbacks where START fans out to scan_trends and read_backlog, join_research, propose_directions with before_model_callback recall_taste, direction_gate, persist_direction, policy_check routing OK to scripter with after_agent_callback remember_pick and BLOCK to quarantine, which continues to scripter.": [
+  "steps/Memory.tsx"
+ ],
+ "The workflow with video generation showing the research readers, scripter, and the new render_desk and store_video nodes.": [
+  "steps/Video.tsx"
+ ],
+ "The workflow you finish with · each node names the step that adds it": [
+  "steps/Overview.tsx"
+ ],
+ "The write runs after the scripter; wait for the run to finish.": [
+  "steps/Memory.tsx"
+ ],
+ "The {0} agent submits the video generation job to Veo and receives a pending receipt. The workflow execution immediately suspends, persisting the open call identifier to session state. An external poller independently tracks generation progress and resumes execution once the asset is ready.": [
+  "steps/Video.tsx"
+ ],
+ "The {0} function executes a vector retrieval query against the corpus, projecting query text into vector space and retrieving the top-k nearest passages along with similarity scores and provenance metadata. The workflow invokes this function directly inside a reader node.": [
+  "steps/Rag.tsx"
+ ],
+ "The {0} parameter controls an Agent's execution lifecycle. While root conversational agents require {1} mode, graph nodes typically operate in {2} mode. For complex multi-step reasoning, {3} mode enables autonomous tool calling until explicit completion is reached.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Then": [
+  "steps/FanOut.tsx"
+ ],
+ "Then send this": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "Those are the passages nearest to your question, closest first.": [
+  "steps/Rag.tsx"
+ ],
+ "Three agent modes. In chat mode, a person and the model exchange messages turn after turn, and the model calls tools when it decides to; the conversation ends when the model stops. In single_turn mode, the previous node's output goes into one model call, and one typed object comes out for the next node. In task mode, the previous node's output goes to the model, which calls its tools as many times as it needs and ends by calling finish_task; what it hands to finish_task is the node's output.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Three passages, by distance": [
+  "steps/Rag.tsx"
+ ],
+ "Three senders, a page, a console and another process after a restart, each sending the same function_response with the call's id into the one open call.": [
+  "steps/Summary.tsx"
+ ],
+ "Three stores where session state holds what one run knows, Memory Bank holds consolidated facts about a person, and RAG Engine holds what people wrote, verbatim, searchable by meaning.": [
+  "steps/Rag.tsx"
+ ],
+ "Timeline illustrating workflow execution where the scripter runs, render_desk calls render_submit and receives a pending receipt, the workflow suspends with the call id in the session; meanwhile Veo renders; later deliver polls Veo, answers the call by id, the call closes and store_video runs.": [
+  "steps/Video.tsx"
+ ],
+ "Toggle theme": [
+  "components/TopNav.tsx"
+ ],
+ "Tools in Agent": [
+  "steps/SinglePrompt.tsx",
+  "steps/registry.tsx"
+ ],
+ "Tools in Agent.": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "Trigger the delivery worker below to locate the pending call in session storage, poll the operation until finished, and transmit the resumption FunctionResponse to complete the pipeline.": [
+  "steps/Video.tsx"
+ ],
+ "Trigger the policy-violating branch to observe quarantine autonomously iterating with its tools to clean the direction before forwarding it to the scripter.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Triggering deployment executes the gcloud deployment command via a background subshell and streams stdout directly to the console. Cloud Build parses the multi-stage Dockerfile, compiles the frontend bundle and FastAPI server into a unified container image, and deploys it to Cloud Run. Initial container builds require several minutes for dependency resolution and layer caching.{0}": [
+  "steps/Deploy.tsx"
+ ],
+ "Twelve past sessions in three eras flow into the CREATOR_TASTE and CHANNEL_RULES topics of the Memory Bank as memories are created or updated.": [
+  "steps/Memory.tsx"
+ ],
+ "Two nodes light together on the map, then the join.": [
+  "steps/FanOut.tsx"
+ ],
+ "Two paused nodes: direction_gate, resumed by a person's answer, and render_desk, resumed by the receipt of the render. A clock, struck out: nothing waits on a timer.": [
+  "steps/Summary.tsx"
+ ],
+ "Two processes where the workflow process is paused at render_desk with the pending call in the session store; the delivery process reads that call, polls Veo every ten seconds, and when the clip is done sends a function_response into the session, which restarts the workflow at store_video.": [
+  "steps/Video.tsx"
+ ],
+ "Two tool-call events appear, then the reply.": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "Type the video idea.": [
+  "steps/Overview.tsx"
+ ],
+ "Unenforced confirmation": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "Unlike single-turn agents that return immediate structured responses, task-mode agents run autonomous tool-use loops until explicit completion criteria are met. When policy violations occur, quarantine iterates with analysis tools until the payload is sanitized.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Unstructured research": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "Update quarantine to an Agent first. Click here →": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Uploads agent/comments.md where the file is split into passages, each passage embedded and stored. About two minutes while the index builds. Rerun it after editing the comments; the previous copy is replaced.": [
+  "steps/Rag.tsx"
+ ],
+ "Upon completion, the worker records the artifact URL to {0} and dispatches a {1} message targeted to the pending call's ID. ADK matches the response to the suspended tool call, resumes workflow execution from the exact point of suspension, and routes forward to {2}. In the production app, the server handles this lifecycle automatically in background threads.": [
+  "steps/Video.tsx"
+ ],
+ "Validate autonomous remediation on policy violation.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "Veo · costs money": [
+  "steps/Summary.tsx"
+ ],
+ "Veo · in Google Cloud": [
+  "steps/Video.tsx"
+ ],
+ "Veo · render_desk": [
+  "steps/Deploy.tsx"
+ ],
+ "Verify": [
+  "steps/FanOut.tsx",
+  "steps/SinglePrompt.tsx"
+ ],
+ "Verify agent execution.": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "Vibe Studio home": [
+  "components/TopNav.tsx"
+ ],
+ "Vibe{0}": [
+  "components/TopNav.tsx"
+ ],
+ "Waits minutes for a render without a process kept alive for it.": [
+  "steps/Story.tsx"
+ ],
+ "Waits until every incoming branch has reported, then passes all their outputs on as one dict.": [
+  "steps/FanOut.tsx"
+ ],
+ "Watch the run": [
+  "steps/FanOut.tsx"
+ ],
+ "What goes in it.": [
+  "steps/FanOut.tsx"
+ ],
+ "What it sees": [
+  "steps/Memory.tsx"
+ ],
+ "What the agent can do: plain Python functions or MCP tools it can call. ADK builds the tool declaration from the function's name, signature, and docstring.": [
+  "steps/AdkGlance.tsx"
+ ],
+ "What the corpus holds.": [
+  "steps/Rag.tsx"
+ ],
+ "What you build": [
+  "steps/registry.tsx"
+ ],
+ "What you just wrote": [
+  "steps/FanOut.tsx"
+ ],
+ "What you learn": [
+  "steps/Overview.tsx"
+ ],
+ "When": [
+  "steps/Memory.tsx"
+ ],
+ "When policy violations are detected, execution routes to {0}. In this stage, quarantine terminates the workflow upon violation; in 5c, it will be upgraded to an autonomous remediation agent.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "When the yield runs, ADK gives the request an {0} and writes an open function call named {1} into the session, with your message, schema, and payload as its arguments. Then it returns to the caller. No thread waits; the open call is a row in the session.": [
+  "steps/FanOut.tsx"
+ ],
+ "Where the graph stands": [
+  "steps/FanOut.tsx",
+  "steps/PolicyGate.tsx"
+ ],
+ "Where the graph stands after edit 2. The run ends after your answer because the gate is the last node in this stage; downstream stages continue from the node that reads it.": [
+  "steps/FanOut.tsx"
+ ],
+ "Where the research comes from": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "While suitable for prototyping, a monolithic prompt lacks inspectable research, deterministic policy enforcement, and reliable human approval gates. The workflow graph decomposes this baseline into an ADK Workflow with parallel reader nodes, a join synchronization barrier, and structured candidate schemas.": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "Who polls Veo": [
+  "steps/Video.tsx"
+ ],
+ "Why the answer has a shape.": [
+  "steps/FanOut.tsx"
+ ],
+ "Wire render_desk and store_video into the workflow topology. Execution proceeds through script generation into video submission, automatically suspending upon receiving the pending receipt until an external delivery worker dispatches the completion event.": [
+  "steps/Video.tsx"
+ ],
+ "Workflow DAG initialization, START sentinel, edge lists as chained tuples; JoinNode synchronization barriers; AgentNode with structured output_schema; RequestInput suspension with response_schema, candidate payload, and interrupt_id": [
+  "steps/Summary.tsx"
+ ],
+ "Workflow State": [
+  "steps/PolicyGate.tsx",
+  "steps/registry.tsx"
+ ],
+ "Workflow Topology": [
+  "steps/Summary.tsx"
+ ],
+ "Workflows declare the edge topology in code. The ADK runtime traverses the graph, coordinates concurrent branch execution, and persists each node's output event into the session journal.": [
+  "steps/FanOut.tsx"
+ ],
+ "Wrap render_submit as a LongRunningFunctionTool.": [
+  "steps/Video.tsx"
+ ],
+ "Wrapped, in stage6_video/agent.py.": [
+  "steps/Video.tsx"
+ ],
+ "Write the edges.": [
+  "steps/FanOut.tsx"
+ ],
+ "Yes. The model chose how; another run may cite it elsewhere.": [
+  "steps/Rag.tsx"
+ ],
+ "You answered by function_response": [
+  "steps/FanOut.tsx"
+ ],
+ "You have an active audience and an expanding backlog of creative ideas, but producing each video requires continuous multi-stage execution.": [
+  "steps/Story.tsx"
+ ],
+ "You run a digital channel on VibeTube.": [
+  "steps/Story.tsx"
+ ],
+ "You type an idea in adk web. The two readers run, the join gathers their outputs, and propose_directions makes one model call; the run ends there. Its four candidates come back to you as the workflow's output, the last event in the chat: three viable and one that breaks policy on purpose. Nothing asks you to choose yet; the two edits on this page add a gate after the agent.": [
+  "steps/FanOut.tsx"
+ ],
+ "Your edit": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "Your idea": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "Your inputs, per video": [
+  "steps/Overview.tsx"
+ ],
+ "a Gemini model, per topic": [
+  "steps/Memory.tsx"
+ ],
+ "a bank command is already running on this server; its remaining output appears here": [
+  "steps/Memory.tsx"
+ ],
+ "a candidate cites feedback": [
+  "steps/Rag.tsx"
+ ],
+ "a channel concept": [
+  "steps/FanOut.tsx"
+ ],
+ "a conversation · root conversational agent": [
+  "steps/PolicyGate.tsx"
+ ],
+ "a corpus is connected": [
+  "steps/Rag.tsx"
+ ],
+ "a deliver command is already running on this server; its remaining output appears here": [
+  "steps/Video.tsx"
+ ],
+ "a deploy is already running on this server; its remaining output appears here": [
+  "steps/Deploy.tsx"
+ ],
+ "a function node": [
+  "steps/PolicyGate.tsx"
+ ],
+ "a function · code": [
+  "steps/Summary.tsx"
+ ],
+ "a new memory under the scope": [
+  "steps/Memory.tsx"
+ ],
+ "a person answers": [
+  "steps/Summary.tsx"
+ ],
+ "a person's preferences → Memory Bank": [
+  "steps/Memory.tsx"
+ ],
+ "a phoenix in the toaster": [
+  "steps/Rag.tsx"
+ ],
+ "a plain function tool": [
+  "steps/Video.tsx"
+ ],
+ "a question for the corpus": [
+  "steps/Rag.tsx"
+ ],
+ "a rag command is already running on this server; its remaining output appears here": [
+  "steps/Rag.tsx"
+ ],
+ "a tiny dragon guards": [
+  "steps/FanOut.tsx"
+ ],
+ "a tiny dragon guards the last cookie": [
+  "steps/Video.tsx"
+ ],
+ "a tiny robot doing laundry at midnight": [
+  "steps/FanOut.tsx",
+  "steps/SinglePrompt.tsx"
+ ],
+ "adk web could not take your save · {0}": [
+  "components/LoadCheck.tsx"
+ ],
+ "adk web has your save from {0} · ready to run": [
+  "components/LoadCheck.tsx"
+ ],
+ "adk web is ADK's development UI. It is mounted inside this app at {0} and reads the same session store, so it opens here with {1} preselected.": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "adk web ready": [
+  "steps/FanOut.tsx"
+ ],
+ "adk web ready · {0} apps": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "adk web unavailable": [
+  "steps/FanOut.tsx",
+  "steps/SinglePrompt.tsx"
+ ],
+ "adk web · State tab": [
+  "steps/PolicyGate.tsx"
+ ],
+ "after the scripter's turn": [
+  "steps/Memory.tsx"
+ ],
+ "after_agent on scripter · remember_pick": [
+  "steps/Memory.tsx"
+ ],
+ "agent": [
+  "steps/Overview.tsx"
+ ],
+ "agent as a node": [
+  "steps/Overview.tsx"
+ ],
+ "agent defined ✓": [
+  "steps/FanOut.tsx"
+ ],
+ "agent in the chain ✓": [
+  "steps/FanOut.tsx"
+ ],
+ "agent node": [
+  "steps/PolicyGate.tsx",
+  "steps/Summary.tsx"
+ ],
+ "agent.{0} running": [
+  "components/LiveRunPill.tsx"
+ ],
+ "agents/brand_style/agent.py · a typical agent definition": [
+  "steps/AdkGlance.tsx"
+ ],
+ "an Agent Runtime resource on GEAP": [
+  "steps/Memory.tsx"
+ ],
+ "an Agent used as a node": [
+  "steps/FanOut.tsx"
+ ],
+ "an interceptor runs before and after this call": [
+  "steps/AdkGlance.tsx"
+ ],
+ "an open adk_request_input call": [
+  "steps/FanOut.tsx"
+ ],
+ "another process": [
+  "steps/Summary.tsx"
+ ],
+ "another ten": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "as it needs": [
+  "steps/PolicyGate.tsx"
+ ],
+ "as many calls": [
+  "steps/PolicyGate.tsx"
+ ],
+ "as many rounds as it needs,": [
+  "steps/PolicyGate.tsx"
+ ],
+ "asking adk web whether it has this save…": [
+  "components/LoadCheck.tsx"
+ ],
+ "auditable": [
+  "steps/Story.tsx"
+ ],
+ "avatar · telemetry · graphinfo": [
+  "steps/Deploy.tsx"
+ ],
+ "bait for policy_check, step 5": [
+  "steps/FanOut.tsx"
+ ],
+ "batch of {0} comments": [
+  "steps/Rag.tsx"
+ ],
+ "before its model call": [
+  "steps/Memory.tsx"
+ ],
+ "before the model call of propose_directions": [
+  "steps/Memory.tsx"
+ ],
+ "before ▸ ◂ after · agent · model · tool": [
+  "steps/AdkGlance.tsx"
+ ],
+ "before_agent_callback / after_agent_callback": [
+  "steps/Memory.tsx"
+ ],
+ "before_model on propose_directions · recall_taste": [
+  "steps/Memory.tsx"
+ ],
+ "before_model_callback / after_model_callback": [
+  "steps/Memory.tsx"
+ ],
+ "before_tool_callback / after_tool_callback": [
+  "steps/Memory.tsx"
+ ],
+ "breaks policy on purpose": [
+  "steps/FanOut.tsx"
+ ],
+ "by parameter name": [
+  "steps/PolicyGate.tsx"
+ ],
+ "candidates, bound": [
+  "steps/PolicyGate.tsx"
+ ],
+ "chain ends at {0}": [
+  "steps/PolicyGate.tsx"
+ ],
+ "changed on disk · reload": [
+  "components/CodeEditor.tsx"
+ ],
+ "chat, single_turn, and task modes.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "check it against the channel's policy": [
+  "steps/Story.tsx"
+ ],
+ "check the policy": [
+  "steps/Story.tsx"
+ ],
+ "check what is trending": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "check {0} · 10 s apart": [
+  "steps/Video.tsx"
+ ],
+ "check_trends was called": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "checking what adk web has…": [
+  "components/LoadedBadge.tsx"
+ ],
+ "choose a direction": [
+  "steps/Story.tsx"
+ ],
+ "chunk": [
+  "steps/Rag.tsx"
+ ],
+ "cleaned": [
+  "steps/Memory.tsx",
+  "steps/PolicyGate.tsx",
+  "steps/Rag.tsx"
+ ],
+ "client browser": [
+  "steps/Deploy.tsx"
+ ],
+ "close match → UPDATED": [
+  "steps/Memory.tsx"
+ ],
+ "comb the backlog": [
+  "steps/Story.tsx"
+ ],
+ "comb through the backlog of ideas": [
+  "steps/Story.tsx"
+ ],
+ "comments.md is uploaded, split into passages, embedded and stored; a probe query confirms the index answers.": [
+  "steps/Rag.tsx"
+ ],
+ "comments.md · 30 comments": [
+  "steps/Rag.tsx"
+ ],
+ "conditional router": [
+  "steps/Summary.tsx"
+ ],
+ "consolidate": [
+  "steps/Memory.tsx"
+ ],
+ "copied": [
+  "steps/FanOut.tsx",
+  "steps/Memory.tsx",
+  "steps/Rag.tsx",
+  "steps/Video.tsx"
+ ],
+ "copy for a terminal": [
+  "steps/Memory.tsx",
+  "steps/Rag.tsx",
+  "steps/Video.tsx"
+ ],
+ "corpus · vibestudio-feedback": [
+  "steps/Rag.tsx"
+ ],
+ "could not ask the server: {0}": [
+  "components/LoadedBadge.tsx"
+ ],
+ "could not reach the learning center: {0}": [
+  "components/LoadCheck.tsx",
+  "steps/Deploy.tsx",
+  "steps/Memory.tsx",
+  "steps/Rag.tsx",
+  "steps/Video.tsx"
+ ],
+ "could not start: {0}": [
+  "steps/Deploy.tsx"
+ ],
+ "could not start: {0}. Wait for it to finish; the buttons enable again when it exits.": [
+  "steps/Memory.tsx",
+  "steps/Rag.tsx",
+  "steps/Video.tsx"
+ ],
+ "created": [
+  "steps/Memory.tsx"
+ ],
+ "data, before any model: a node": [
+  "steps/Summary.tsx"
+ ],
+ "decided before this": [
+  "steps/Summary.tsx"
+ ],
+ "decides a tool is needed and emits {0} · reads the {1} and writes prose": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "describe the video: a title and 3 shots": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "direction_gate is in the chain": [
+  "steps/FanOut.tsx"
+ ],
+ "direction_gate yields a RequestInput": [
+  "steps/FanOut.tsx"
+ ],
+ "documents, transcripts → RAG Engine": [
+  "steps/Memory.tsx"
+ ],
+ "done · the mp4": [
+  "steps/Video.tsx"
+ ],
+ "downstream node": [
+  "steps/FanOut.tsx"
+ ],
+ "each message is a turn; the model chooses": [
+  "steps/PolicyGate.tsx"
+ ],
+ "edges complete ✓": [
+  "steps/FanOut.tsx"
+ ],
+ "edges found: {0}": [
+  "steps/FanOut.tsx"
+ ],
+ "embed": [
+  "steps/Memory.tsx",
+  "steps/Rag.tsx"
+ ],
+ "embed, then compare": [
+  "steps/Memory.tsx"
+ ],
+ "embedding model": [
+  "steps/Rag.tsx"
+ ],
+ "embedding model · 768 dimensions": [
+  "steps/Rag.tsx"
+ ],
+ "ends by calling the built-in finish_task tool;": [
+  "steps/PolicyGate.tsx"
+ ],
+ "entry sentinel": [
+  "steps/Summary.tsx"
+ ],
+ "even after a restart": [
+  "steps/Summary.tsx"
+ ],
+ "event stream": [
+  "steps/Summary.tsx"
+ ],
+ "events from: {0}": [
+  "steps/FanOut.tsx"
+ ],
+ "events · stage · pick": [
+  "steps/Deploy.tsx"
+ ],
+ "exactly four candidates": [
+  "steps/FanOut.tsx"
+ ],
+ "exited with {0}": [
+  "steps/Memory.tsx",
+  "steps/Rag.tsx",
+  "steps/Video.tsx"
+ ],
+ "extract": [
+  "steps/Memory.tsx"
+ ],
+ "extract · a Gemini model": [
+  "steps/Memory.tsx"
+ ],
+ "fact · picks small-magic scenes": [
+  "steps/Memory.tsx"
+ ],
+ "files → passages → vectors": [
+  "steps/Rag.tsx"
+ ],
+ "finish_task carried a cleaned direction": [
+  "steps/PolicyGate.tsx"
+ ],
+ "from the stated rule": [
+  "steps/Memory.tsx"
+ ],
+ "function": [
+  "steps/Overview.tsx"
+ ],
+ "function node": [
+  "steps/FanOut.tsx",
+  "steps/Overview.tsx",
+  "steps/Summary.tsx"
+ ],
+ "gate in the chain ✓": [
+  "steps/FanOut.tsx"
+ ],
+ "generate_videos → operation": [
+  "steps/Video.tsx"
+ ],
+ "hands the pick to Memory Bank, then returns None": [
+  "steps/Memory.tsx"
+ ],
+ "https endpoint": [
+  "steps/Deploy.tsx"
+ ],
+ "human-in-the-loop gate": [
+  "steps/Summary.tsx"
+ ],
+ "id call_3719769": [
+  "steps/Summary.tsx"
+ ],
+ "idea · backlog · graph": [
+  "steps/Deploy.tsx"
+ ],
+ "idle while paused · may even be restarted": [
+  "steps/Video.tsx"
+ ],
+ "image · web/public/share.png": [
+  "steps/Summary.tsx"
+ ],
+ "in the session store": [
+  "steps/Video.tsx"
+ ],
+ "input from the node before, one object out": [
+  "steps/PolicyGate.tsx"
+ ],
+ "instruction": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "instruction · QUARANTINE_INSTRUCTION, abridged": [
+  "steps/PolicyGate.tsx"
+ ],
+ "into passages": [
+  "steps/Rag.tsx"
+ ],
+ "join barrier": [
+  "steps/Summary.tsx"
+ ],
+ "join defined ✓": [
+  "steps/FanOut.tsx"
+ ],
+ "join_research is None": [
+  "steps/FanOut.tsx"
+ ],
+ "join_research is a JoinNode": [
+  "steps/FanOut.tsx"
+ ],
+ "join_research output · the research dict": [
+  "steps/FanOut.tsx"
+ ],
+ "join_research produced its dict.": [
+  "steps/FanOut.tsx"
+ ],
+ "knows no page": [
+  "steps/Summary.tsx"
+ ],
+ "later nodes read it by field name, as code": [
+  "steps/FanOut.tsx"
+ ],
+ "live: the page hears the server": [
+  "components/LiveRunPill.tsx"
+ ],
+ "loading": [
+  "components/CodeEditor.tsx"
+ ],
+ "loads · {0} edges": [
+  "steps/FanOut.tsx"
+ ],
+ "long-running tool": [
+  "steps/Overview.tsx",
+  "steps/Summary.tsx"
+ ],
+ "look at your backlog of ideas": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "lost track of the command · read runs/bank_run.log": [
+  "steps/Memory.tsx"
+ ],
+ "lost track of the command · read runs/deliver_run.log": [
+  "steps/Video.tsx"
+ ],
+ "lost track of the command · read runs/rag_run.log": [
+  "steps/Rag.tsx"
+ ],
+ "managed vector db": [
+  "steps/Rag.tsx"
+ ],
+ "managed vector db · serverless": [
+  "steps/Rag.tsx"
+ ],
+ "memories · one fact each, under the scope, tagged with a topic": [
+  "steps/Memory.tsx"
+ ],
+ "memory topics · what a memory may be about": [
+  "steps/Memory.tsx"
+ ],
+ "merge with a match": [
+  "steps/Memory.tsx"
+ ],
+ "minutes · nothing waiting · restarts survive": [
+  "steps/Video.tsx"
+ ],
+ "mode single_turn, by default": [
+  "steps/FanOut.tsx"
+ ],
+ "nearest": [
+  "steps/Rag.tsx"
+ ],
+ "never a wait": [
+  "steps/Summary.tsx"
+ ],
+ "new in this part": [
+  "steps/Overview.tsx"
+ ],
+ "next stage": [
+  "steps/FanOut.tsx"
+ ],
+ "no RequestInput yield yet": [
+  "steps/FanOut.tsx"
+ ],
+ "no after_agent_callback": [
+  "steps/Memory.tsx"
+ ],
+ "no before_model_callback": [
+  "steps/Memory.tsx"
+ ],
+ "no corpus: RAG Engine had no capacity for this project": [
+  "steps/Rag.tsx"
+ ],
+ "no edge from quarantine yet": [
+  "steps/PolicyGate.tsx"
+ ],
+ "no feedback to cite without a corpus": [
+  "steps/Rag.tsx"
+ ],
+ "no gate yet · the two edits below add one": [
+  "steps/FanOut.tsx"
+ ],
+ "no match → CREATED": [
+  "steps/Memory.tsx"
+ ],
+ "no return with a route yet": [
+  "steps/PolicyGate.tsx"
+ ],
+ "no rule stated tonight": [
+  "steps/Memory.tsx"
+ ],
+ "no text on screen; nothing that mocks a competitor": [
+  "steps/Memory.tsx"
+ ],
+ "no tools, no follow-up": [
+  "steps/PolicyGate.tsx"
+ ],
+ "not a document store, not analytics — facts about one user": [
+  "steps/Memory.tsx"
+ ],
+ "not connected": [
+  "components/LiveRunPill.tsx"
+ ],
+ "not required; blank means 1": [
+  "steps/FanOut.tsx"
+ ],
+ "not saved": [
+  "components/CodeEditor.tsx"
+ ],
+ "nothing asks you to choose yet": [
+  "steps/FanOut.tsx"
+ ],
+ "nothing for CHANNEL_RULES": [
+  "steps/Memory.tsx"
+ ],
+ "object": [
+  "steps/PolicyGate.tsx"
+ ],
+ "offline": [
+  "components/LiveRunPill.tsx"
+ ],
+ "one agent node runs · each hook is an Agent argument named &lt;hook&gt;_callback": [
+  "steps/Memory.tsx"
+ ],
+ "one agent's context": [
+  "steps/Summary.tsx"
+ ],
+ "one answer, typed": [
+  "steps/FanOut.tsx"
+ ],
+ "one call · no tool loop · no conversation": [
+  "steps/FanOut.tsx"
+ ],
+ "one call · propose_directions, scripter": [
+  "steps/PolicyGate.tsx"
+ ],
+ "one dict per run": [
+  "steps/PolicyGate.tsx"
+ ],
+ "one exchange, as events": [
+  "steps/Memory.tsx"
+ ],
+ "one id, one answer, one resume": [
+  "steps/Summary.tsx"
+ ],
+ "one model call": [
+  "steps/FanOut.tsx"
+ ],
+ "one retrieval_query call · no model writes anything · the passages are the comments as written": [
+  "steps/Rag.tsx"
+ ],
+ "one vector per passage": [
+  "steps/Rag.tsx"
+ ],
+ "open in a new tab": [
+  "steps/FanOut.tsx",
+  "steps/SinglePrompt.tsx"
+ ],
+ "operations.get answers with not yet, not yet, or done": [
+  "steps/Video.tsx"
+ ],
+ "operations.get, every ten seconds": [
+  "steps/Video.tsx"
+ ],
+ "output": [
+  "steps/Memory.tsx",
+  "steps/PolicyGate.tsx",
+  "steps/Rag.tsx",
+  "steps/Video.tsx"
+ ],
+ "output goes to the next node only": [
+  "steps/PolicyGate.tsx"
+ ],
+ "output_schema · what finish_task must carry": [
+  "steps/PolicyGate.tsx"
+ ],
+ "passages, found by meaning": [
+  "steps/Rag.tsx"
+ ],
+ "paused here": [
+  "steps/FanOut.tsx"
+ ],
+ "paused, on disk": [
+  "steps/Summary.tsx"
+ ],
+ "pending call · id · operation": [
+  "steps/Video.tsx"
+ ],
+ "persist_direction feeds policy_check, a router. OK goes to scripter, BLOCK goes to quarantine, and quarantine now continues to scripter.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "persist_direction feeds policy_check, a router. OK goes to scripter, BLOCK goes to quarantine, where the run ends.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "persist_direction follows the gate in the chain": [
+  "steps/PolicyGate.tsx"
+ ],
+ "persist_direction in the chain ✓": [
+  "steps/PolicyGate.tsx"
+ ],
+ "picks small-magic scenes; was gadgets, then animals": [
+  "steps/Memory.tsx"
+ ],
+ "placeholder · says blocked, run ends": [
+  "steps/PolicyGate.tsx"
+ ],
+ "platform · bus · files · publish": [
+  "steps/Deploy.tsx"
+ ],
+ "player · thumbnail · publish": [
+  "steps/Deploy.tsx"
+ ],
+ "policy_check in the chain; add the route dict": [
+  "steps/PolicyGate.tsx"
+ ],
+ "policy_check is in the chain with both routes": [
+  "steps/PolicyGate.tsx"
+ ],
+ "policy_check returns an Event with a route": [
+  "steps/PolicyGate.tsx"
+ ],
+ "policy_check, a plain function, reads policy_words.txt, a text file, and routes OK to the scripter or BLOCK to quarantine, before the render that costs money.": [
+  "steps/Summary.tsx"
+ ],
+ "process 2 · python -m agent.deliver": [
+  "steps/Video.tsx"
+ ],
+ "profile · avatar · history": [
+  "steps/Deploy.tsx"
+ ],
+ "propose a direction and agree on it with the creator": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "propose_directions is None": [
+  "steps/FanOut.tsx"
+ ],
+ "propose_directions is an Agent": [
+  "steps/FanOut.tsx"
+ ],
+ "propose_directions read memories on the latest run": [
+  "steps/Memory.tsx"
+ ],
+ "propose_directions sits in the chain between join_research and direction_gate. Used as a node it runs in single_turn mode: the join's dict goes to Gemini as JSON in one call, with no tool loop and no conversation, and one typed answer comes back, a Directions object with exactly four candidates. Candidates 1 to 3 are viable channel concepts; candidate 4 breaks policy on purpose, bait for the policy check later in the graph. Later nodes read the answer by field name.": [
+  "steps/FanOut.tsx"
+ ],
+ "propose_directions, scripter.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "quarantine": [
+  "steps/Overview.tsx",
+  "steps/PolicyGate.tsx"
+ ],
+ "quarantine continues to the scripter": [
+  "steps/PolicyGate.tsx"
+ ],
+ "quarantine is None": [
+  "steps/PolicyGate.tsx"
+ ],
+ "quarantine is a task agent.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "quarantine is a task-mode Agent": [
+  "steps/PolicyGate.tsx"
+ ],
+ "quarantine is a {0}": [
+  "steps/PolicyGate.tsx"
+ ],
+ "quarantine is missing from stage3_router/agent.py. Open the hints and paste the complete node into the editor.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "quarantine · a placeholder function node": [
+  "steps/PolicyGate.tsx"
+ ],
+ "quarantine → scripter ✓": [
+  "steps/PolicyGate.tsx"
+ ],
+ "quarantine, from now on.": [
+  "steps/PolicyGate.tsx"
+ ],
+ "query text": [
+  "steps/Rag.tsx"
+ ],
+ "query · {0} · {1} passages · first · {2}…": [
+  "steps/Rag.tsx"
+ ],
+ "ragCorpora/{0} · {1} file{2} · agent/comments.md has {3} comments": [
+  "steps/Rag.tsx"
+ ],
+ "ran, but no passages came back": [
+  "steps/Rag.tsx"
+ ],
+ "read_backlog was called": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "read_feedback enters the join": [
+  "steps/Rag.tsx"
+ ],
+ "read_feedback enters the join ✓": [
+  "steps/Rag.tsx"
+ ],
+ "read_feedback ran and retrieved passages": [
+  "steps/Rag.tsx"
+ ],
+ "read_feedback ran; no corpus, so no passages": [
+  "steps/Rag.tsx"
+ ],
+ "read_feedback takes tonight's idea, calls rag.retrieve, the corpus returns the nearest passages, and the node hands them to the join as the feedback key.": [
+  "steps/Rag.tsx"
+ ],
+ "reads": [
+  "steps/Video.tsx"
+ ],
+ "reads \"pick\" by name": [
+  "steps/FanOut.tsx"
+ ],
+ "reads by key": [
+  "steps/Summary.tsx"
+ ],
+ "reads direction, angle": [
+  "steps/PolicyGate.tsx"
+ ],
+ "reads every memory in the scope": [
+  "steps/Memory.tsx"
+ ],
+ "reads the bank and appends the memories to the request, then returns None": [
+  "steps/Memory.tsx"
+ ],
+ "reads the bank before its model call": [
+  "steps/Memory.tsx"
+ ],
+ "reads the text once per topic": [
+  "steps/Memory.tsx"
+ ],
+ "recall_taste wired ✓": [
+  "steps/Memory.tsx"
+ ],
+ "refused direction": [
+  "steps/PolicyGate.tsx"
+ ],
+ "reload": [
+  "components/CodeEditor.tsx"
+ ],
+ "remember_pick wired ✓": [
+  "steps/Memory.tsx"
+ ],
+ "remember_pick · memory": [
+  "steps/PolicyGate.tsx"
+ ],
+ "render the clip": [
+  "steps/Story.tsx"
+ ],
+ "render_desk in the graph": [
+  "steps/Video.tsx",
+  "steps/registry.tsx"
+ ],
+ "render_desk is defined, its tool is long-running, and the delivery knows how to answer the call. The node is not in the graph yet. Step 8b adds the last chain, runs the workflow until it pauses, and delivers the clip from the console.": [
+  "steps/Video.tsx"
+ ],
+ "render_desk submitted a render": [
+  "steps/Video.tsx"
+ ],
+ "render_submit is a LongRunningFunctionTool": [
+  "steps/Video.tsx"
+ ],
+ "render_submit not in tools": [
+  "steps/Video.tsx"
+ ],
+ "render_url and render_status are in the State tab.": [
+  "steps/Video.tsx"
+ ],
+ "renders": [
+  "steps/FanOut.tsx"
+ ],
+ "repeatable": [
+  "steps/Story.tsx"
+ ],
+ "reply": [
+  "steps/PolicyGate.tsx"
+ ],
+ "research the trend": [
+  "steps/Story.tsx"
+ ],
+ "research what is trending": [
+  "steps/Story.tsx"
+ ],
+ "reset": [
+  "components/CodeEditor.tsx"
+ ],
+ "response_schema has one property, pick; adk web renders it as a form; the validated answer is a dict with the same key, which persist_direction reads by name.": [
+  "steps/FanOut.tsx"
+ ],
+ "response_schema · properties": [
+  "steps/FanOut.tsx"
+ ],
+ "result": [
+  "steps/PolicyGate.tsx"
+ ],
+ "retries": [
+  "steps/Video.tsx"
+ ],
+ "retrieval_query embeds the question with the corpus model, finds the nearest vectors, and returns their passages with an associated distance.": [
+  "steps/Rag.tsx"
+ ],
+ "return None continues as normal · return a value replaces what would have come next": [
+  "steps/Memory.tsx"
+ ],
+ "returns": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "rewrites, checks": [
+  "steps/PolicyGate.tsx"
+ ],
+ "rides that agent": [
+  "steps/Summary.tsx"
+ ],
+ "route BLOCK": [
+  "steps/PolicyGate.tsx"
+ ],
+ "router": [
+  "steps/Overview.tsx"
+ ],
+ "router returns a route ✓": [
+  "steps/PolicyGate.tsx"
+ ],
+ "router wired ✓": [
+  "steps/PolicyGate.tsx"
+ ],
+ "run vibestudio/run.sh once or build via Dockerfile": [
+  "steps/Deploy.tsx"
+ ],
+ "running on this server…": [
+  "steps/Memory.tsx",
+  "steps/Rag.tsx",
+  "steps/Video.tsx"
+ ],
+ "runs on delivery": [
+  "steps/Video.tsx"
+ ],
+ "saved": [
+  "components/CodeEditor.tsx"
+ ],
+ "saved, but the file does not import: {0} · adk web will show the same error until it is fixed": [
+  "components/CodeEditor.tsx"
+ ],
+ "saving": [
+  "components/CodeEditor.tsx"
+ ],
+ "scope · whose memories": [
+  "steps/Memory.tsx"
+ ],
+ "script title · {0}": [
+  "steps/PolicyGate.tsx"
+ ],
+ "scripter": [
+  "steps/Overview.tsx",
+  "steps/PolicyGate.tsx"
+ ],
+ "scripter · after the run": [
+  "steps/Memory.tsx"
+ ],
+ "scripter → render_desk → store_video": [
+  "steps/Video.tsx"
+ ],
+ "scripter → render_desk → store_video ✓": [
+  "steps/Video.tsx"
+ ],
+ "session state": [
+  "steps/PolicyGate.tsx"
+ ],
+ "shows the merged keys": [
+  "steps/PolicyGate.tsx"
+ ],
+ "small magic in small rooms": [
+  "steps/Rag.tsx"
+ ],
+ "small magic in the kitchen": [
+  "steps/Rag.tsx"
+ ],
+ "split": [
+  "steps/Rag.tsx"
+ ],
+ "standing instructions": [
+  "steps/Memory.tsx"
+ ],
+ "state has user:prefs": [
+  "steps/PolicyGate.tsx"
+ ],
+ "state keys · {0}": [
+  "steps/PolicyGate.tsx"
+ ],
+ "state write in place ✓": [
+  "steps/PolicyGate.tsx"
+ ],
+ "state.direction holds your pick": [
+  "steps/PolicyGate.tsx"
+ ],
+ "store": [
+  "steps/Rag.tsx"
+ ],
+ "store_video ran": [
+  "steps/Video.tsx"
+ ],
+ "submit": [
+  "steps/FanOut.tsx"
+ ],
+ "suspended · call id in the session": [
+  "steps/Video.tsx"
+ ],
+ "suspends here, pending": [
+  "steps/Video.tsx"
+ ],
+ "tagged CREATOR_TASTE": [
+  "steps/Memory.tsx"
+ ],
+ "task agent · clean the words": [
+  "steps/PolicyGate.tsx"
+ ],
+ "task agent ✓": [
+  "steps/PolicyGate.tsx"
+ ],
+ "task-mode agent": [
+  "steps/Summary.tsx"
+ ],
+ "ten trends with a heat score, hottest first{0}fifteen backlog notes, one per line": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "the TODO line is still there": [
+  "steps/Video.tsx"
+ ],
+ "the answer": [
+  "steps/FanOut.tsx"
+ ],
+ "the answer is typed by output_schema": [
+  "steps/PolicyGate.tsx"
+ ],
+ "the app": [
+  "steps/Summary.tsx"
+ ],
+ "the built-in tool task mode adds": [
+  "steps/PolicyGate.tsx"
+ ],
+ "the call is answered · the run continues at store_video": [
+  "steps/Video.tsx"
+ ],
+ "the comments arrive as text in the bundle, cited as 'feedback' in the candidates' evidence": [
+  "steps/Rag.tsx"
+ ],
+ "the corpus": [
+  "steps/Rag.tsx"
+ ],
+ "the corpus, asked with tonight's idea": [
+  "steps/Rag.tsx"
+ ],
+ "the data": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "the default for an agent used as a node": [
+  "steps/PolicyGate.tsx"
+ ],
+ "the delivery builds the FunctionResponse": [
+  "steps/Video.tsx"
+ ],
+ "the deploy exited with {0}; the output above says why": [
+  "steps/Deploy.tsx"
+ ],
+ "the dict, as JSON": [
+  "steps/FanOut.tsx"
+ ],
+ "the docs": [
+  "steps/Rag.tsx"
+ ],
+ "the form in adk web": [
+  "steps/FanOut.tsx"
+ ],
+ "the form input": [
+  "steps/PolicyGate.tsx"
+ ],
+ "the graph": [
+  "steps/Summary.tsx"
+ ],
+ "the graph ends at scripter": [
+  "steps/Video.tsx"
+ ],
+ "the last cookie": [
+  "steps/FanOut.tsx"
+ ],
+ "the last event in the chat": [
+  "steps/FanOut.tsx"
+ ],
+ "the latest candidates and their sources": [
+  "steps/Rag.tsx"
+ ],
+ "the learning center's log is runs/lab.log": [
+  "steps/Memory.tsx",
+  "steps/Rag.tsx"
+ ],
+ "the model": [
+  "steps/Rag.tsx"
+ ],
+ "the model reads these": [
+  "steps/Rag.tsx"
+ ],
+ "the open call": [
+  "steps/Summary.tsx"
+ ],
+ "the page": [
+  "steps/Summary.tsx"
+ ],
+ "the probe query, until the index answers": [
+  "steps/Rag.tsx"
+ ],
+ "the read, by scope": [
+  "steps/Memory.tsx"
+ ],
+ "the receipt was answered": [
+  "steps/Video.tsx"
+ ],
+ "the render poller answers the call": [
+  "steps/Deploy.tsx"
+ ],
+ "the render's receipt": [
+  "steps/Summary.tsx"
+ ],
+ "the research dict": [
+  "steps/FanOut.tsx"
+ ],
+ "the run ends here": [
+  "steps/FanOut.tsx"
+ ],
+ "the same model embeds every passage and every question": [
+  "steps/Rag.tsx"
+ ],
+ "the session store": [
+  "steps/Video.tsx"
+ ],
+ "the sources": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "the tiny dragon guarding one sock": [
+  "steps/Rag.tsx"
+ ],
+ "the tools": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "the whole run is in runs/bank_run.log": [
+  "steps/Memory.tsx"
+ ],
+ "the whole run is in runs/deliver_run.log": [
+  "steps/Video.tsx"
+ ],
+ "the whole run is in runs/rag_run.log": [
+  "steps/Rag.tsx"
+ ],
+ "the workflow is suspended on the receipt": [
+  "steps/Video.tsx"
+ ],
+ "the workflow · one session": [
+  "steps/Video.tsx"
+ ],
+ "the workflow's output": [
+  "steps/FanOut.tsx"
+ ],
+ "the write": [
+  "steps/Memory.tsx"
+ ],
+ "this lab · agent/comments.md": [
+  "steps/Rag.tsx"
+ ],
+ "tiny dragons in the kitchen": [
+  "steps/Rag.tsx"
+ ],
+ "title, angle, hook": [
+  "steps/PolicyGate.tsx"
+ ],
+ "title, angle, hook, style": [
+  "steps/PolicyGate.tsx"
+ ],
+ "to find what it resembles": [
+  "steps/Memory.tsx"
+ ],
+ "tools": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "tools wired ✓": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "tools · agent/cleanup_tools.py": [
+  "steps/PolicyGate.tsx"
+ ],
+ "topics · what a memory may be about": [
+  "steps/Memory.tsx"
+ ],
+ "two passages": [
+  "steps/Rag.tsx"
+ ],
+ "two readers into the join": [
+  "steps/Rag.tsx"
+ ],
+ "unsaved": [
+  "components/CodeEditor.tsx"
+ ],
+ "until title and angle are clean": [
+  "steps/PolicyGate.tsx"
+ ],
+ "validated": [
+  "steps/FanOut.tsx"
+ ],
+ "vector store": [
+  "steps/Rag.tsx"
+ ],
+ "waiting": [
+  "steps/Rag.tsx",
+  "steps/Video.tsx"
+ ],
+ "waits for three": [
+  "steps/Rag.tsx"
+ ],
+ "what can be imported": [
+  "steps/Rag.tsx"
+ ],
+ "what goes where": [
+  "steps/Memory.tsx"
+ ],
+ "what is this? →": [
+  "steps/AdkGlance.tsx"
+ ],
+ "what it hands over, typed by output_schema, is the output": [
+  "steps/PolicyGate.tsx"
+ ],
+ "what they pick, how it moves": [
+  "steps/Memory.tsx"
+ ],
+ "when it decides": [
+  "steps/PolicyGate.tsx"
+ ],
+ "when to call tools, when to ask, when to stop": [
+  "steps/PolicyGate.tsx"
+ ],
+ "with the memories already in the scope": [
+  "steps/Memory.tsx"
+ ],
+ "work with tools until done · quarantine": [
+  "steps/PolicyGate.tsx"
+ ],
+ "write the script": [
+  "steps/Story.tsx"
+ ],
+ "writes": [
+  "steps/Video.tsx"
+ ],
+ "writes by key": [
+  "steps/Summary.tsx"
+ ],
+ "writes the direction": [
+  "steps/PolicyGate.tsx"
+ ],
+ "writes the pick after its turn": [
+  "steps/Memory.tsx"
+ ],
+ "you · adk web": [
+  "steps/FanOut.tsx"
+ ],
+ "your pick": [
+  "steps/Overview.tsx"
+ ],
+ "{0} The finished line is {1} and the TODO comment can go.": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "{0} The list takes the function objects themselves, not strings and not calls. Write the two names separated by a comma, exactly as they are spelled in the {1} lines above.": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "{0} adk_request_input call{1} in the sessions": [
+  "steps/FanOut.tsx"
+ ],
+ "{0} answer{1} carrying the call id": [
+  "steps/FanOut.tsx"
+ ],
+ "{0} calls {1}, which initiates the generation operation on GEAP and returns the operation identifier immediately. The tool returns a dictionary with {2} set to {3}. Because the tool is wrapped in {4}, ADK interprets the pending status as an interrupted call. The turn completes, execution suspends, and the session records the pending call ID and operation name.": [
+  "steps/Video.tsx"
+ ],
+ "{0} call{1} · GET /api/trends": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "{0} call{1} · reads agent/backlog.txt, 15 notes": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "{0} created · {1} updated": [
+  "steps/Memory.tsx"
+ ],
+ "{0} extracts the input idea, issues a vector query via {1}, and emits the top 5 passages as node output. If no idea is provided, it falls back to a baseline audience feedback query. Built-in error handling returns an empty set if the corpus is unreachable, preventing workflow aborts.": [
+  "steps/Rag.tsx"
+ ],
+ "{0} is an ADK event. A node yields it the way it yields any other event, and the graph suspends at that point. It has four fields. You write {1}, {2}, and {3}. ADK fills in {4} when the yield runs.": [
+  "steps/FanOut.tsx"
+ ],
+ "{0} is the node's name on the map. {1} is {2}, the configured Gemini model. {3} is a string constant in {4}, imported into the app file. And {5} is the {6} model.": [
+  "steps/FanOut.tsx"
+ ],
+ "{0} names the embedding model once; every passage and every question goes through it. {1} takes a local path and a chunking config, about 120 tokens per passage, so a passage is two or three comments. The corpus name is cached in {2}.": [
+  "steps/Rag.tsx"
+ ],
+ "{0} notes from agent/backlog.txt, with your idea": [
+  "steps/FanOut.tsx"
+ ],
+ "{0} of the {1} edits from earlier steps {2} still open. One click writes the answers into the files and adk web picks them up.": [
+  "components/CatchUp.tsx"
+ ],
+ "{0} references the Gemini model defined in {1}. ADK discovers runnable applications by locating an {2} file that exports {3}, using the folder name as the app ID.": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "{0} retrieves active memory facts scoped to the creator, appends them to the incoming LLM request payload to steer direction proposals, and caches the retrieved facts in session state. Following script generation, {1} reads the chosen direction from state and dispatches the selection to Memory Bank for consolidation. Both callbacks return {2}, allowing the standard execution pipeline to proceed unimpeded.": [
+  "steps/Memory.tsx"
+ ],
+ "{0} run{1} reached the join": [
+  "steps/FanOut.tsx"
+ ],
+ "{0} session{1} failed · run load again later": [
+  "steps/Memory.tsx"
+ ],
+ "{0} session{1}, {2} message{3} from you": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "{0} · the creator": [
+  "steps/Memory.tsx"
+ ],
+ "{0} → OK | BLOCK": [
+  "steps/PolicyGate.tsx"
+ ],
+ "{0}: ten of 250, a format and a look each{1}{2}: reads the notes file": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "{0}All {1} edits from earlier steps are in place.": [
+  "components/CatchUp.tsx"
+ ],
+ "{0}Fill in every earlier step": [
+  "components/CatchUp.tsx"
+ ],
+ "{0}Put the Agent skeleton in place": [
+  "steps/PolicyGate.tsx"
+ ],
+ "{0}This step is being built": [
+  "components/shared.tsx"
+ ],
+ "{0}{1}{2}{3}plain Python, no model": [
+  "steps/SinglePrompt.tsx"
+ ],
+ "~120-token passages": [
+  "steps/Rag.tsx"
+ ],
+ "· Active gcloud credentials with Cloud Run, Cloud Build, and Artifact Registry APIs enabled": [
+  "steps/Deploy.tsx"
+ ],
+ "· Agentic Workflow with ADK": [
+  "components/TopNav.tsx"
+ ],
+ "· the file on disk was not changed": [
+  "components/CodeEditor.tsx"
+ ],
+ "“small magic?”": [
+  "steps/Rag.tsx"
+ ],
+ "“what viewers liked and what they complained about”": [
+  "steps/Rag.tsx"
+ ],
+ "▶ Ask it something": [
+  "steps/Rag.tsx"
+ ],
+ "◼ Back to indexing": [
+  "steps/Rag.tsx"
+ ]
+}

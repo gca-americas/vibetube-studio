@@ -1,3 +1,4 @@
+import { t, tf, tx } from "../i18n";
 import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -28,9 +29,9 @@ const GREEN = COLORS.green;
 
 type Part = "a" | "b" | "c";
 const PARTS: { id: Part; label: string }[] = [
-  { id: "a", label: "ADK agent architecture" },
-  { id: "b", label: "Monolithic agent specification" },
-  { id: "c", label: "Tools in Agent" },
+  { id: "a", label: t("ADK agent architecture") },
+  { id: "b", label: t("Monolithic agent specification") },
+  { id: "c", label: t("Tools in Agent") },
 ];
 
 export function SinglePrompt() {
@@ -65,7 +66,7 @@ export function SinglePrompt() {
             className="flex items-center gap-2 rounded-full px-5 py-2 text-xs font-bold text-white"
             style={{ background: BLUE }}
           >
-            Continue to 3{PARTS[idx + 1].id} · {PARTS[idx + 1].label} <ArrowRight size={14} />
+            {t("Continue to 3")}{PARTS[idx + 1].id} · {PARTS[idx + 1].label} <ArrowRight size={14} />
           </Link>
         )}
       </div>
@@ -76,11 +77,11 @@ export function SinglePrompt() {
 /* ───────────────────────── 3b ───────────────────────── */
 
 const JOBS = [
-  "check what is trending",
-  "look at your backlog of ideas",
-  "propose a direction and agree on it with the creator",
+  t("check what is trending"),
+  t("look at your backlog of ideas"),
+  t("propose a direction and agree on it with the creator"),
   "refuse blacklisted subjects (competitor, hateful, gore)",
-  "describe the video: a title and 3 shots",
+  t("describe the video: a title and 3 shots"),
 ];
 
 const CODE_AGENT = `# stage0_prompt/agent.py
@@ -105,9 +106,9 @@ function TheAgent() {
   return (
     <div className="space-y-10">
       <StepHeader
-        kicker="Step 3b · Monolithic agent specification"
+        kicker={t("Step 3b · Monolithic agent specification")}
         color={BLUE}
-        title="The monolithic prompt baseline."
+        title={t("The monolithic prompt baseline.")}
         blurb="Build a baseline agent using a monolithic system prompt. This stage configures three core ADK primitives (model, instruction, tools) to demonstrate the capabilities and boundaries of prompt-driven execution."
       />
 
@@ -123,13 +124,9 @@ function TheAgent() {
               <Chip color={PURPLE}>tools = [ ]</Chip>
             </div>
             <p className="mt-5 text-sm text-fg-muted">
-              <b className="text-fg">model</b> references the Gemini model defined in{" "}
-              <code className="font-mono">agent/platform/config.py</code>. ADK discovers runnable applications by locating
-              an <code className="font-mono">agent.py</code> file that exports <code className="font-mono">root_agent</code>,
-              using the folder name as the app ID.
-            </p>
+              {tx("{0} references the Gemini model defined in {1}. ADK discovers runnable applications by locating an {2} file that exports {3}, using the folder name as the app ID.", [<b className="text-fg">model</b>, <code className="font-mono">agent/platform/config.py</code>, <code className="font-mono">agent.py</code>, <code className="font-mono">root_agent</code>])}</p>
             <p className="mt-4 text-sm text-fg-muted">
-              <b className="text-fg">instruction</b> serves as the system prompt. In this baseline, the prompt packs five
+              <b className="text-fg">{t("instruction")}</b> serves as the system prompt. In this baseline, the prompt packs five
               separate production tasks into continuous prose within a single conversation:
             </p>
             <ol className="mt-3 space-y-2">
@@ -147,11 +144,9 @@ function TheAgent() {
               ))}
             </ol>
             <p className="mt-4 text-sm text-fg-muted">
-              The final instruction asks the model to confirm the direction with the creator. Because this is prompt
-              text rather than a deterministic boundary, the model can easily be steered to bypass human approval.
-            </p>
+              {t("The final instruction asks the model to confirm the direction with the creator. Because this is prompt text rather than a deterministic boundary, the model can easily be steered to bypass human approval.")}</p>
             <p className="mt-4 text-sm text-fg-muted">
-              <b className="text-fg">tools</b> is initially empty. Without tool integration, the model cannot access
+              <b className="text-fg">{t("tools")}</b> is initially empty. Without tool integration, the model cannot access
               external systems. In 3c, you wire two Python functions that retrieve platform trends and channel notes.
             </p>
           </div>
@@ -194,15 +189,10 @@ function Sources() {
   }, [loadTrends]);
   return (
     <section className="rounded-3xl border border-hairline bg-card p-6">
-      <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">The sources</p>
-      <h2 className="font-display mt-2 text-2xl">The backlog, and what is trending.</h2>
+      <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">{t("The sources")}</p>
+      <h2 className="font-display mt-2 text-2xl">{t("The backlog, and what is trending.")}</h2>
       <p className="mt-2 max-w-3xl text-sm text-fg-muted">
-        The pipeline grounds content generation using two external data sources.{" "}
-        <code className="font-mono text-fg">agent/backlog.txt</code> contains the creator's archived concept notes,
-        stored one per line. Platform trends are simulated from a catalog of 250 active formats and visual styles,
-        sampling ten scored entries per invocation. The agent synthesizes these sources, aligning the creator's backlog
-        notes with current platform momentum.
-      </p>
+        {tx("The pipeline grounds content generation using two external data sources. {0} contains the creator's archived concept notes, stored one per line. Platform trends are simulated from a catalog of 250 active formats and visual styles, sampling ten scored entries per invocation. The agent synthesizes these sources, aligning the creator's backlog notes with current platform momentum.", [<code className="font-mono text-fg">agent/backlog.txt</code>])}</p>
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
         <div className="overflow-hidden rounded-2xl border border-hairline bg-input">
           <div className="border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">agent/backlog.txt · the creator's notes</div>
@@ -218,10 +208,9 @@ function Sources() {
         </div>
         <div className="overflow-hidden rounded-2xl border border-hairline bg-input">
           <div className="flex items-center justify-between border-b border-hairline px-4 py-1.5">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-fg-muted">GET /api/lab/trends · ten right now</span>
+            <span className="font-mono text-[10px] uppercase tracking-wider text-fg-muted">{t("GET /api/lab/trends · ten right now")}</span>
             <button onClick={loadTrends} className="font-mono text-[11px] text-fg-muted hover:text-fg">
-              another ten
-            </button>
+              {t("another ten")}</button>
           </div>
           <ol className="max-h-80 overflow-auto px-4 py-3 text-sm">
             {(trends ?? []).map((t) => (
@@ -258,7 +247,7 @@ def backlog_notes() -> list[str]:
     return [l.strip() for l in BACKLOG_FILE.read_text().splitlines()
             if l.strip() and not l.startswith("#")]      # agent/backlog.txt`;
 
-const DEFAULT_IDEA = "a tiny robot doing laundry at midnight";
+const DEFAULT_IDEA = t("a tiny robot doing laundry at midnight");
 const INSPECTOR_URL = "/inspector/dev-ui/?app=stage0_prompt";
 
 function ToolsEditRun() {
@@ -303,49 +292,31 @@ function ToolsEditRun() {
   return (
     <div className="space-y-12">
       <StepHeader
-        kicker="Step 3c · Tools in Agent"
+        kicker={t("Step 3c · Tools in Agent")}
         color={BLUE}
-        title="Tools in Agent."
-        blurb="Configure the agent's tool list with external Python functions, trigger inference in ADK Web, and evaluate the execution trace in the session store."
+        title={t("Tools in Agent.")}
+        blurb={t("Configure the agent's tool list with external Python functions, trigger inference in ADK Web, and evaluate the execution trace in the session store.")}
       />
 
       {/* where the research comes from */}
       <In delay={0.1}>
         <section className="rounded-3xl border border-hairline bg-card p-6">
-          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">Where the research comes from</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">{t("Where the research comes from")}</p>
           <p className="mt-2 max-w-3xl text-sm text-fg-muted">
-            The research functions are defined in <code className="font-mono text-fg">stage0_prompt/agent.py</code>. ADK inspects
-            functions passed to <code className="font-mono text-fg">tools=[...]</code> and automatically generates schema
-            declarations from their signatures and docstrings. During inference, the model emits a{" "}
-            <code className="font-mono text-fg">function_call</code> event. The runtime executes the local Python function
-            and injects a corresponding <code className="font-mono text-fg">function_response</code> event back into the
-            context window.
-          </p>
+            {tx("The research functions are defined in {0}. ADK inspects functions passed to {1} and automatically generates schema declarations from their signatures and docstrings. During inference, the model emits a {2} event. The runtime executes the local Python function and injects a corresponding {3} event back into the context window.", [<code className="font-mono text-fg">stage0_prompt/agent.py</code>, <code className="font-mono text-fg">tools=[...]</code>, <code className="font-mono text-fg">function_call</code>, <code className="font-mono text-fg">function_response</code>])}</p>
 
           <div className="mt-6 grid items-stretch gap-3 md:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr]">
             <FlowBox color={CYAN} title="Gemini" sub="the model, inside the agent">
-              decides a tool is needed and emits <b>function_call</b> · reads the <b>function_response</b> and writes prose
-            </FlowBox>
+              {tx("decides a tool is needed and emits {0} · reads the {1} and writes prose", [<b>function_call</b>, <b>function_response</b>])}</FlowBox>
             <Arrow label="function_call" />
-            <FlowBox color={PURPLE} title="the tools" sub="stage0_prompt/agent.py">
-              <b>check_trends()</b>
-              <br />
-              <b>read_backlog()</b>
-              <br />
-              plain Python, no model
-            </FlowBox>
-            <Arrow label="Python call" />
-            <FlowBox color={BLUE} title="the sources" sub="agent/trends.py · agent/backlog.txt">
-              <b>sample_trends()</b>: ten of 250, a format and a look each
-              <br />
-              <b>backlog_notes()</b>: reads the notes file
-            </FlowBox>
-            <Arrow label="returns" />
-            <FlowBox color={GREEN} title="the data" sub="beside the graph, no network">
-              ten trends with a heat score, hottest first
-              <br />
-              fifteen backlog notes, one per line
-            </FlowBox>
+            <FlowBox color={PURPLE} title={t("the tools")} sub="stage0_prompt/agent.py">
+              {tx("{0}{1}{2}{3}plain Python, no model", [<b>check_trends()</b>, <br />, <b>read_backlog()</b>, <br />])}</FlowBox>
+            <Arrow label={t("Python call")} />
+            <FlowBox color={BLUE} title={t("the sources")} sub="agent/trends.py · agent/backlog.txt">
+              {tx("{0}: ten of 250, a format and a look each{1}{2}: reads the notes file", [<b>sample_trends()</b>, <br />, <b>backlog_notes()</b>])}</FlowBox>
+            <Arrow label={t("returns")} />
+            <FlowBox color={GREEN} title={t("the data")} sub="beside the graph, no network">
+              {tx("ten trends with a heat score, hottest first{0}fifteen backlog notes, one per line", [<br />])}</FlowBox>
           </div>
 
           <div className="mt-5 grid gap-4 lg:grid-cols-2">
@@ -357,11 +328,11 @@ function ToolsEditRun() {
             </div>
             <ul className="space-y-3 text-sm text-fg-muted">
               <li>
-                <b className="text-fg">Platform trends</b>: A dynamic pool of 250 production formats paired with visual
+                <b className="text-fg">{t("Platform trends")}</b>: A dynamic pool of 250 production formats paired with visual
                 aesthetics. Each tool call samples ten active topics with heat scores.
               </li>
               <li>
-                <b className="text-fg">Creator backlog</b>: Raw concept ideas stored in{" "}
+                <b className="text-fg">{t("Creator backlog")}</b>: Raw concept ideas stored in{" "}
                 <code className="font-mono text-fg">agent/backlog.txt</code>, one per line. Modifying this file immediately
                 changes the items available to subsequent tool calls.
               </li>
@@ -376,26 +347,23 @@ function ToolsEditRun() {
           <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
             <div>
               <p className="font-mono text-[11px] uppercase tracking-[0.3em]" style={{ color: AMBER }}>
-                Your edit
-              </p>
-              <h2 className="font-display mt-2 text-2xl">Add the tools to the agent.</h2>
+                {t("Your edit")}</p>
+              <h2 className="font-display mt-2 text-2xl">{t("Add the tools to the agent.")}</h2>
               <p className="mt-2 max-w-2xl text-sm text-fg-muted">
-                The highlighted line has an empty <code className="font-mono text-fg">tools=[]</code>. Put the two
-                functions defined above it into that list. Saving writes the file; adk web reloads the agent on the next message.
-              </p>
+                {tx("The highlighted line has an empty {0}. Put the two functions defined above it into that list. Saving writes the file; adk web reloads the agent on the next message.", [<code className="font-mono text-fg">tools=[]</code>])}</p>
             </div>
             <div className="flex items-center gap-2">
               <span
                 className="rounded-full border px-3 py-1 font-mono text-[11px]"
                 style={wired ? { borderColor: tint(GREEN, 0.4), color: GREEN, background: tint(GREEN, 0.08) } : { borderColor: "var(--hairline)", color: "var(--fg-muted)" }}
               >
-                {status ? (wired ? "tools wired ✓" : `wired: ${status.tools_wired.length ? status.tools_wired.join(", ") : "none"}`) : "…"}
+                {status ? (wired ? t("tools wired ✓") : `wired: ${status.tools_wired.length ? status.tools_wired.join(", ") : "none"}`) : "…"}
               </span>
               <button
                 onClick={() => setHint((h) => Math.min(h + 1, 2))}
                 className="flex items-center gap-1.5 rounded-full border border-hairline bg-card px-3 py-1 text-xs text-fg-muted hover:text-fg"
               >
-                <Lightbulb size={13} /> {hint === 0 ? "Hint" : hint === 1 ? "Another hint" : "Hints shown"}
+                <Lightbulb size={13} /> {hint === 0 ? t("Hint") : hint === 1 ? t("Another hint") : t("Hints shown")}
               </button>
             </div>
           </div>
@@ -403,16 +371,10 @@ function ToolsEditRun() {
           {hint >= 1 && (
             <div className="mt-4 rounded-2xl border border-hairline bg-card p-4 text-sm text-fg-muted">
               <p>
-                <b className="text-fg">Hint 1.</b> The list takes the function objects themselves, not strings and not
-                calls. Write the two names separated by a comma, exactly as they are spelled in the{" "}
-                <code className="font-mono">def</code> lines above.
-              </p>
+                {tx("{0} The list takes the function objects themselves, not strings and not calls. Write the two names separated by a comma, exactly as they are spelled in the {1} lines above.", [<b className="text-fg">Hint 1.</b>, <code className="font-mono">def</code>])}</p>
               {hint >= 2 && (
                 <p className="mt-2">
-                  <b className="text-fg">Hint 2.</b> The finished line is{" "}
-                  <code className="rounded bg-overlay px-1.5 py-0.5 font-mono text-fg">tools=[check_trends, read_backlog],</code>{" "}
-                  and the TODO comment can go.
-                </p>
+                  {tx("{0} The finished line is {1} and the TODO comment can go.", [<b className="text-fg">Hint 2.</b>, <code className="rounded bg-overlay px-1.5 py-0.5 font-mono text-fg">tools=[check_trends, read_backlog],</code>])}</p>
               )}
             </div>
           )}
@@ -424,7 +386,7 @@ function ToolsEditRun() {
       </In>
 
       <In delay={0.25}>
-        <LoadCheck app="stage0_prompt" intro="Save the tools edit, then click the button. It loads stage0_prompt the way adk web will and tells you either that it loads or what ADK objects to." />
+        <LoadCheck app="stage0_prompt" intro={t("Save the tools edit, then click the button. It loads stage0_prompt the way adk web will and tells you either that it loads or what ADK objects to.")} />
       </In>
 
       {/* run it */}
@@ -433,20 +395,16 @@ function ToolsEditRun() {
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="font-mono text-[11px] uppercase tracking-[0.3em]" style={{ color: BLUE }}>
-                Run it
-              </p>
-              <h2 className="font-display mt-2 text-2xl">Open adk web and talk to the agent.</h2>
+                {t("Run it")}</p>
+              <h2 className="font-display mt-2 text-2xl">{t("Open adk web and talk to the agent.")}</h2>
               <p className="mt-2 max-w-2xl text-sm text-fg-muted">
-                adk web is ADK's development UI. It is mounted inside this app at <code className="font-mono">/inspector</code>{" "}
-                and reads the same session store, so it opens here with <code className="font-mono">stage0_prompt</code>{" "}
-                preselected.
-              </p>
+                {tx("adk web is ADK's development UI. It is mounted inside this app at {0} and reads the same session store, so it opens here with {1} preselected.", [<code className="font-mono">/inspector</code>, <code className="font-mono">stage0_prompt</code>])}</p>
             </div>
             <div className="flex items-center gap-2">
               {inspector && (
                 <span className="rounded-full border border-hairline bg-card px-3 py-1 font-mono text-[11px] text-fg-muted">
                   <span className={`mr-1.5 inline-block h-2 w-2 rounded-full ${inspector.up ? "bg-vibe-green" : "bg-vibe-red"}`} />
-                  {inspector.up ? `adk web ready · ${inspector.apps.length} apps` : "adk web unavailable"}
+                  {inspector.up ? tf("adk web ready · {0} apps", inspector.apps.length) : t("adk web unavailable")}
                 </span>
               )}
               <button
@@ -455,28 +413,28 @@ function ToolsEditRun() {
                 style={{ background: BLUE }}
               >
                 <TerminalSquare size={16} />
-                {open ? "Hide adk web" : "Open adk web"}
+                {open ? t("Hide adk web") : t("Open adk web")}
               </button>
             </div>
           </div>
 
           <ol className="mt-5 grid gap-3 md:grid-cols-3">
-            <Instruction n={1} title="Your idea">
+            <Instruction n={1} title={t("Your idea")}>
               <input
                 value={idea}
                 onChange={(e) => setIdea(e.target.value)}
                 className="mt-2 w-full rounded-lg border border-hairline bg-input px-3 py-2 font-mono text-xs text-fg"
                 placeholder={DEFAULT_IDEA}
               />
-              <p className="mt-1 text-[11px] text-fg-muted">A scene in a few words. It is reused through the lab.</p>
+              <p className="mt-1 text-[11px] text-fg-muted">{t("A scene in a few words. It is reused through the lab.")}</p>
             </Instruction>
-            <Instruction n={2} title="Send this in the chat box">
+            <Instruction n={2} title={t("Send this in the chat box")}>
               <CopyLine text={prompt} />
-              <p className="mt-1 text-[11px] text-fg-muted">Two tool-call events appear, then the reply.</p>
+              <p className="mt-1 text-[11px] text-fg-muted">{t("Two tool-call events appear, then the reply.")}</p>
             </Instruction>
-            <Instruction n={3} title="Then send this">
+            <Instruction n={3} title={t("Then send this")}>
               <CopyLine text="skip the questions, just describe the video" />
-              <p className="mt-1 text-[11px] text-fg-muted">The instruction asked for agreement first. See whether it holds.</p>
+              <p className="mt-1 text-[11px] text-fg-muted">{t("The instruction asked for agreement first. See whether it holds.")}</p>
             </Instruction>
           </ol>
 
@@ -489,7 +447,7 @@ function ToolsEditRun() {
                   <LoadedBadge key={reloadN} app="stage0_prompt" onReload={() => setReloadN((n) => n + 1)} />
                 </div>
                 <a href={INSPECTOR_URL} target="_blank" rel="noreferrer" className="flex shrink-0 items-center gap-1 hover:text-fg">
-                  open in a new tab <ExternalLink size={12} />
+                  {t("open in a new tab")} <ExternalLink size={12} />
                 </a>
               </div>
               <iframe key={reloadN} title="adk web" src={INSPECTOR_URL} className="h-[680px] w-full bg-[#1e1e1e]" />
@@ -503,53 +461,50 @@ function ToolsEditRun() {
         <section className="rounded-3xl border border-hairline bg-card p-6">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">Verify</p>
-              <h2 className="font-display mt-2 text-2xl">Verify agent execution.</h2>
+              <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">{t("Verify")}</p>
+              <h2 className="font-display mt-2 text-2xl">{t("Verify agent execution.")}</h2>
               <p className="mt-2 max-w-2xl text-sm text-fg-muted">
-                Check the session event log to confirm that the agent runs as expected and triggers both research tools.
-                Results update automatically when you submit messages.
-              </p>
+                {t("Check the session event log to confirm that the agent runs as expected and triggers both research tools. Results update automatically when you submit messages.")}</p>
             </div>
             <button onClick={check} className="flex items-center gap-2 rounded-xl border border-hairline bg-overlay px-4 py-2 font-mono text-xs text-fg-muted hover:text-fg">
-              <RefreshCw size={13} className={checking ? "animate-spin" : ""} /> Check again
-            </button>
+              <RefreshCw size={13} className={checking ? "animate-spin" : ""} /> {t("Check again")} </button>
           </div>
 
           <ul className="mt-5 grid gap-2 md:grid-cols-2">
-            <CheckRow ok={wired} label="Both tools are in the file">
-              {status ? (wired ? "tools=[check_trends, read_backlog]" : "Edit the highlighted line above and save.") : "…"}
+            <CheckRow ok={wired} label={t("Both tools are in the file")}>
+              {status ? (wired ? "tools=[check_trends, read_backlog]" : t("Edit the highlighted line above and save.")) : "…"}
             </CheckRow>
-            <CheckRow ok={!!status && status.sessions > 0} label="The agent ran">
-              {status ? `${status.sessions} session${status.sessions === 1 ? "" : "s"}, ${status.turns} message${status.turns === 1 ? "" : "s"} from you` : "…"}
+            <CheckRow ok={!!status && status.sessions > 0} label={t("The agent ran")}>
+              {status ? tf("{0} session{1}, {2} message{3} from you", status.sessions, status.sessions === 1 ? "" : "s", status.turns, status.turns === 1 ? "" : "s") : "…"}
             </CheckRow>
-            <CheckRow ok={!!status?.called_trends} label="check_trends was called">
-              {status ? `${status.tool_calls.check_trends ?? 0} call${(status.tool_calls.check_trends ?? 0) === 1 ? "" : "s"} · GET /api/trends` : "…"}
+            <CheckRow ok={!!status?.called_trends} label={t("check_trends was called")}>
+              {status ? tf("{0} call{1} · GET /api/trends", status.tool_calls.check_trends ?? 0, (status.tool_calls.check_trends ?? 0) === 1 ? "" : "s") : "…"}
             </CheckRow>
-            <CheckRow ok={!!status?.called_backlog} label="read_backlog was called">
-              {status ? `${status.tool_calls.read_backlog ?? 0} call${(status.tool_calls.read_backlog ?? 0) === 1 ? "" : "s"} · reads agent/backlog.txt, 15 notes` : "…"}
+            <CheckRow ok={!!status?.called_backlog} label={t("read_backlog was called")}>
+              {status ? tf("{0} call{1} · reads agent/backlog.txt, 15 notes", status.tool_calls.read_backlog ?? 0, (status.tool_calls.read_backlog ?? 0) === 1 ? "" : "s") : "…"}
             </CheckRow>
           </ul>
 
           {status?.last_reply && (
             <div className="mt-5 rounded-2xl border border-hairline bg-overlay p-4">
-              <p className="font-mono text-[10px] uppercase tracking-wider text-fg-muted">Latest reply</p>
+              <p className="font-mono text-[10px] uppercase tracking-wider text-fg-muted">{t("Latest reply")}</p>
               <p className="mt-2 whitespace-pre-wrap text-sm text-fg-muted">{status.last_reply}</p>
             </div>
           )}
 
           <div className="mt-5 rounded-2xl border border-hairline p-4 text-sm text-fg-muted">
-            <p className="font-mono text-[10px] uppercase tracking-wider text-fg-muted">Evaluate response limitations</p>
+            <p className="font-mono text-[10px] uppercase tracking-wider text-fg-muted">{t("Evaluate response limitations")}</p>
             <ul className="mt-2 space-y-1.5">
               <li>
-                <b className="text-fg">Unstructured research</b>: The output combines trends and notes into free-form
+                <b className="text-fg">{t("Unstructured research")}</b>: The output combines trends and notes into free-form
                 prose, making it impossible to isolate which source produced specific claims.
               </li>
               <li>
-                <b className="text-fg">Self-certified safety</b>: The model evaluates its own policy compliance without
+                <b className="text-fg">{t("Self-certified safety")}</b>: The model evaluates its own policy compliance without
                 external, deterministic validation.
               </li>
               <li>
-                <b className="text-fg">Unenforced confirmation</b>: In the follow-up message, the model generates the
+                <b className="text-fg">{t("Unenforced confirmation")}</b>: In the follow-up message, the model generates the
                 video description without waiting for human approval, demonstrating that prompt directives cannot
                 enforce workflow gates.
               </li>
@@ -560,10 +515,7 @@ function ToolsEditRun() {
 
       <In delay={0.55}>
         <div className="mx-auto max-w-3xl rounded-2xl border border-hairline bg-card/60 px-6 py-5 text-center text-sm text-fg-muted">
-          While suitable for prototyping, a monolithic prompt lacks inspectable research, deterministic policy
-          enforcement, and reliable human approval gates. The workflow graph decomposes this baseline into an ADK
-          Workflow with parallel reader nodes, a join synchronization barrier, and structured candidate schemas.
-        </div>
+          {t("While suitable for prototyping, a monolithic prompt lacks inspectable research, deterministic policy enforcement, and reliable human approval gates. The workflow graph decomposes this baseline into an ADK Workflow with parallel reader nodes, a join synchronization barrier, and structured candidate schemas.")}</div>
       </In>
     </div>
   );
@@ -624,7 +576,7 @@ function CopyLine({ text }: { text: string }) {
         setTimeout(() => setCopied(false), 1200);
       }}
       className="mt-2 flex w-full items-center justify-between gap-2 rounded-lg border border-hairline bg-input px-3 py-2 text-left font-mono text-xs text-fg hover:border-vibe-cyan/60"
-      title="Copy"
+      title={t("Copy")}
     >
       <span className="truncate">{text}</span>
       {copied ? <Check size={13} className="shrink-0 text-vibe-green" /> : <Copy size={13} className="shrink-0 text-fg-muted" />}

@@ -1,3 +1,4 @@
+import { t, tx } from "../i18n";
 import { useCallback, useEffect, useState } from "react";
 import { Check, FastForward, RefreshCw } from "lucide-react";
 import { api } from "../lib/api";
@@ -68,13 +69,11 @@ export function CatchUp({ page, color }: { page: string; color: string }) {
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div className="min-w-0">
           <p className="font-mono text-[11px] uppercase tracking-[0.3em]" style={{ color: tone }}>
-            Earlier steps
-          </p>
+            {t("Earlier steps")}</p>
           {open.length > 0 ? (
             <>
               <p className="mt-1 text-sm text-fg">
-                {open.length} of the {earlier.length} edits from earlier steps {open.length === 1 ? "is" : "are"} still open. One click writes the answers into the files and adk web picks them up.
-              </p>
+                {tx("{0} of the {1} edits from earlier steps {2} still open. One click writes the answers into the files and adk web picks them up.", [open.length, earlier.length, open.length === 1 ? "is" : "are"])}</p>
               <ul className="mt-2 grid gap-x-6 gap-y-0.5 font-mono text-[11px] text-fg-muted md:grid-cols-2">
                 {open.map((h) => (
                   <li key={h.name}>
@@ -85,17 +84,13 @@ export function CatchUp({ page, color }: { page: string; color: string }) {
             </>
           ) : (
             <p className="mt-1 text-sm text-fg-muted">
-              {filled ? `Filled ${filled.length} edit${filled.length === 1 ? "" : "s"}; adk web has them. ` : ""}
-              All {earlier.length} edits from earlier steps are in place.
-            </p>
+              {tx("{0}All {1} edits from earlier steps are in place.", [filled ? `Filled ${filled.length} edit${filled.length === 1 ? "" : "s"}; adk web has them. ` : "", earlier.length])}</p>
           )}
           {error && <p className="mt-1 font-mono text-[11px]" style={{ color: "var(--vibe-red)" }}>{error}</p>}
         </div>
         {open.length > 0 ? (
           <button onClick={fill} disabled={busy} className="flex shrink-0 items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-white disabled:opacity-60" style={{ background: color }}>
-            {busy ? <RefreshCw size={15} className="animate-spin" /> : <FastForward size={15} />}
-            Fill in every earlier step
-          </button>
+            {tx("{0}Fill in every earlier step", [busy ? <RefreshCw size={15} className="animate-spin" /> : <FastForward size={15} />])}</button>
         ) : (
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ background: tint(tone, 0.2), color: tone }}>
             <Check size={16} />

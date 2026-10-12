@@ -1,3 +1,4 @@
+import { t, tx } from "../i18n";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { RefreshCw } from "lucide-react";
 import { api, type LoadedStatus } from "../lib/api";
@@ -56,8 +57,8 @@ export function LoadedBadge({ app, onReload }: { app: string; onReload?: () => v
     }
   };
 
-  if (err) return <span style={{ color: COLORS.red }}>could not ask the server: {err}</span>;
-  if (!st) return <span className="text-fg-muted">checking what adk web has…</span>;
+  if (err) return <span style={{ color: COLORS.red }}>{tx("could not ask the server: {0}", [err])}</span>;
+  if (!st) return <span className="text-fg-muted">{t("checking what adk web has…")}</span>;
 
   const frameBehind = shownSave.current !== null && st.saved_at > shownSave.current + 0.5;
   const wrong = st.status === "stale" || st.status === "error";
@@ -80,7 +81,7 @@ export function LoadedBadge({ app, onReload }: { app: string; onReload?: () => v
           className="flex shrink-0 items-center gap-1 rounded-md border px-2 py-0.5 font-mono text-[11px] font-bold disabled:opacity-50"
           style={{ borderColor: tint(tone, 0.5), background: tint(tone, 0.12), color: tone }}
         >
-          <RefreshCw size={11} className={busy ? "animate-spin" : ""} /> {wrong ? "Reload the code" : "Reload adk web"}
+          <RefreshCw size={11} className={busy ? "animate-spin" : ""} /> {wrong ? t("Reload the code") : t("Reload adk web")}
         </button>
       )}
     </span>

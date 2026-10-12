@@ -1,3 +1,4 @@
+import { t, tf, tx } from "../i18n";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -27,8 +28,8 @@ const mono = { fontFamily: "var(--font-mono)" } as const;
 
 type Part = "a" | "b";
 const PARTS: { id: Part; label: string }[] = [
-  { id: "a", label: "A long-running tool" },
-  { id: "b", label: "render_desk in the graph" },
+  { id: "a", label: t("A long-running tool") },
+  { id: "b", label: t("render_desk in the graph") },
 ];
 
 export function Video() {
@@ -49,7 +50,7 @@ export function Video() {
         )}
         {idx < PARTS.length - 1 && (
           <Link to={`/step/video/${PARTS[idx + 1].id}`} className="flex items-center gap-2 rounded-full px-5 py-2 text-xs font-bold text-white" style={{ background: AMBER }}>
-            Continue to 8{PARTS[idx + 1].id} · {PARTS[idx + 1].label} <ArrowRight size={14} />
+            {t("Continue to 8")}{PARTS[idx + 1].id} · {PARTS[idx + 1].label} <ArrowRight size={14} />
           </Link>
         )}
       </div>
@@ -75,7 +76,7 @@ function SourceToggle({ path, label }: { path: string; label: string }) {
   return (
     <div className="mt-4 min-w-0 flex-1 basis-[320px]">
       <button onClick={toggle} className="rounded-xl border border-hairline bg-overlay px-4 py-2 text-left font-mono text-xs text-fg-muted hover:text-fg">
-        {open ? "Hide the code" : "Show the code"} · {label}
+        {open ? t("Hide the code") : t("Show the code")} · {label}
       </button>
       {open && (
         <div className="mt-3 overflow-hidden rounded-2xl border border-hairline bg-input">
@@ -110,8 +111,8 @@ function useStage6() {
   }, [snapshot?.updated_at, check]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!open) return;
-    const t = setInterval(check, 4000);
-    return () => clearInterval(t);
+    const timer = setInterval(check, 4000);
+    return () => clearInterval(timer);
   }, [open, check]);
   return { status, checking, check, open, setOpen };
 }
@@ -133,7 +134,7 @@ function TimelineFigure() {
   return (
     <figure className="m-0 mt-4">
       <div className="overflow-x-auto">
-        <svg viewBox="0 0 960 330" className="h-auto w-full min-w-[720px] text-fg" role="img" aria-label="Timeline illustrating workflow execution where the scripter runs, render_desk calls render_submit and receives a pending receipt, the workflow suspends with the call id in the session; meanwhile Veo renders; later deliver polls Veo, answers the call by id, the call closes and store_video runs.">
+        <svg viewBox="0 0 960 330" className="h-auto w-full min-w-[720px] text-fg" role="img" aria-label={t("Timeline illustrating workflow execution where the scripter runs, render_desk calls render_submit and receives a pending receipt, the workflow suspends with the call id in the session; meanwhile Veo renders; later deliver polls Veo, answers the call by id, the call closes and store_video runs.")}>
           <defs>
             <marker id="tl-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
               <path d="M0 0 L10 5 L0 10 z" fill="currentColor" />
@@ -143,15 +144,15 @@ function TimelineFigure() {
           <line x1="14" y1="30" x2="946" y2="30" stroke="currentColor" strokeOpacity="0.25" strokeWidth="1" markerEnd="url(#tl-arrow)" />
 
           {/* lane 1: the workflow */}
-          <text x="14" y="62" fontSize="9" style={mono} fill={AMBER}>the workflow · one session</text>
+          <text x="14" y="62" fontSize="9" style={mono} fill={AMBER}>{t("the workflow · one session")}</text>
           {box(14, 72, 90, "scripter", "the script", PURPLE)}
           <line x1="104" y1="92" x2="122" y2="92" stroke="currentColor" strokeOpacity="0.5" strokeWidth="1.2" markerEnd="url(#tl-arrow)" />
           {box(124, 72, 150, "render_desk", "render_submit(prompt)", AMBER, true)}
           <line x1="274" y1="92" x2="292" y2="92" stroke="currentColor" strokeOpacity="0.5" strokeWidth="1.2" markerEnd="url(#tl-arrow)" />
           {box(294, 72, 130, "pending receipt", "{status, operation}", AMBER)}
           <motion.rect x="430" y="70" width="230" height="44" rx="9" fill="none" stroke={AMBER} strokeOpacity="0.6" strokeDasharray="5 4" initial={{ strokeOpacity: 0.3 }} animate={{ strokeOpacity: [0.3, 0.8, 0.3] }} transition={{ duration: 2.6, ...loop }} />
-          <text x="545" y="88" textAnchor="middle" fontSize="9.5" style={mono} fill={AMBER}>suspended · call id in the session</text>
-          <text x="545" y="103" textAnchor="middle" fontSize="8" style={mono} fill="currentColor" opacity="0.6">minutes · nothing waiting · restarts survive</text>
+          <text x="545" y="88" textAnchor="middle" fontSize="9.5" style={mono} fill={AMBER}>{t("suspended · call id in the session")}</text>
+          <text x="545" y="103" textAnchor="middle" fontSize="8" style={mono} fill="currentColor" opacity="0.6">{t("minutes · nothing waiting · restarts survive")}</text>
           <line x1="662" y1="92" x2="680" y2="92" stroke={CYAN} strokeOpacity="0.9" strokeWidth="1.4" markerEnd="url(#tl-arrow)" />
           {box(682, 72, 118, "render_desk", "the call closes", AMBER, true)}
           <line x1="800" y1="92" x2="818" y2="92" stroke="currentColor" strokeOpacity="0.5" strokeWidth="1.2" markerEnd="url(#tl-arrow)" />
@@ -166,19 +167,19 @@ function TimelineFigure() {
           <text x="684" y="160" fontSize="8.5" style={mono} fill={CYAN}>function_response(id, url)</text>
 
           {/* lane 3: Veo */}
-          <text x="14" y="268" fontSize="9" style={mono} fill={GREEN}>Veo · in Google Cloud</text>
+          <text x="14" y="268" fontSize="9" style={mono} fill={GREEN}>{t("Veo · in Google Cloud")}</text>
           <line x1="294" y1="114" x2="294" y2="256" stroke={GREEN} strokeOpacity="0.5" strokeWidth="1" strokeDasharray="3 3" />
-          <text x="300" y="254" fontSize="8" style={mono} fill={GREEN} opacity="0.8">generate_videos → operation</text>
+          <text x="300" y="254" fontSize="8" style={mono} fill={GREEN} opacity="0.8">{t("generate_videos → operation")}</text>
           <motion.rect x="294" y="262" height="8" rx="4" fill={GREEN} initial={{ width: 0 }} animate={{ width: [0, 300, 300] }} transition={{ duration: 2.6, ...loop }} />
           <rect x="294" y="262" width="300" height="8" rx="4" fill="none" stroke={GREEN} strokeOpacity="0.5" />
-          <text x="602" y="270" fontSize="8.5" style={mono} fill={GREEN}>done · the mp4</text>
+          <text x="602" y="270" fontSize="8.5" style={mono} fill={GREEN}>{t("done · the mp4")}</text>
           {[0, 1, 2, 3].map((k) => (
             <line key={k} x1={575 + k * 24} y1={216} x2={575 + k * 24} y2={258} stroke={CYAN} strokeOpacity="0.5" strokeWidth="1" strokeDasharray="2 3" />
           ))}
-          <text x="611" y="300" textAnchor="middle" fontSize="8" style={mono} fill={CYAN} opacity="0.9">operations.get, every ten seconds</text>
+          <text x="611" y="300" textAnchor="middle" fontSize="8" style={mono} fill={CYAN} opacity="0.9">{t("operations.get, every ten seconds")}</text>
         </svg>
       </div>
-      <figcaption className="mt-2 text-xs text-fg-muted">The workflow keeps the operation id, not a wait. The delivery answers that id from wherever it runs, even after a restart.</figcaption>
+      <figcaption className="mt-2 text-xs text-fg-muted">{t("The workflow keeps the operation id, not a wait. The delivery answers that id from wherever it runs, even after a restart.")}</figcaption>
     </figure>
   );
 }
@@ -198,7 +199,7 @@ function PollerFigure() {
   return (
     <figure className="m-0 mt-4">
       <div className="overflow-x-auto">
-        <svg viewBox="0 0 900 330" className="h-auto w-full min-w-[720px] text-fg" role="img" aria-label="Two processes where the workflow process is paused at render_desk with the pending call in the session store; the delivery process reads that call, polls Veo every ten seconds, and when the clip is done sends a function_response into the session, which restarts the workflow at store_video.">
+        <svg viewBox="0 0 900 330" className="h-auto w-full min-w-[720px] text-fg" role="img" aria-label={t("Two processes where the workflow process is paused at render_desk with the pending call in the session store; the delivery process reads that call, polls Veo every ten seconds, and when the clip is done sends a function_response into the session, which restarts the workflow at store_video.")}>
           <defs>
             <marker id="pf-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
               <path d="M0 0 L10 5 L0 10 z" fill="currentColor" />
@@ -213,23 +214,23 @@ function PollerFigure() {
           {box(30, 114, 268, 46, "render_desk", "render_submit → pending · the run pauses here", AMBER, true)}
           <line x1="164" y1="160" x2="164" y2="174" stroke="currentColor" strokeOpacity="0.5" strokeWidth="1.2" markerEnd="url(#pf-arrow)" />
           {box(30, 176, 268, 46, "store_video", "runs only after the resume", "currentColor")}
-          <text x="164" y="238" textAnchor="middle" fontSize="8.5" style={mono} fill="currentColor" opacity="0.6">idle while paused · may even be restarted</text>
+          <text x="164" y="238" textAnchor="middle" fontSize="8.5" style={mono} fill="currentColor" opacity="0.6">{t("idle while paused · may even be restarted")}</text>
 
           {/* the session store, between them */}
           <rect x="350" y="86" width="200" height="86" rx="12" fill="var(--card)" stroke="currentColor" strokeOpacity="0.5" />
-          <text x="450" y="108" textAnchor="middle" fontSize="10" style={mono} fill="currentColor">the session store</text>
+          <text x="450" y="108" textAnchor="middle" fontSize="10" style={mono} fill="currentColor">{t("the session store")}</text>
           <text x="450" y="124" textAnchor="middle" fontSize="8.5" style={mono} fill="currentColor" opacity="0.65">runs/sessions.db</text>
           <rect x="358" y="136" width="184" height="24" rx="6" fill={tint(AMBER, 0.12)} stroke={AMBER} strokeOpacity="0.8" />
-          <text x="450" y="152" textAnchor="middle" fontSize="8.5" style={mono} fill={AMBER}>pending call · id · operation</text>
+          <text x="450" y="152" textAnchor="middle" fontSize="8.5" style={mono} fill={AMBER}>{t("pending call · id · operation")}</text>
           <line x1="298" y1="137" x2="348" y2="137" stroke={AMBER} strokeOpacity="0.9" strokeWidth="1.3" markerEnd="url(#pf-arrow)" />
-          <text x="323" y="130" textAnchor="middle" fontSize="8" style={mono} fill={AMBER}>writes</text>
+          <text x="323" y="130" textAnchor="middle" fontSize="8" style={mono} fill={AMBER}>{t("writes")}</text>
 
           {/* process 2: the delivery */}
           <rect x="586" y="14" width="300" height="230" rx="16" fill="var(--overlay)" stroke={CYAN} strokeOpacity="0.5" />
-          <text x="602" y="36" fontSize="9.5" style={mono} fill={CYAN}>process 2 · python -m agent.deliver</text>
+          <text x="602" y="36" fontSize="9.5" style={mono} fill={CYAN}>{t("process 2 · python -m agent.deliver")}</text>
           {box(602, 52, 268, 46, "find the pending call", "from the session store", CYAN)}
           <line x1="552" y1="137" x2="600" y2="137" stroke={CYAN} strokeOpacity="0.9" strokeWidth="1.3" markerEnd="url(#pf-arrow)" />
-          <text x="576" y="130" textAnchor="middle" fontSize="8" style={mono} fill={CYAN}>reads</text>
+          <text x="576" y="130" textAnchor="middle" fontSize="8" style={mono} fill={CYAN}>{t("reads")}</text>
           <line x1="736" y1="98" x2="736" y2="112" stroke="currentColor" strokeOpacity="0.5" strokeWidth="1.2" markerEnd="url(#pf-arrow)" />
           {box(602, 114, 268, 46, "videogen.check(operation)", "every ten seconds, until done", CYAN)}
           <motion.path d="M870 128 C 890 128, 890 152, 870 152" fill="none" stroke={CYAN} strokeWidth="1.3" markerEnd="url(#pf-arrow)" initial={{ pathLength: 0 }} animate={{ pathLength: [0, 1, 1] }} transition={{ duration: 1.6, ...loop }} />
@@ -239,16 +240,16 @@ function PollerFigure() {
           {/* the resume: back through the session into the workflow */}
           <motion.path d="M602 199 L 450 199 L 450 172" fill="none" stroke={GREEN} strokeWidth="1.4" markerEnd="url(#pf-arrow)" initial={{ pathLength: 0 }} animate={{ pathLength: [0, 1, 1] }} transition={{ duration: 2.2, delay: 0.8, ...loop }} />
           <motion.path d="M350 137 L 314 137 L 314 199 L 298 199" fill="none" stroke={GREEN} strokeWidth="1.4" markerEnd="url(#pf-arrow)" initial={{ pathLength: 0 }} animate={{ pathLength: [0, 1, 1] }} transition={{ duration: 2.2, delay: 1.6, ...loop }} />
-          <text x="450" y="216" textAnchor="middle" fontSize="8.5" style={mono} fill={GREEN}>the call is answered · the run continues at store_video</text>
+          <text x="450" y="216" textAnchor="middle" fontSize="8.5" style={mono} fill={GREEN}>{t("the call is answered · the run continues at store_video")}</text>
 
           {/* Veo */}
           <rect x="586" y="262" width="300" height="52" rx="12" fill={tint(GREEN, 0.06)} stroke={GREEN} strokeOpacity="0.6" />
-          <text x="736" y="284" textAnchor="middle" fontSize="10" style={mono} fill={GREEN}>Veo · in Google Cloud</text>
-          <text x="736" y="300" textAnchor="middle" fontSize="8.5" style={mono} fill="currentColor" opacity="0.65">operations.get answers with not yet, not yet, or done</text>
+          <text x="736" y="284" textAnchor="middle" fontSize="10" style={mono} fill={GREEN}>{t("Veo · in Google Cloud")}</text>
+          <text x="736" y="300" textAnchor="middle" fontSize="8.5" style={mono} fill="currentColor" opacity="0.65">{t("operations.get answers with not yet, not yet, or done")}</text>
           <line x1="736" y1="222" x2="736" y2="260" stroke={GREEN} strokeOpacity="0.6" strokeWidth="1.2" strokeDasharray="3 3" />
         </svg>
       </div>
-      <figcaption className="mt-2 text-xs text-fg-muted">The workflow process writes the pending call and stops. The delivery process reads it, polls Veo, and answers it; the answer restarts the workflow.</figcaption>
+      <figcaption className="mt-2 text-xs text-fg-muted">{t("The workflow process writes the pending call and stops. The delivery process reads it, polls Veo, and answers it; the answer restarts the workflow.")}</figcaption>
     </figure>
   );
 }
@@ -303,33 +304,32 @@ function TheTool() {
   return (
     <div className="space-y-12">
       <StepHeader
-        kicker="Step 8a · A long-running tool"
+        kicker={t("Step 8a · A long-running tool")}
         color={AMBER}
-        title="Asynchronous execution with LongRunningFunctionTool."
-        blurb="Long-running operations such as media synthesis should not block graph worker processes synchronously. Wrapping tool functions in LongRunningFunctionTool allows the node to submit jobs, record pending receipts in session storage, and suspend execution safely until asynchronous workers complete."
+        title={t("Asynchronous execution with LongRunningFunctionTool.")}
+        blurb={t("Long-running operations such as media synthesis should not block graph worker processes synchronously. Wrapping tool functions in LongRunningFunctionTool allows the node to submit jobs, record pending receipts in session storage, and suspend execution safely until asynchronous workers complete.")}
       />
 
       <In delay={0.1}>
         <section className="rounded-3xl border border-hairline bg-card p-6">
-          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">How it moves</p>
-          <h2 className="font-display mt-2 text-2xl">Decoupled asynchronous processing lifecycle.</h2>
+          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">{t("How it moves")}</p>
+          <h2 className="font-display mt-2 text-2xl">{t("Decoupled asynchronous processing lifecycle.")}</h2>
           <p className="mt-2 max-w-3xl text-sm text-fg-muted">
-            The <code className="font-mono text-fg">render_desk</code> agent submits the video generation job to Veo and receives a pending receipt. The workflow execution immediately suspends, persisting the open call identifier to session state. An external poller independently tracks generation progress and resumes execution once the asset is ready.
-          </p>
+            {tx("The {0} agent submits the video generation job to Veo and receives a pending receipt. The workflow execution immediately suspends, persisting the open call identifier to session state. An external poller independently tracks generation progress and resumes execution once the asset is ready.", [<code className="font-mono text-fg">render_desk</code>])}</p>
           <TimelineFigure />
         </section>
       </In>
 
       <In delay={0.3}>
         <EditPanel
-          label="Edit 1 of 2"
-          title="Wrap render_submit as a LongRunningFunctionTool."
+          label={t("Edit 1 of 2")}
+          title={t("Wrap render_submit as a LongRunningFunctionTool.")}
           intro={
             <>
               <code className="font-mono text-fg">render_desk</code> receives the structured script, formats the video prompt, and invokes <code className="font-mono text-fg">render_submit</code>. In <code className="font-mono text-fg">stage6_video/agent.py</code>, wrap <code className="font-mono text-fg">render_submit</code> with <code className="font-mono text-fg">LongRunningFunctionTool(render_submit)</code>. Wrapping converts the tool into an asynchronous handler, ensuring that returning a pending receipt suspends the workflow at this node rather than blocking the worker process.
             </>
           }
-          pill={status ? (wrapped ? "LongRunningFunctionTool ✓" : status.tool === "plain" ? "a plain function tool" : "render_submit not in tools") : "…"}
+          pill={status ? (wrapped ? "LongRunningFunctionTool ✓" : status.tool === "plain" ? t("a plain function tool") : t("render_submit not in tools")) : "…"}
           ok={wrapped}
           hint={hint}
           setHint={setHint}
@@ -344,11 +344,10 @@ function TheTool() {
 
       <In delay={0.4}>
         <section className="rounded-3xl border border-hairline bg-card p-6">
-          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">The tool</p>
-          <h2 className="font-display mt-2 text-2xl">Pending receipts and session suspension mechanics.</h2>
+          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">{t("The tool")}</p>
+          <h2 className="font-display mt-2 text-2xl">{t("Pending receipts and session suspension mechanics.")}</h2>
           <p className="mt-2 max-w-3xl text-sm text-fg-muted">
-            <code className="font-mono text-fg">render_submit</code> calls <code className="font-mono text-fg">videogen.start</code>, which initiates the generation operation on GEAP and returns the operation identifier immediately. The tool returns a dictionary with <code className="font-mono text-fg">status</code> set to <code className="font-mono text-fg">"pending"</code>. Because the tool is wrapped in <code className="font-mono text-fg">LongRunningFunctionTool</code>, ADK interprets the pending status as an interrupted call. The turn completes, execution suspends, and the session records the pending call ID and operation name.
-          </p>
+            {tx("{0} calls {1}, which initiates the generation operation on GEAP and returns the operation identifier immediately. The tool returns a dictionary with {2} set to {3}. Because the tool is wrapped in {4}, ADK interprets the pending status as an interrupted call. The turn completes, execution suspends, and the session records the pending call ID and operation name.", [<code className="font-mono text-fg">render_submit</code>, <code className="font-mono text-fg">videogen.start</code>, <code className="font-mono text-fg">status</code>, <code className="font-mono text-fg">"pending"</code>, <code className="font-mono text-fg">LongRunningFunctionTool</code>])}</p>
           <div className="mt-4 grid gap-4">
             <div className="overflow-hidden rounded-2xl border border-hairline bg-input">
               <div className="border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">agent/desk.py · render_submit</div>
@@ -365,18 +364,14 @@ function TheTool() {
           </div>
           <div className="mt-4 grid gap-3 md:grid-cols-2">
             <div className="rounded-2xl border border-hairline bg-overlay p-4 text-sm">
-              <p className="font-mono text-[10px] uppercase tracking-wider text-fg-muted">retries</p>
+              <p className="font-mono text-[10px] uppercase tracking-wider text-fg-muted">{t("retries")}</p>
               <p className="mt-1 text-fg-muted">
-                Eight attempts, seventy seconds apart, across submit, check, and download operations for Veo. <code className="font-mono text-fg">STUDIO_VIDEO_RETRIES</code>{" "}
-                and <code className="font-mono text-fg">STUDIO_VIDEO_INTERVAL</code> in <code className="font-mono text-fg">.env</code> configure these intervals.
-              </p>
+                {tx("Eight attempts, seventy seconds apart, across submit, check, and download operations for Veo. {0} and {1} in {2} configure these intervals.", [<code className="font-mono text-fg">STUDIO_VIDEO_RETRIES</code>, <code className="font-mono text-fg">STUDIO_VIDEO_INTERVAL</code>, <code className="font-mono text-fg">.env</code>])}</p>
             </div>
             <div className="rounded-2xl border border-hairline bg-overlay p-4 text-sm">
               <p className="font-mono text-[10px] uppercase tracking-wider text-fg-muted">cost</p>
               <p className="mt-1 text-fg-muted">
-                One Veo clip per run{status ? (status.real_video ? ", and this server renders for real" : ", and this server uses STUDIO_REAL_VIDEO=0 with a stand-in receipt that finishes in five seconds without generating media") : ""}.
-                Set <code className="font-mono text-fg">STUDIO_REAL_VIDEO=0</code> in <code className="font-mono text-fg">.env</code> to take the same path at no cost.
-              </p>
+                {tx("One Veo clip per run{0}. Set {1} in {2} to take the same path at no cost.", [status ? (status.real_video ? ", and this server renders for real" : ", and this server uses STUDIO_REAL_VIDEO=0 with a stand-in receipt that finishes in five seconds without generating media") : "", <code className="font-mono text-fg">STUDIO_REAL_VIDEO=0</code>, <code className="font-mono text-fg">.env</code>])}</p>
             </div>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -388,14 +383,13 @@ function TheTool() {
 
       <In delay={0.5}>
         <section className="rounded-3xl border border-hairline bg-card p-6">
-          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">Who polls Veo</p>
-          <h2 className="font-display mt-2 text-2xl">External worker polling and session resumption.</h2>
+          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">{t("Who polls Veo")}</p>
+          <h2 className="font-display mt-2 text-2xl">{t("External worker polling and session resumption.")}</h2>
           <p className="mt-2 max-w-3xl text-sm text-fg-muted">
             While the workflow is suspended, no compute resources or threads are held open waiting for the render. An independent delivery worker (<code className="font-mono text-fg">agent.deliver</code>) queries the session store for pending calls and periodically polls Veo via <code className="font-mono text-fg">videogen.check</code> until completion.
           </p>
           <p className="mt-2 max-w-3xl text-sm text-fg-muted">
-            Upon completion, the worker records the artifact URL to <code className="font-mono text-fg">runs/state.json</code> and dispatches a <code className="font-mono text-fg">function_response</code> message targeted to the pending call's ID. ADK matches the response to the suspended tool call, resumes workflow execution from the exact point of suspension, and routes forward to <code className="font-mono text-fg">store_video</code>. In the production app, the server handles this lifecycle automatically in background threads.
-          </p>
+            {tx("Upon completion, the worker records the artifact URL to {0} and dispatches a {1} message targeted to the pending call's ID. ADK matches the response to the suspended tool call, resumes workflow execution from the exact point of suspension, and routes forward to {2}. In the production app, the server handles this lifecycle automatically in background threads.", [<code className="font-mono text-fg">runs/state.json</code>, <code className="font-mono text-fg">function_response</code>, <code className="font-mono text-fg">store_video</code>])}</p>
           <PollerFigure />
           <div className="mt-4 overflow-hidden rounded-2xl border border-hairline bg-input">
             <div className="border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">agent/deliver.py · the polling loop</div>
@@ -408,14 +402,14 @@ function TheTool() {
 
       <In delay={0.55}>
         <EditPanel
-          label="Edit 2 of 2"
-          title="Construct FunctionResponse to resume execution."
+          label={t("Edit 2 of 2")}
+          title={t("Construct FunctionResponse to resume execution.")}
           intro={
             <>
               In <code className="font-mono text-fg">agent/deliver.py</code>, complete <code className="font-mono text-fg">_answer</code> to construct the resumption event. Replace the TODO line with a <code className="font-mono text-fg">Part(function_response=FunctionResponse(...))</code> carrying <code className="font-mono text-fg">id=row["call_id"]</code>, <code className="font-mono text-fg">name=row["name"]</code>, and <code className="font-mono text-fg">response=response</code>. Dispatching this part resolves the pending tool call and resumes workflow execution.
             </>
           }
-          pill={status ? (status.deliver_wired ? "FunctionResponse built ✓" : "the TODO line is still there") : "…"}
+          pill={status ? (status.deliver_wired ? t("FunctionResponse built ✓") : t("the TODO line is still there")) : "…"}
           ok={status?.deliver_wired ?? false}
           hint={hint2}
           setHint={setHint2}
@@ -431,11 +425,9 @@ function TheTool() {
 
       <In delay={0.6}>
         <section className="rounded-3xl border border-hairline bg-card p-6">
-          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">Next</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">{t("Next")}</p>
           <p className="mt-1 max-w-3xl text-sm text-fg-muted">
-            render_desk is defined, its tool is long-running, and the delivery knows how to answer the call. The node is not in the graph yet. Step 8b adds the
-            last chain, runs the workflow until it pauses, and delivers the clip from the console.
-          </p>
+            {t("render_desk is defined, its tool is long-running, and the delivery knows how to answer the call. The node is not in the graph yet. Step 8b adds the last chain, runs the workflow until it pauses, and delivers the clip from the console.")}</p>
         </section>
       </In>
     </div>
@@ -456,7 +448,7 @@ def store_video(node_input):
                 state={"render_url": url, "render_status": render.get("status", "unknown")},
                 message=f"video: {said}")`;
 
-const DEFAULT_VIDEO_IDEA = "a tiny dragon guards the last cookie";
+const DEFAULT_VIDEO_IDEA = t("a tiny dragon guards the last cookie");
 
 function WorkflowFigure() {
   const node = (cx: number, cy: number, label: string, kind: "func" | "join" | "agent" | "human" | "router" | "task" | "new" | "newfunc") => {
@@ -474,7 +466,7 @@ function WorkflowFigure() {
   return (
     <figure className="m-0 mt-4">
       <div className="overflow-x-auto">
-        <svg viewBox="0 0 1180 260" className="h-auto w-full min-w-[900px] text-fg" role="img" aria-label="The workflow with video generation showing the research readers, scripter, and the new render_desk and store_video nodes.">
+        <svg viewBox="0 0 1180 260" className="h-auto w-full min-w-[900px] text-fg" role="img" aria-label={t("The workflow with video generation showing the research readers, scripter, and the new render_desk and store_video nodes.")}>
           <defs>
             <marker id="wf8-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
               <path d="M0 0 L10 5 L0 10 z" fill="currentColor" />
@@ -511,19 +503,19 @@ function WorkflowFigure() {
           <path d="M892 195 C 915 195, 915 65, 894 65" fill="none" stroke={PURPLE} strokeOpacity="0.8" strokeWidth="1.2" strokeDasharray="4 3" markerEnd="url(#wf8-arrow)" />
           {edge(892, 65, 926, 65, AMBER)}
           {edge(1032, 65, 1056, 65, AMBER)}
-          <text x="980" y="106" fontSize="8.5" style={mono} textAnchor="middle" fill={AMBER}>suspends here, pending</text>
-          <text x="1110" y="106" fontSize="8.5" style={mono} textAnchor="middle" fill={AMBER}>runs on delivery</text>
+          <text x="980" y="106" fontSize="8.5" style={mono} textAnchor="middle" fill={AMBER}>{t("suspends here, pending")}</text>
+          <text x="1110" y="106" fontSize="8.5" style={mono} textAnchor="middle" fill={AMBER}>{t("runs on delivery")}</text>
         </svg>
       </div>
-      <figcaption className="mt-2 text-xs text-fg-muted">One chain is the whole change. The run stops inside render_desk and the session keeps the receipt; store_video runs when the delivery resumes it.</figcaption>
+      <figcaption className="mt-2 text-xs text-fg-muted">{t("One chain is the whole change. The run stops inside render_desk and the session keeps the receipt; store_video runs when the delivery resumes it.")}</figcaption>
     </figure>
   );
 }
 
 type VideoCmd = "deliver" | "status";
 const VIDEO_COMMANDS: { cmd: VideoCmd; line: string; what: string }[] = [
-  { cmd: "status", line: "python -m agent.deliver status", what: "Lists the pending renders across stage6_video sessions, showing session, call id, and operation." },
-  { cmd: "deliver", line: "python -m agent.deliver", what: "Takes the newest pending render, polls Veo until the clip exists, writes the result to runs/state.json, and resumes the session with a function_response for the call's id. The graph continues; the nodes it runs print here." },
+  { cmd: "status", line: "python -m agent.deliver status", what: t("Lists the pending renders across stage6_video sessions, showing session, call id, and operation.") },
+  { cmd: "deliver", line: "python -m agent.deliver", what: t("Takes the newest pending render, polls Veo until the clip exists, writes the result to runs/state.json, and resumes the session with a function_response for the call's id. The graph continues; the nodes it runs print here.") },
 ];
 
 function DeliverRunner({ onDone, onShow }: { onDone: () => void; onShow: () => void }) {
@@ -546,13 +538,13 @@ function DeliverRunner({ onDone, onShow }: { onDone: () => void; onShow: () => v
         runId.current = null;
         seenRunning.current = true;
         setRunning(true);
-        setLines(["a deliver command is already running on this server; its remaining output appears here"]);
+        setLines([t("a deliver command is already running on this server; its remaining output appears here")]);
       }
     });
   }, []);
   useEffect(() => {
     if (!running) return;
-    const t = setInterval(async () => {
+    const timer = setInterval(async () => {
       const st = await api.videoStatus();
       if (st.running) {
         seenRunning.current = true;
@@ -569,7 +561,7 @@ function DeliverRunner({ onDone, onShow }: { onDone: () => void; onShow: () => v
           // Either the worker has not registered yet or it is still going.
           if (++waitedFor.current > 120) {
             setRunning(false);
-            setLines((l) => [...l, `lost track of the command · read runs/deliver_run.log`]);
+            setLines((l) => [...l, t("lost track of the command · read runs/deliver_run.log")]);
           }
           return;
         }
@@ -588,7 +580,7 @@ function DeliverRunner({ onDone, onShow }: { onDone: () => void; onShow: () => v
       }
       onDone();
     }, 1500);
-    return () => clearInterval(t);
+    return () => clearInterval(timer);
   }, [running, onDone]);
   const run = async (cmd: VideoCmd) => {
     setLines([]);
@@ -601,14 +593,14 @@ function DeliverRunner({ onDone, onShow }: { onDone: () => void; onShow: () => v
     } catch (e) {
       // a failed request used to reject inside the click handler, so the page
       // showed nothing at all and the button looked dead
-      setLines([`could not reach the learning center: ${(e as Error).message}`,
-                "Is it still running? Its log is runs/lab.log; scripts/start.sh starts it again."]);
+      setLines([tf("could not reach the learning center: {0}", (e as Error).message),
+                t("Is it still running? Its log is runs/lab.log; scripts/start.sh starts it again.")]);
       setExit(1);
       setRunning(false);
       return;
     }
     if (!r.ok) {
-      setLines([`could not start: ${r.detail}. Wait for it to finish; the buttons enable again when it exits.`]);
+      setLines([tf("could not start: {0}. Wait for it to finish; the buttons enable again when it exits.", r.detail)]);
       // refused because another worker is live: watch that one instead
       runId.current = null;
       seenRunning.current = true;
@@ -646,10 +638,10 @@ function DeliverRunner({ onDone, onShow }: { onDone: () => void; onShow: () => v
                   setTimeout(() => setCopied(null), 1200);
                 }}
                 className="flex min-w-0 flex-1 items-center justify-between gap-3 rounded-lg border border-hairline bg-input px-3 py-2 text-left font-mono text-xs text-fg hover:border-vibe-cyan/60"
-                title="copy for a terminal"
+                title={t("copy for a terminal")}
               >
                 <span className="truncate">{c.line}</span>
-                <span className="shrink-0 text-[10px] text-fg-muted">{copied === c.cmd ? "copied" : "copy"}</span>
+                <span className="shrink-0 text-[10px] text-fg-muted">{copied === c.cmd ? t("copied") : "copy"}</span>
               </button>
               <button onClick={() => run(c.cmd)} disabled={running} className="shrink-0 rounded-lg px-3 py-2 font-mono text-xs font-bold text-white disabled:opacity-40" style={{ background: AMBER }}>
                 run
@@ -668,11 +660,9 @@ function DeliverRunner({ onDone, onShow }: { onDone: () => void; onShow: () => v
           {!running && exit === 0 && (
             <div className="flex flex-col gap-3 border-b border-hairline px-4 py-3 md:flex-row md:items-center md:justify-between">
               <p className="text-xs text-fg-muted">
-                Delivered. adk web does not re-read a session on its own, so the frame above still shows the run ending at the receipt.
-              </p>
+                {t("Delivered. adk web does not re-read a session on its own, so the frame above still shows the run ending at the receipt.")}</p>
               <button onClick={onShow} className="flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 font-mono text-xs font-bold text-white" style={{ background: AMBER }}>
-                <RefreshCw size={13} /> Refresh adk web
-              </button>
+                <RefreshCw size={13} /> {t("Refresh adk web")} </button>
             </div>
           )}
           <pre className="max-h-80 overflow-auto whitespace-pre-wrap px-4 py-3 font-mono text-[11px] leading-relaxed text-fg">
@@ -706,13 +696,13 @@ function DeliverOverlay({ cmd, lines, running, exit, onClose, onShow }: { cmd: V
   const stage = continued ? 4 : answered ? 3 : ready ? 3 : found ? 2 : 1;
   const loop = done ? { repeat: 0 } : { repeat: Infinity };
   const steps = [
-    { name: "find the receipt", sub: "in the session store", color: CYAN },
-    { name: "wait for Veo", sub: checks ? `check ${checks} · 10 s apart` : "operations.get", color: GREEN },
+    { name: "find the receipt", sub: t("in the session store"), color: CYAN },
+    { name: "wait for Veo", sub: checks ? tf("check {0} · 10 s apart", checks) : "operations.get", color: GREEN },
     { name: "answer by id", sub: "function_response", color: AMBER },
     { name: "the graph continues", sub: "store_video", color: PURPLE },
   ];
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)" }} role="dialog" aria-modal="true" aria-label="Delivering the render">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)" }} role="dialog" aria-modal="true" aria-label={t("Delivering the render")}>
       <motion.div initial={{ y: 16, scale: 0.98 }} animate={{ y: 0, scale: 1 }} className="w-full max-w-3xl overflow-hidden rounded-3xl border border-hairline bg-card shadow-2xl">
         <div className="flex items-center justify-between border-b border-hairline px-5 py-3">
           <div className="flex items-center gap-3">
@@ -720,17 +710,17 @@ function DeliverOverlay({ cmd, lines, running, exit, onClose, onShow }: { cmd: V
             <span className="font-mono text-xs text-fg">python -m agent.deliver</span>
           </div>
           <span className="font-mono text-[11px]" style={{ color: failed ? RED : done ? GREEN : "var(--fg-muted)" }}>
-            {done ? (failed ? `exited with ${exit}` : "done") : "running on this server…"}
+            {done ? (failed ? tf("exited with {0}", exit) : "done") : t("running on this server…")}
           </span>
         </div>
         <div className="p-5">
           <p className="text-sm text-fg-muted">
             {cmd === "deliver"
-              ? "Another process reads the pending call from the session store, waits for Veo, and resumes the same session with a function_response for that call's id. With a real render this takes a minute or three; the stand-in finishes in seconds."
-              : "Every pending render this server can find in the stage6_video sessions, showing the session, the call id, and the Veo operation the delivery would ask about."}
+              ? t("Another process reads the pending call from the session store, waits for Veo, and resumes the same session with a function_response for that call's id. With a real render this takes a minute or three; the stand-in finishes in seconds.")
+              : t("Every pending render this server can find in the stage6_video sessions, showing the session, the call id, and the Veo operation the delivery would ask about.")}
           </p>
           {cmd === "deliver" && (
-          <svg viewBox="0 0 620 130" className="mt-3 h-auto w-full text-fg" role="img" aria-label="Four stages showing find the receipt, wait for Veo, answer by id, and the graph continues.">
+          <svg viewBox="0 0 620 130" className="mt-3 h-auto w-full text-fg" role="img" aria-label={t("Four stages showing find the receipt, wait for Veo, answer by id, and the graph continues.")}>
             {steps.map((s, i) => {
               const x = 14 + i * 150;
               const active = stage === i + 1 && !done;
@@ -740,7 +730,7 @@ function DeliverOverlay({ cmd, lines, running, exit, onClose, onShow }: { cmd: V
                   <motion.rect x={x} y={20} width={136} height={70} rx={12} fill={past || active ? tint(s.color, 0.1) : "var(--overlay)"} stroke={past || active ? s.color : "var(--hairline)"} strokeWidth={active ? 1.8 : 1.2} initial={{ strokeOpacity: 0.6 }} animate={active ? { strokeOpacity: [0.4, 1, 0.4] } : { strokeOpacity: past ? 1 : 0.6 }} transition={{ duration: 1.4, ...loop }} />
                   <text x={x + 68} y={48} textAnchor="middle" fontSize="11" style={mono} fill={past || active ? s.color : "currentColor"}>{s.name}</text>
                   <text x={x + 68} y={66} textAnchor="middle" fontSize="8.5" style={mono} fill="currentColor" opacity="0.65">{s.sub}</text>
-                  <text x={x + 68} y={82} textAnchor="middle" fontSize="8.5" style={mono} fill={past ? GREEN : "currentColor"} opacity={past ? 1 : 0.5}>{past ? "done" : active ? "working…" : "waiting"}</text>
+                  <text x={x + 68} y={82} textAnchor="middle" fontSize="8.5" style={mono} fill={past ? GREEN : "currentColor"} opacity={past ? 1 : 0.5}>{past ? "done" : active ? "working…" : t("waiting")}</text>
                   {i < 3 && <line x1={x + 138} y1={55} x2={x + 162} y2={55} stroke="currentColor" strokeOpacity="0.4" strokeWidth="1.2" />}
                 </g>
               );
@@ -752,8 +742,8 @@ function DeliverOverlay({ cmd, lines, running, exit, onClose, onShow }: { cmd: V
         </div>
         <div className="border-t border-hairline bg-input">
           <div className="flex items-center justify-between border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">
-            <span>output</span>
-            <span className="normal-case tracking-normal">the whole run is in runs/deliver_run.log</span>
+            <span>{t("output")}</span>
+            <span className="normal-case tracking-normal">{t("the whole run is in runs/deliver_run.log")}</span>
           </div>
           <pre className="max-h-40 overflow-auto whitespace-pre-wrap px-4 py-3 font-mono text-[11px] leading-relaxed text-fg">{clean.slice(-30).join("\n") || "starting… finding the pending render in the session store"}</pre>
         </div>
@@ -763,17 +753,16 @@ function DeliverOverlay({ cmd, lines, running, exit, onClose, onShow }: { cmd: V
             exit={exit}
             onClose={onClose}
             message={cmd === "deliver"
-              ? "The clip was delivered to the pending call and the run finished. adk web still shows the run ending at the receipt until the session is reloaded."
-              : "That is every pending render in the session store. Run the delivery to answer the newest one."}
+              ? t("The clip was delivered to the pending call and the run finished. adk web still shows the run ending at the receipt until the session is reloaded.")
+              : t("That is every pending render in the session store. Run the delivery to answer the newest one.")}
             extra={cmd !== "deliver" ? null : (
               <button onClick={onShow} className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-white" style={{ background: AMBER }}>
-                <RefreshCw size={14} /> Refresh adk web
-              </button>
+                <RefreshCw size={14} /> {t("Refresh adk web")} </button>
             )}
           />
         ) : (
           <div className="flex items-center justify-end gap-3 border-t border-hairline px-5 py-3">
-            <span className="text-xs text-fg-muted">The page is locked until the command finishes.</span>
+            <span className="text-xs text-fg-muted">{t("The page is locked until the command finishes.")}</span>
           </div>
         )}
       </motion.div>
@@ -803,19 +792,18 @@ function TheDesk() {
   return (
     <div className="space-y-12">
       <StepHeader
-        kicker="Step 8b · render_desk in the graph"
+        kicker={t("Step 8b · render_desk in the graph")}
         color={AMBER}
-        title="End-to-end execution and out-of-band delivery."
-        blurb="Wire render_desk and store_video into the workflow topology. Execution proceeds through script generation into video submission, automatically suspending upon receiving the pending receipt until an external delivery worker dispatches the completion event."
+        title={t("End-to-end execution and out-of-band delivery.")}
+        blurb={t("Wire render_desk and store_video into the workflow topology. Execution proceeds through script generation into video submission, automatically suspending upon receiving the pending receipt until an external delivery worker dispatches the completion event.")}
       />
 
       <In delay={0.2}>
         <section className="rounded-3xl border border-hairline bg-card p-6">
-          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">The node after render_desk</p>
-          <h2 className="font-display mt-2 text-2xl">State persistence via store_video.</h2>
+          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">{t("The node after render_desk")}</p>
+          <h2 className="font-display mt-2 text-2xl">{t("State persistence via store_video.")}</h2>
           <p className="mt-2 max-w-3xl text-sm text-fg-muted">
-            The external delivery worker records asset metadata to <code className="font-mono text-fg">runs/state.json</code>. When the workflow resumes, <code className="font-mono text-fg">store_video</code> reads the output file and writes <code className="font-mono text-fg">render_url</code> and <code className="font-mono text-fg">render_status</code> directly into session state, ensuring the workflow session maintains a complete record of the generated artifact.
-          </p>
+            {tx("The external delivery worker records asset metadata to {0}. When the workflow resumes, {1} reads the output file and writes {2} and {3} directly into session state, ensuring the workflow session maintains a complete record of the generated artifact.", [<code className="font-mono text-fg">runs/state.json</code>, <code className="font-mono text-fg">store_video</code>, <code className="font-mono text-fg">render_url</code>, <code className="font-mono text-fg">render_status</code>])}</p>
           <div className="mt-4 overflow-hidden rounded-2xl border border-hairline bg-input">
             <div className="border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">agent/graph.py · store_video</div>
             <pre className="overflow-x-auto px-4 py-3 font-mono text-[11px] leading-relaxed text-fg">
@@ -828,14 +816,14 @@ function TheDesk() {
 
       <In delay={0.3}>
         <EditPanel
-          label="Edit 1 of 1"
-          title="Append render pipeline to the workflow chain."
+          label={t("Edit 1 of 1")}
+          title={t("Append render pipeline to the workflow chain.")}
           intro={
             <>
               In <code className="font-mono text-fg">stage6_video/agent.py</code>, connect the final execution chain by appending <code className="font-mono text-fg">(scripter, render_desk, store_video)</code> to the workflow edge definitions.
             </>
           }
-          pill={status ? (wired ? "scripter → render_desk → store_video ✓" : "the graph ends at scripter") : "…"}
+          pill={status ? (wired ? t("scripter → render_desk → store_video ✓") : t("the graph ends at scripter")) : "…"}
           ok={wired}
           hint={hint}
           setHint={setHint}
@@ -850,7 +838,7 @@ function TheDesk() {
       </In>
 
       <In delay={0.35}>
-        <LoadCheck app="stage6_video" intro="Save, then verify module loading to confirm the completed pipeline edges import cleanly without errors." />
+        <LoadCheck app="stage6_video" intro={t("Save, then verify module loading to confirm the completed pipeline edges import cleanly without errors.")} />
       </In>
 
       <In delay={0.4}>
@@ -858,14 +846,14 @@ function TheDesk() {
           app="stage6_video"
           open={open}
           setOpen={setOpen}
-          title="Execute workflow to verify receipt suspension."
-          intro={`Send an idea prompt and submit your direction choice. Following script generation, render_desk initiates the video render and the workflow suspends execution with a pending receipt.${status && !status.real_video ? " In simulation mode (STUDIO_REAL_VIDEO=0), a mock receipt is generated instantly at zero cost." : status?.real_video ? " Active mode invokes GEAP Veo to synthesize a video clip with estimated duration of 1–3 minutes." : ""}`}
+          title={t("Execute workflow to verify receipt suspension.")}
+          intro={tf("Send an idea prompt and submit your direction choice. Following script generation, render_desk initiates the video render and the workflow suspends execution with a pending receipt.{0}", status && !status.real_video ? " In simulation mode (STUDIO_REAL_VIDEO=0), a mock receipt is generated instantly at zero cost." : status?.real_video ? " Active mode invokes GEAP Veo to synthesize a video clip with estimated duration of 1–3 minutes." : "")}
           idea={idea}
           setIdea={setIdea}
           frame={frame}
           steps={[
-            "After the scripter finishes, inspect render_desk's event stream. Observe the function call to render_submit with the composed prompt, followed by the pending receipt response and the WAITING reply. Execution halts without advancing to store_video until resumed.",
-            "Run the delivery below. When it finishes, click Refresh adk web to reopen the session. The function_response and store_video follow the pending call, committing render_url to state.",
+            t("After the scripter finishes, inspect render_desk's event stream. Observe the function call to render_submit with the composed prompt, followed by the pending receipt response and the WAITING reply. Execution halts without advancing to store_video until resumed."),
+            t("Run the delivery below. When it finishes, click Refresh adk web to reopen the session. The function_response and store_video follow the pending call, committing render_url to state."),
           ]}
         />
       </In>
@@ -873,12 +861,10 @@ function TheDesk() {
       <In delay={0.45}>
         <section className="rounded-3xl border border-hairline bg-card p-6">
           <p className="font-mono text-[11px] uppercase tracking-[0.3em]" style={{ color: AMBER }}>
-            Console
-          </p>
-          <h2 className="font-display mt-2 text-2xl">Deliver completed asset and resume execution.</h2>
+            {t("Console")}</p>
+          <h2 className="font-display mt-2 text-2xl">{t("Deliver completed asset and resume execution.")}</h2>
           <p className="mt-2 max-w-3xl text-sm text-fg-muted">
-            Trigger the delivery worker below to locate the pending call in session storage, poll the operation until finished, and transmit the resumption FunctionResponse to complete the pipeline.
-          </p>
+            {t("Trigger the delivery worker below to locate the pending call in session storage, poll the operation until finished, and transmit the resumption FunctionResponse to complete the pipeline.")}</p>
           <DeliverRunner onDone={check} onShow={showInAdkWeb} />
           <div className="flex flex-wrap gap-3">
             <SourceToggle path="agent/deliver.py" label="agent/deliver.py · find, wait, answer by id" />
@@ -887,32 +873,31 @@ function TheDesk() {
       </In>
 
       <In delay={0.5}>
-        <VerifyPanel checking={checking} onCheck={check} intro="Read from this step's app file, the latest stage6_video session's events and state, and runs/state.json.">
-          <CheckRow ok={wrapped} label="render_submit is a LongRunningFunctionTool">
-            {status ? (wrapped ? "Wrapped, in stage6_video/agent.py." : "Step 8a edit.") : "…"}
+        <VerifyPanel checking={checking} onCheck={check} intro={t("Read from this step's app file, the latest stage6_video session's events and state, and runs/state.json.")}>
+          <CheckRow ok={wrapped} label={t("render_submit is a LongRunningFunctionTool")}>
+            {status ? (wrapped ? t("Wrapped, in stage6_video/agent.py.") : t("Step 8a edit.")) : "…"}
           </CheckRow>
-          <CheckRow ok={status?.deliver_wired ?? false} label="the delivery builds the FunctionResponse">
-            {status ? (status.deliver_wired ? "In agent/deliver.py." : "Step 8a second edit.") : "…"}
+          <CheckRow ok={status?.deliver_wired ?? false} label={t("the delivery builds the FunctionResponse")}>
+            {status ? (status.deliver_wired ? t("In agent/deliver.py.") : t("Step 8a second edit.")) : "…"}
           </CheckRow>
-          <CheckRow ok={wired} label="scripter → render_desk → store_video">
-            {status ? (wired ? "In the edge list." : "The edit above.") : "…"}
+          <CheckRow ok={wired} label={t("scripter → render_desk → store_video")}>
+            {status ? (wired ? t("In the edge list.") : t("The edit above.")) : "…"}
           </CheckRow>
-          <CheckRow ok={!!submitted} label="render_desk submitted a render">
-            {submitted ? `call ${submitted.call_id.slice(0, 8)} · ${submitted.operation || "(operation in the receipt)"} · ${submitted.prompt.slice(0, 80)}…` : "No run reached the desk yet."}
+          <CheckRow ok={!!submitted} label={t("render_desk submitted a render")}>
+            {submitted ? `call ${submitted.call_id.slice(0, 8)} · ${submitted.operation || "(operation in the receipt)"} · ${submitted.prompt.slice(0, 80)}…` : t("No run reached the desk yet.")}
           </CheckRow>
-          <CheckRow ok={!!pending || delivered} label={pending ? "the workflow is suspended on the receipt" : "the receipt was answered"}>
-            {pending ? "Pending. The run ended here; deliver below." : delivered ? `Delivered · render_status ${status?.render_status}${status?.render_url ? ` · ${status.render_url}` : " · stand-in, no file"}` : submitted ? "Answered, but store_video has not written state." : "Nothing pending."}
+          <CheckRow ok={!!pending || delivered} label={pending ? t("the workflow is suspended on the receipt") : t("the receipt was answered")}>
+            {pending ? t("Pending. The run ended here; deliver below.") : delivered ? tf("Delivered · render_status {0}{1}", status?.render_status, status?.render_url ? ` · ${status.render_url}` : " · stand-in, no file") : submitted ? t("Answered, but store_video has not written state.") : t("Nothing pending.")}
           </CheckRow>
-          <CheckRow ok={status?.store_video_ran ?? false} label="store_video ran">
-            {status?.store_video_ran ? "render_url and render_status are in the State tab." : "Runs when the delivery resumes the session."}
+          <CheckRow ok={status?.store_video_ran ?? false} label={t("store_video ran")}>
+            {status?.store_video_ran ? t("render_url and render_status are in the State tab.") : t("Runs when the delivery resumes the session.")}
           </CheckRow>
           {status?.render_url ? (
             <li className="md:col-span-2 overflow-hidden rounded-2xl border border-hairline bg-overlay">
               <div className="flex items-center justify-between gap-3 border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">
                 <span className="truncate">{status.render_url}</span>
                 <a href={status.render_url} download={status.render_url.split("/").pop() || "render.mp4"} className="flex shrink-0 items-center gap-1.5 rounded-md border border-hairline bg-card px-2.5 py-1 normal-case tracking-normal text-fg hover:border-vibe-amber/60">
-                  <Download size={12} /> Download the clip
-                </a>
+                  <Download size={12} /> {t("Download the clip")} </a>
               </div>
               <video src={status.render_url} controls className="max-h-[420px] w-full bg-black" />
             </li>
