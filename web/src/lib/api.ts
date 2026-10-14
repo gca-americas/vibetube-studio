@@ -68,6 +68,9 @@ export const api = {
   version: () => get<{ running: string; head: string; stale: boolean; subject: string }>("/api/lab/version"),
   workerLog: (verb: "bank" | "rag" | "deliver" | "deploy") => get<{ verb: string; lines: string[] }>(`/api/lab/worker/${verb}/log`),
   holesPlan: () => get<{ name: string; page: string; label: string; state: string }[]>("/api/lab/holes/plan"),
+  /** Write a hint's answer into the file over the symbol's current text, and reload the agent. */
+  answer: (body: { path: string; symbol: string; text: string }) =>
+    post<{ content: string; validation: { valid: boolean; message: string; import_error?: string } }>("/api/code/answer", body),
   fillHoles: (names: string[]) => post<{ filled: string[] }>("/api/lab/holes/fill", { names }),
   quarantineSkeleton: () => post<{ ok: boolean; state: string; detail?: string }>("/api/lab/quarantine/skeleton"),
   getCode: (path: string) => get<{ content: string; validation?: { valid: boolean; message: string }; symbol?: string; span?: number[] }>(`/api/code?path=${encodeURIComponent(path)}`),

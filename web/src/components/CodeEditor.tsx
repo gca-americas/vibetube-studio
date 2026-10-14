@@ -92,7 +92,12 @@ export function CodeEditor({
     return d as { content: string; validation: Validation };
   }, [path, symbol]);
 
+  // each adopt starts a new generation: a save still in flight from before it
+  // must not report into the text it no longer describes
+  const gen = useRef(0);
   const adopt = (d: { content: string; validation: Validation }) => {
+    gen.current += 1;
+    if (timer.current) clearTimeout(timer.current);
     setCode(d.content);
     setOriginal(d.content);
     setValidation(d.validation);
@@ -138,8 +143,19 @@ export function CodeEditor({
     window.addEventListener("vibe:sync", syncWithDisk);
     return () => window.removeEventListener("vibe:sync", syncWithDisk);
   }, [syncWithDisk]);
+  // The answer button wrote this file: show it as it is now, over any unsaved edits.
+  useEffect(() => {
+    const take = (ev: Event) => {
+      const d = (ev as CustomEvent<{ path: string }>).detail;
+      if (d?.path !== path) return;
+      fetchFile().then(adopt).catch(() => undefined);
+    };
+    window.addEventListener("vibe:adopt", take);
+    return () => window.removeEventListener("vibe:adopt", take);
+  }, [fetchFile, path]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const save = async (content: string) => {
+    const g = gen.current;
     setState("saving");
     const res = await fetch("/api/code", {
       method: "POST",
@@ -147,6 +163,7 @@ export function CodeEditor({
       body: JSON.stringify({ path, content, symbol }),
     });
     const d = await res.json().catch(() => ({}));
+    if (g !== gen.current) return;                 // the editor adopted the file meanwhile
     if (!res.ok || !d.validation) {
       setValidation({ valid: false, message: d.detail || `save failed (${res.status})` });
       setState("invalid");

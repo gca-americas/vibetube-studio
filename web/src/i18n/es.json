@@ -52,7 +52,6 @@
  "An Agent Runtime is created in the project, then the CREATOR_TASTE and CHANNEL_RULES topics are attached to its Memory Bank.": "Se crea un Agent Runtime en el proyecto y luego se asocian los temas CREATOR_TASTE y CHANNEL_RULES a su Memory Bank.",
  "An LLM call. Used as a node it runs in single_turn mode: one call, structured output, no conversation.": "Una llamada al LLM. Usado como nodo corre en modo single_turn: una llamada, salida estructurada, sin conversación.",
  "An OK run reached the scripter": "Una ejecución OK llegó al scripter",
- "Another hint": "Otra pista",
  "Another process reads the pending call from the session store, waits for Veo, and resumes the same session with a function_response for that call's id. With a real render this takes a minute or three; the stand-in finishes in seconds.": "Otro proceso lee la llamada pendiente del almacén de sesiones, espera a Veo y reanuda la misma sesión con un function_response para el id de esa llamada. Con un render real esto toma uno o tres minutos; el sustituto termina en segundos.",
  "Answer a run with candidate 4.": "Responde una ejecución con el candidato 4.",
  "Answered, but store_video has not written state.": "Respondido, pero store_video no ha escrito el estado.",
@@ -220,7 +219,6 @@
  "Hide the code": "Ocultar el código",
  "Hierarchical agent memory: Session state via parameter binding and persistent GEAP Memory Bank context.": "Memoria jerárquica del agente: estado de sesión mediante enlace de parámetros y contexto persistente en GEAP Memory Bank.",
  "Hint": "Pista",
- "Hints shown": "Pistas mostradas",
  "How it moves": "Cómo se mueve",
  "How the search works": "Cómo funciona la búsqueda",
  "Human in the loop.": "Una persona en el bucle.",
@@ -1071,5 +1069,10 @@
  "“what viewers liked and what they complained about”": "“qué les gustó a los espectadores y de qué se quejaron”",
  "▶ Ask it something": "▶ Pregúntale algo",
  "◼ Back to indexing": "◼ Volver a la indexación",
- "Human-in-the-loop": "Una persona en el bucle"
+ "Human-in-the-loop": "Una persona en el bucle",
+ "Write the answer": "Escribir la respuesta",
+ "Write the answer again": "Escribir la respuesta de nuevo",
+ "Written to {0}, but the file does not import: {1}": "Escrito en {0}, pero el archivo no se importa: {1}",
+ "Written to {0} and saved; adk web has it.": "Escrito en {0} y guardado; adk web ya lo tiene.",
+ "writing…": "escribiendo…"
 }

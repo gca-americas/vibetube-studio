@@ -52,7 +52,6 @@
  "An Agent Runtime is created in the project, then the CREATOR_TASTE and CHANNEL_RULES topics are attached to its Memory Bank.": "Um Agent Runtime é criado no projeto e depois os tópicos CREATOR_TASTE e CHANNEL_RULES são anexados ao seu Memory Bank.",
  "An LLM call. Used as a node it runs in single_turn mode: one call, structured output, no conversation.": "Uma chamada ao LLM. Usado como nó, roda em modo single_turn: uma chamada, saída estruturada, sem conversa.",
  "An OK run reached the scripter": "Uma execução OK chegou ao scripter",
- "Another hint": "Outra dica",
  "Another process reads the pending call from the session store, waits for Veo, and resumes the same session with a function_response for that call's id. With a real render this takes a minute or three; the stand-in finishes in seconds.": "Outro processo lê a chamada pendente do armazenamento de sessões, espera o Veo e retoma a mesma sessão com um function_response para o id dessa chamada. Com um render de verdade isso leva de um a três minutos; o substituto termina em segundos.",
  "Answer a run with candidate 4.": "Responda uma execução com o candidato 4.",
  "Answered, but store_video has not written state.": "Respondido, mas store_video não escreveu o estado.",
@@ -220,7 +219,6 @@
  "Hide the code": "Ocultar o código",
  "Hierarchical agent memory: Session state via parameter binding and persistent GEAP Memory Bank context.": "Memória hierárquica do agente: estado de sessão por vinculação de parâmetros e contexto persistente no GEAP Memory Bank.",
  "Hint": "Dica",
- "Hints shown": "Dicas mostradas",
  "How it moves": "Como se move",
  "How the search works": "Como a busca funciona",
  "Human in the loop.": "Uma pessoa no circuito.",
@@ -1071,5 +1069,10 @@
  "“what viewers liked and what they complained about”": "“o que os espectadores gostaram e do que reclamaram”",
  "▶ Ask it something": "▶ Pergunte algo a ele",
  "◼ Back to indexing": "◼ Voltar à indexação",
- "Human-in-the-loop": "Uma pessoa no circuito"
+ "Human-in-the-loop": "Uma pessoa no circuito",
+ "Write the answer": "Escrever a resposta",
+ "Write the answer again": "Escrever a resposta de novo",
+ "Written to {0}, but the file does not import: {1}": "Escrito em {0}, mas o arquivo não importa: {1}",
+ "Written to {0} and saved; adk web has it.": "Escrito em {0} e salvo; o adk web já o tem.",
+ "writing…": "escrevendo…"
 }
