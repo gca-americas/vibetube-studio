@@ -6,6 +6,7 @@ it inline.
 from __future__ import annotations
 
 import ast
+import re
 
 from fastapi import APIRouter, HTTPException
 
@@ -13,7 +14,7 @@ from agent.platform import config
 
 from pydantic import BaseModel
 
-from ..schemas import CodeFile, CodeWrite
+from ..schemas import CodeAnswer, CodeFile, CodeWrite
 from ..services import reload as agent_reload
 from ..services.events import bus
 
@@ -123,6 +124,80 @@ def _stray_lines(block: str, symbol: str) -> str | None:
             f"`{shown[:60]}`. Keep this block to `{symbol}` alone; an import belongs at the top of the file.")
 
 
+_OPEN, _CLOSE = "([{", ")]}"
+
+
+def _balanced_end(lines: list[str], start: int) -> int:
+    """Index of the line where every bracket opened from lines[start] on has
+    closed again. Strings and comments are skipped well enough for the lab's
+    files; a block that never closes ends at the last line."""
+    depth = 0
+    opened = False
+    for i in range(start, len(lines)):
+        quote = None
+        for ch in lines[i]:
+            if quote:
+                if ch == quote:
+                    quote = None
+                continue
+            if ch in "\"'":
+                quote = ch
+            elif ch == "#":
+                break
+            elif ch in _OPEN:
+                depth += 1
+                opened = True
+            elif ch in _CLOSE:
+                depth -= 1
+        if depth <= 0 and (opened or i > start):
+            return i
+    return len(lines) - 1
+
+
+def place_answer(block: str, symbol: str, text: str, path: str) -> str | None:
+    """The symbol's block with the answer written into it, or None when the
+    answer has no place there. A whole-symbol answer replaces the block. A
+    fragment replaces the registered TODO line(s) of a hole in the block
+    when they are still there, else the lines from the one that starts the
+    way the fragment does (`edges=[`, `tools=[`, `yield Event(`) through the
+    line where its brackets close."""
+    from checks.holes import HOLES
+    head = next((l.strip() for l in text.splitlines() if l.strip()), "")
+    if head.startswith((f"{symbol} =", f"{symbol}=", f"def {symbol}(", f"async def {symbol}(", "@")):
+        return text if text.endswith("\n") else text + "\n"
+    if text.strip() and text.strip() in block:
+        return block
+    lines = block.splitlines(keepends=True)
+    anchors = [a for rel, a, _ in HOLES.values() if rel == path and a in block]
+    # a fragment that opens something named (`edges=[`, `tools=[`, `yield Event(`)
+    # replaces that something, from the line it starts on to the line its brackets close
+    m = re.match(r"[^\(\[\{]*[\(\[\{]", head)
+    prefix = m.group(0) if m and m.group(0).strip("([{ ") else None
+    hit = next((i for i, l in enumerate(lines) if prefix and l.strip().startswith(prefix)), None)
+    if hit is not None:
+        end = _balanced_end([l.rstrip("\n") for l in lines], hit)
+        span = "".join(lines[hit : end + 1])
+        # ...unless a hole's TODO is still in the block and the fragment belongs to it: the TODO line
+        # itself opens the thing (`tools=[render_submit])  # TODO`), or sits elsewhere than the thing
+        # found (a TODO comment above a placeholder). Then the registry's answer is to replace the TODO.
+        hit_in_anchor = any(lines[hit].rstrip("\n") in a for a in anchors)
+        anchor_in_span = any(a in span for a in anchors)
+        if not hit_in_anchor and (not anchors or anchor_in_span):
+            new = text if text.endswith("\n") else text + "\n"
+            return "".join(lines[:hit]) + new + "".join(lines[end + 1 :])
+    if anchors:
+        return block.replace(anchors[0], text.rstrip("\n"), 1)
+    return None
+    prefix = m.group(0)
+    lines = block.splitlines(keepends=True)
+    for i, line in enumerate(lines):
+        if line.strip().startswith(prefix):
+            end = _balanced_end([l.rstrip("\n") for l in lines], i)
+            new = text if text.endswith("\n") else text + "\n"
+            return "".join(lines[:i]) + new + "".join(lines[end + 1 :])
+    return None
+
+
 def _slice(content: str, span: tuple[int, int]) -> str:
     lines = content.splitlines(keepends=True)
     return "".join(lines[span[0] - 1 : span[1]])
@@ -199,6 +274,50 @@ async def reset(body: CodeReset) -> CodeFile:
         v = {**v, "message": note}
     span = symbol_span(new_full, body.symbol) if body.symbol else None
     return CodeFile(path=body.path, content=fresh, validation=v, symbol=body.symbol, span=list(span) if span else None)
+
+
+@router.post("/answer", response_model=CodeFile)
+async def answer(body: CodeAnswer) -> CodeFile:
+    """Write a hint's answer into the file, over whatever the student has in
+    that symbol, and reload the agent: what the last hint does when clicked.
+    The response is the symbol's block as the editor should now show it."""
+    editable, _ = FILES.get(body.path, (False, ""))
+    p = _resolve(body.path)
+    if not editable:
+        raise HTTPException(403, f"{body.path} is read-only in this lab")
+    current = p.read_text()
+    span = symbol_span(current, body.symbol)
+    if span is None:
+        # the file no longer parses or has lost the symbol: start from the shipped block
+        shipped = config.ROOT / "starter" / body.path
+        if not shipped.exists():
+            raise HTTPException(409, f"{body.symbol} is not in {body.path} and there is no shipped copy to start from; reset the block first")
+        current = shipped.read_text()
+        span = symbol_span(current, body.symbol)
+        if span is None:
+            raise HTTPException(409, f"{body.symbol} is not in the shipped {body.path}")
+    block = _slice(current, span)
+    placed = place_answer(block, body.symbol, body.text, body.path)
+    if placed is None:
+        # the student's block no longer has a place for it: the shipped block does
+        shipped = config.ROOT / "starter" / body.path
+        if shipped.exists():
+            fresh = shipped.read_text()
+            f_span = symbol_span(fresh, body.symbol)
+            if f_span:
+                placed = place_answer(_slice(fresh, f_span), body.symbol, body.text, body.path)
+    if placed is None:
+        raise HTTPException(409, f"could not place the answer in {body.symbol} of {body.path}")
+    new_full = _splice(current, span, placed)
+    _write(p, new_full)
+    err = agent_reload.after_save_report(body.path)
+    bus.mark_dirty()
+    v = validate(body.path, new_full)
+    if err:
+        v = {**v, "import_error": err}
+    new_span = symbol_span(new_full, body.symbol)
+    content = _slice(new_full, new_span) if new_span else placed
+    return CodeFile(path=body.path, content=content, validation=v, symbol=body.symbol, span=list(new_span) if new_span else None)
 
 
 @router.post("", response_model=CodeFile)

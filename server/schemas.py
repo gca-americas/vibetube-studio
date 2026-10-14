@@ -37,3 +37,11 @@ class CodeWrite(BaseModel):
     path: str
     content: str
     symbol: str | None = None
+
+
+class CodeAnswer(BaseModel):
+    """The answer a hint shows, to be written into the file: the whole
+    top-level symbol, or a fragment of it (an argument, a statement)."""
+    path: str
+    symbol: str
+    text: str

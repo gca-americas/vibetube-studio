@@ -1499,6 +1499,29 @@ export function EditPanel({
   pattern: RegExp;
   onSaved: () => void;
 }) {
+  // The last hint is the answer, and clicking it writes the answer into the
+  // file: over whatever the editor holds, saved, and reloaded by adk web.
+  const [writing, setWriting] = useState(false);
+  const [written, setWritten] = useState<{ ok: boolean; text: string } | null>(null);
+  const writeAnswer = async () => {
+    if (!symbol) return;
+    setWriting(true);
+    try {
+      const d = await api.answer({ path, symbol, text: hint2 });
+      window.dispatchEvent(new CustomEvent("vibe:adopt", { detail: { path } }));
+      const err = d.validation.import_error;
+      setWritten(err ? { ok: false, text: `Written to ${path}, but the file does not import: ${err}` } : { ok: true, text: `Written to ${path} and saved; adk web has it.` });
+      onSaved();
+    } catch (e) {
+      setWritten({ ok: false, text: (e as Error).message });
+    } finally {
+      setWriting(false);
+    }
+  };
+  const onHint = () => {
+    if (hint >= 1) void writeAnswer();
+    setHint((h) => Math.min(h + 1, 2));
+  };
   return (
     <section className="rounded-3xl border p-6" style={{ borderColor: tint(AMBER, 0.4), background: tint(AMBER, 0.04) }}>
       <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
@@ -1513,8 +1536,8 @@ export function EditPanel({
           <span className="rounded-full border px-3 py-1 font-mono text-[11px]" style={ok ? { borderColor: tint(GREEN, 0.4), color: GREEN, background: tint(GREEN, 0.08) } : { borderColor: "var(--hairline)", color: "var(--fg-muted)" }}>
             {pill}
           </span>
-          <button onClick={() => setHint((h) => Math.min(h + 1, 2))} className="flex items-center gap-1.5 rounded-full border border-hairline bg-card px-3 py-1 text-xs text-fg-muted hover:text-fg">
-            <Lightbulb size={13} /> {hint === 0 ? "Hint" : hint === 1 ? "Another hint" : "Hints shown"}
+          <button onClick={onHint} disabled={writing} className="flex items-center gap-1.5 rounded-full border border-hairline bg-card px-3 py-1 text-xs text-fg-muted hover:text-fg disabled:opacity-60">
+            {writing ? <RefreshCw size={13} className="animate-spin" /> : <Lightbulb size={13} />} {hint === 0 ? "Hint" : hint === 1 ? "Write the answer" : "Write the answer again"}
           </button>
         </div>
       </div>
@@ -1524,6 +1547,11 @@ export function EditPanel({
             <b className="text-fg">Hint 1.</b> {hint1}
           </p>
           {hint >= 2 && <pre className="mt-2 overflow-x-auto rounded-lg bg-overlay px-3 py-2 font-mono text-[11.5px] text-fg">{hint2}</pre>}
+          {hint >= 2 && (
+            <p className="mt-2 font-mono text-[11.5px]" style={{ color: written ? (written.ok ? GREEN : RED) : "var(--fg-muted)" }}>
+              {written ? written.text : writing ? "writing…" : ""}
+            </p>
+          )}
         </div>
       )}
       {extra && <div className="mt-4">{extra}</div>}

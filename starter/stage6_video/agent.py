@@ -58,4 +58,4 @@ root_agent = Workflow(
            (join_research, propose_directions, direction_gate,
             persist_direction, policy_check),
            (policy_check, {"OK": scripter, "BLOCK": quarantine}),
-           (quarantine, scripter)])  # TODO: VIDEO_EDGES - add the last chain: (scripter, render_desk, store_video)  # TODO: VIDEO_EDGES - add the last chain: (scripter, render_desk, store_video)
+           (quarantine, scripter)])  # TODO: VIDEO_EDGES - add the last chain: (scripter, render_desk, store_video)
