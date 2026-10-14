@@ -255,6 +255,27 @@ function ToolsEditRun() {
   const [open, setOpen] = useState(false);
   const [reloadN, setReloadN] = useState(0);   // the badge reloads the frame on request
   const [hint, setHint] = useState(0);
+  // the last hint writes its answer into the file, over whatever the editor holds
+  const [writing, setWriting] = useState(false);
+  const [written, setWritten] = useState<{ ok: boolean; text: string } | null>(null);
+  const writeAnswer = async () => {
+    setWriting(true);
+    try {
+      const d = await api.answer({ path: "stage0_prompt/agent.py", symbol: "root_agent", text: "    tools=[check_trends, read_backlog]," });
+      window.dispatchEvent(new CustomEvent("vibe:adopt", { detail: { path: "stage0_prompt/agent.py" } }));
+      const err = d.validation.import_error;
+      setWritten(err ? { ok: false, text: tf("Written to {0}, but the file does not import: {1}", "stage0_prompt/agent.py", err) } : { ok: true, text: tf("Written to {0} and saved; adk web has it.", "stage0_prompt/agent.py") });
+      check();
+    } catch (e) {
+      setWritten({ ok: false, text: (e as Error).message });
+    } finally {
+      setWriting(false);
+    }
+  };
+  const onHint = () => {
+    if (hint >= 1) void writeAnswer();
+    setHint((h) => Math.min(h + 1, 2));
+  };
   const [inspector, setInspector] = useState<InspectorStatus | null>(null);
   const [status, setStatus] = useState<Stage0Status | null>(null);
   const [checking, setChecking] = useState(false);
@@ -360,10 +381,11 @@ function ToolsEditRun() {
                 {status ? (wired ? t("tools wired ✓") : `wired: ${status.tools_wired.length ? status.tools_wired.join(", ") : "none"}`) : "…"}
               </span>
               <button
-                onClick={() => setHint((h) => Math.min(h + 1, 2))}
-                className="flex items-center gap-1.5 rounded-full border border-hairline bg-card px-3 py-1 text-xs text-fg-muted hover:text-fg"
+                onClick={onHint}
+                disabled={writing}
+                className="flex items-center gap-1.5 rounded-full border border-hairline bg-card px-3 py-1 text-xs text-fg-muted hover:text-fg disabled:opacity-60"
               >
-                <Lightbulb size={13} /> {hint === 0 ? t("Hint") : hint === 1 ? t("Another hint") : t("Hints shown")}
+                {writing ? <RefreshCw size={13} className="animate-spin" /> : <Lightbulb size={13} />} {hint === 0 ? t("Hint") : hint === 1 ? t("Write the answer") : t("Write the answer again")}
               </button>
             </div>
           </div>
@@ -375,6 +397,11 @@ function ToolsEditRun() {
               {hint >= 2 && (
                 <p className="mt-2">
                   {tx("{0} The finished line is {1} and the TODO comment can go.", [<b className="text-fg">Hint 2.</b>, <code className="rounded bg-overlay px-1.5 py-0.5 font-mono text-fg">tools=[check_trends, read_backlog],</code>])}</p>
+              )}
+              {hint >= 2 && (
+                <p className="mt-2 font-mono text-[11.5px]" style={{ color: written ? (written.ok ? GREEN : COLORS.red) : "var(--fg-muted)" }}>
+                  {written ? written.text : writing ? t("writing…") : ""}
+                </p>
               )}
             </div>
           )}

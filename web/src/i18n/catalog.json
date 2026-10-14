@@ -162,9 +162,6 @@
  "An OK run reached the scripter": [
   "steps/PolicyGate.tsx"
  ],
- "Another hint": [
-  "steps/SinglePrompt.tsx"
- ],
  "Another process reads the pending call from the session store, waits for Veo, and resumes the same session with a function_response for that call's id. With a real render this takes a minute or three; the stand-in finishes in seconds.": [
   "steps/Video.tsx"
  ],
@@ -690,9 +687,6 @@
  ],
  "Hint": [
   "steps/FanOut.tsx",
-  "steps/SinglePrompt.tsx"
- ],
- "Hints shown": [
   "steps/SinglePrompt.tsx"
  ],
  "How it moves": [
@@ -1971,19 +1965,23 @@
   "steps/Video.tsx"
  ],
  "Write the answer": [
-  "steps/FanOut.tsx"
+  "steps/FanOut.tsx",
+  "steps/SinglePrompt.tsx"
  ],
  "Write the answer again": [
-  "steps/FanOut.tsx"
+  "steps/FanOut.tsx",
+  "steps/SinglePrompt.tsx"
  ],
  "Write the edges.": [
   "steps/FanOut.tsx"
  ],
  "Written to {0} and saved; adk web has it.": [
-  "steps/FanOut.tsx"
+  "steps/FanOut.tsx",
+  "steps/SinglePrompt.tsx"
  ],
  "Written to {0}, but the file does not import: {1}": [
-  "steps/FanOut.tsx"
+  "steps/FanOut.tsx",
+  "steps/SinglePrompt.tsx"
  ],
  "Yes. The model chose how; another run may cite it elsewhere.": [
   "steps/Rag.tsx"
@@ -3213,7 +3211,8 @@
   "steps/Memory.tsx"
  ],
  "writing…": [
-  "steps/FanOut.tsx"
+  "steps/FanOut.tsx",
+  "steps/SinglePrompt.tsx"
  ],
  "you · adk web": [
   "steps/FanOut.tsx"
