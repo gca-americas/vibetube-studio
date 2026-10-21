@@ -204,7 +204,7 @@ if [ -f "$EVENT_FILE" ]; then
     EVENT_DEFAULT="$(tr -d '[:space:]' < "$EVENT_FILE" || true)"
 fi
 [ -n "$EVENT_DEFAULT" ] || EVENT_DEFAULT="$(env_get VIBETUBE_EVENT)"
-[ -n "$EVENT_DEFAULT" ] || EVENT_DEFAULT="GoogleDMV"
+[ -n "$EVENT_DEFAULT" ] || EVENT_DEFAULT="Oreilly"
 NAME_DEFAULT="$(env_get VIBETUBE_NAME)"
 if [ -z "$NAME_DEFAULT" ]; then
     ACCOUNT="$(gcloud config get-value account 2>/dev/null || true)"
