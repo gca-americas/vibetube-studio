@@ -11,6 +11,7 @@ import { api, useRunEvents } from "../lib/api";
 import type { InspectorStatus, Stage0Status } from "../lib/types";
 import { AdkGlance } from "./AdkGlance";
 import { COLORS, tint } from "./colors";
+import { AdkFrame } from "../components/AdkFrame";
 
 /*
  * Step 3, in three parts:
@@ -477,7 +478,7 @@ function ToolsEditRun() {
                   {t("open in a new tab")} <ExternalLink size={12} />
                 </a>
               </div>
-              <iframe key={reloadN} title="adk web" src={INSPECTOR_URL} className="h-[680px] w-full bg-[#1e1e1e]" />
+              <AdkFrame key={reloadN} src={INSPECTOR_URL} />
             </div>
           )}
         </section>

@@ -75,6 +75,7 @@ export interface Stage2Status {
   gate_wired: boolean;
   persist_wired: boolean;
   gate_has_request_input: boolean;
+  gate_payload_ok: boolean;
   proposer_mode: string;
   sessions: number;
   nodes_ran: string[];

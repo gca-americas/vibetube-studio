@@ -10,6 +10,7 @@ import { LoadedBadge } from "../components/LoadedBadge";
 import { api, useRunEvents } from "../lib/api";
 import type { InspectorStatus, Stage1Status, Stage2Status } from "../lib/types";
 import { COLORS, tint } from "./colors";
+import { AdkFrame } from "../components/AdkFrame";
 
 /*
  * Step 4, in parts:
@@ -842,6 +843,7 @@ function HumanInTheLoop() {
 
   const gateWired = status?.gate_wired ?? false;
   const hasInput = status?.gate_has_request_input ?? false;
+  const payloadOk = status?.gate_payload_ok ?? false;
 
   return (
     <div className="space-y-12">
@@ -1016,8 +1018,8 @@ function HumanInTheLoop() {
           <CheckRow ok={gateWired} label={t("direction_gate is in the chain")}>
             {status ? (gateWired ? status.chain.join(" → ") : t("Edit 2 above.")) : "…"}
           </CheckRow>
-          <CheckRow ok={hasInput} label={t("direction_gate yields a RequestInput")}>
-            {status ? (hasInput ? t("Found in the function body.") : t("Edit 1 above.")) : "…"}
+          <CheckRow ok={hasInput && payloadOk} label={t("direction_gate yields RequestInput with candidates payload")}>
+            {status ? (!hasInput ? t("Edit 1 above.") : payloadOk ? t("Found in the function body.") : t("The RequestInput needs payload={\"candidates\": cands}.")) : "…"}
           </CheckRow>
           <CheckRow ok={!!status && status.asked > 0} label={t("The graph suspended")}>
             {status ? tf("{0} adk_request_input call{1} in the sessions", status.asked, status.asked === 1 ? "" : "s") : "…"}
@@ -1601,11 +1603,9 @@ export function RunPanel({
               {t("open in a new tab")} <ExternalLink size={12} />
             </a>
           </div>
-          <iframe
+          <AdkFrame
             key={frameKey}
-            title="adk web"
             src={url}
-            className="h-[680px] w-full bg-[#1e1e1e]"
             onLoad={() => {
               // A reloaded frame: the dev UI focuses its chat box while it boots, and the
               // browser scrolls this page to it. Wait for that scroll (or four seconds),

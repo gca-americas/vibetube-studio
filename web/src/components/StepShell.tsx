@@ -11,6 +11,11 @@ export function StepShell() {
   const navigate = useNavigate();
   const index = STEPS.findIndex((s) => s.slug === slug);
 
+  // a step opens at its top, whichever way the person got there
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [slug, part]);
+
   if (index === -1) return <Navigate to={`/step/${STEPS[0].slug}`} replace />;
 
   const step = STEPS[index];

@@ -4,6 +4,8 @@ type Theme = "dark" | "light";
 
 const ThemeContext = createContext<{ theme: Theme; toggle: () => void } | null>(null);
 const STORAGE_KEY = "vibe-studio-theme";
+// The ADK dev UI is served from this origin and reads its theme from this key.
+const ADK_STORAGE_KEY = "adk-theme-preference";
 
 function initialTheme(): Theme {
   const stored = window.localStorage.getItem(STORAGE_KEY);
@@ -17,6 +19,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     document.documentElement.classList.toggle("light", theme === "light");
     window.localStorage.setItem(STORAGE_KEY, theme);
+    window.localStorage.setItem(ADK_STORAGE_KEY, theme);
   }, [theme]);
 
   return (

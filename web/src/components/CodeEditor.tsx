@@ -1,5 +1,5 @@
 import { t, tx } from "../i18n";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useRunEvents } from "../lib/api";
 import { RefreshCw, Check, Loader2, RotateCcw, Save } from "lucide-react";
 import { tint } from "../steps/colors";
@@ -19,6 +19,8 @@ interface Validation {
   line?: number | null;
   /** The file is saved and parses, but importing it failed with this. */
   import_error?: string;
+  /** The server failed before it answered: whether the file was written is not known. */
+  disk_unknown?: boolean;
 }
 
 /** Identical text metrics for the highlighted layer and the textarea. */
@@ -157,16 +159,26 @@ export function CodeEditor({
   const save = async (content: string) => {
     const g = gen.current;
     setState("saving");
-    const res = await fetch("/api/code", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ path, content, symbol }),
-    });
+    let res: Response;
+    try {
+      res = await fetch("/api/code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path, content, symbol }),
+      });
+    } catch (e) {
+      if (g !== gen.current) return;
+      setValidation({ valid: false, message: `save failed: ${(e as Error).message}`, disk_unknown: true });
+      setState("invalid");
+      return;
+    }
     const d = await res.json().catch(() => ({}));
     if (g !== gen.current) return;                 // the editor adopted the file meanwhile
     if (!res.ok || !d.validation) {
-      setValidation({ valid: false, message: d.detail || `save failed (${res.status})` });
+      // The server did not say whether it wrote the file. Say so, and look at the disk.
+      setValidation({ valid: false, message: d.detail || `save failed (${res.status})`, disk_unknown: true });
       setState("invalid");
+      syncWithDisk();
       return;
     }
     setValidation(d.validation);
@@ -174,6 +186,66 @@ export function CodeEditor({
     if (d.validation.valid) {
       setOriginal(content);
       onSaved?.(content, d.validation);
+    }
+  };
+
+  // Tab indents by four spaces (Shift+Tab takes them back); Enter keeps the
+  // line's indentation and adds four after a colon. Python is the lab's only
+  // language here, so the editor does what a code editor does.
+  const INDENT = "    ";
+  // React writes the new value into the textarea, which moves the caret to the
+  // end; the layout effect puts it back before the next key can read it.
+  const caret = useRef<[number, number] | null>(null);
+  useLayoutEffect(() => {
+    if (caret.current && taRef.current) taRef.current.setSelectionRange(...caret.current);
+    caret.current = null;
+  }, [code]);
+  const edit = (value: string, start: number, end = start) => {
+    caret.current = [start, end];
+    onChange(value);
+  };
+  const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.nativeEvent.isComposing) return;
+    const ta = e.currentTarget;
+    const { value, selectionStart: a, selectionEnd: b } = ta;
+    if (e.key === "Tab") {
+      e.preventDefault();
+      const lineStart = value.lastIndexOf("\n", a - 1) + 1;
+      const multi = value.slice(a, b).includes("\n");
+      if (!e.shiftKey && !multi) {
+        edit(value.slice(0, a) + INDENT + value.slice(b), a + INDENT.length);
+        return;
+      }
+      // every line the selection touches moves together
+      const blockEnd = b;
+      const head = value.slice(0, lineStart);
+      const block = value.slice(lineStart, blockEnd);
+      const tail = value.slice(blockEnd);
+      const rows = block.split("\n");
+      let firstDelta = 0;
+      let total = 0;
+      const moved = rows.map((row, i) => {
+        if (!e.shiftKey) {
+          if (i === 0) firstDelta = INDENT.length;
+          total += INDENT.length;
+          return INDENT + row;
+        }
+        const cut = Math.min(INDENT.length, row.length - row.trimStart().length);
+        if (i === 0) firstDelta = -cut;
+        total -= cut;
+        return row.slice(cut);
+      });
+      edit(head + moved.join("\n") + tail, Math.max(lineStart, a + firstDelta), b + total);
+      return;
+    }
+    if (e.key === "Enter" && !e.shiftKey && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      e.preventDefault();
+      const lineStart = value.lastIndexOf("\n", a - 1) + 1;
+      const before = value.slice(lineStart, a);
+      const lead = before.match(/^\s*/)?.[0] ?? "";
+      const more = before.replace(/\s*#.*$/, "").trimEnd().endsWith(":") ? INDENT : "";
+      const ins = "\n" + lead + more;
+      edit(value.slice(0, a) + ins + value.slice(b), a + ins.length);
     }
   };
 
@@ -307,6 +379,7 @@ export function CodeEditor({
           ref={taRef}
           value={code}
           onChange={(e) => onChange(e.target.value)}
+          onKeyDown={onKeyDown}
           onScroll={syncScroll}
           spellCheck={false}
           wrap="off"
@@ -323,7 +396,8 @@ export function CodeEditor({
         {validation?.import_error
           ? <span className="text-vibe-red">{tx("saved, but the file does not import: {0} · adk web will show the same error until it is fixed", [validation.import_error])}</span>
           : validation ? `${validation.message}${validation.line ? ` (line ${validation.line})` : ""}` : t("loading")}
-        {validation?.valid === false && <span>{t("· the file on disk was not changed")}</span>}
+        {validation?.valid === false && !validation.disk_unknown && <span>{t("· the file on disk was not changed")}</span>}
+        {validation?.disk_unknown && <span>{t("· the file on disk may have changed; reload shows it")}</span>}
       </div>
     </div>
   );

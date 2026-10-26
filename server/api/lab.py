@@ -250,18 +250,34 @@ def proposer_mode(path=ROOT / "agent" / "graph.py") -> str:
     return "?"
 
 
-def gate_has_request_input(path=ROOT / "agent" / "graph.py") -> bool:
-    """Does direction_gate yield a RequestInput(...)? Read from the AST."""
+def _gate_requests(path=ROOT / "agent" / "graph.py") -> list[ast.Call]:
+    """The RequestInput(...) calls direction_gate yields, read from the AST."""
     try:
         tree = ast.parse(path.read_text())
     except (OSError, SyntaxError):
-        return False
+        return []
+    calls = []
     for node in ast.walk(tree):
         if isinstance(node, ast.FunctionDef) and node.name == "direction_gate":
             for sub in ast.walk(node):
                 if isinstance(sub, ast.Yield) and isinstance(sub.value, ast.Call) \
                         and getattr(sub.value.func, "id", "") == "RequestInput":
-                    return True
+                    calls.append(sub.value)
+    return calls
+
+
+def gate_has_request_input(path=ROOT / "agent" / "graph.py") -> bool:
+    """Does direction_gate yield a RequestInput(...)?"""
+    return bool(_gate_requests(path))
+
+
+def gate_payload_has_candidates(path=ROOT / "agent" / "graph.py") -> bool:
+    """Does a RequestInput that direction_gate yields pass payload={"candidates": ...}?"""
+    for call in _gate_requests(path):
+        for kw in call.keywords:
+            if kw.arg == "payload" and isinstance(kw.value, ast.Dict) and any(
+                    isinstance(k, ast.Constant) and k.value == "candidates" for k in kw.value.keys):
+                return True
     return False
 
 
@@ -306,6 +322,7 @@ async def stage2():
         "gate_wired": tuple(tail[: len(CHAIN_GATE)]) == CHAIN_GATE,
         "persist_wired": tuple(tail[: len(CHAIN_PERSIST)]) == CHAIN_PERSIST,
         "gate_has_request_input": gate_has_request_input(),
+        "gate_payload_ok": gate_payload_has_candidates(),
         "proposer_mode": proposer_mode(),
         "sessions": len(sessions),
         "nodes_ran": nodes,

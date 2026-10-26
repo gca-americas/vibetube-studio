@@ -1484,6 +1484,9 @@
  "The LlmRequest about to go out, or the LlmResponse that came back.": [
   "steps/Memory.tsx"
  ],
+ "The RequestInput needs payload={\"candidates\": cands}.": [
+  "steps/FanOut.tsx"
+ ],
  "The agent node ran after the join": [
   "steps/FanOut.tsx"
  ],
@@ -2302,7 +2305,7 @@
  "direction_gate is in the chain": [
   "steps/FanOut.tsx"
  ],
- "direction_gate yields a RequestInput": [
+ "direction_gate yields RequestInput with candidates payload": [
   "steps/FanOut.tsx"
  ],
  "documents, transcripts → RAG Engine": [
@@ -3309,6 +3312,9 @@
  ],
  "· Agentic Workflow with ADK": [
   "components/TopNav.tsx"
+ ],
+ "· the file on disk may have changed; reload shows it": [
+  "components/CodeEditor.tsx"
  ],
  "· the file on disk was not changed": [
   "components/CodeEditor.tsx"
