@@ -579,7 +579,7 @@ function PostDrawer() {
               {/* the room, the name, and how the last post went */}
               <section className="rounded-2xl border p-4" style={{ borderColor: tint(accent, 0.4), background: tint(accent, 0.04) }}>
                 <div className="grid gap-3 sm:grid-cols-2">
-                  <Field label="room · event code, case-sensitive" value={code} onChange={setCode} placeholder="GOOGLEATL" />
+                  <Field label="room · event code, case-sensitive" value={code} onChange={setCode} placeholder="googlelive" />
                   <Field label="your name on the card" value={name} onChange={setName} placeholder="Vibe Studio creator" mono={false} />
                 </div>
                 <div className="mt-3 flex flex-wrap items-center gap-3">
