@@ -5,6 +5,7 @@ import { STEPS } from "../steps/registry";
 import { tint } from "../steps/colors";
 import { useTheme } from "./ThemeProvider";
 import { LiveRunPill } from "./LiveRunPill";
+import { PostButton } from "./PostDock";
 
 /**
  * Brand bar plus the step roadmap. Every step is a link, the current one is
@@ -35,6 +36,7 @@ export function TopNav({ activeSlug }: { activeSlug: string }) {
           </span>
         </Link>
         <div className="flex items-center gap-3">
+          <PostButton />
           <LiveRunPill />
           <button
             onClick={toggle}
