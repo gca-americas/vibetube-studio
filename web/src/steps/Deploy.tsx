@@ -102,9 +102,12 @@ function ArchFigure() {
   );
 }
 
-/** The deploy, run from here: the gcloud command (wrapped by vibestudio/deploy.py,
- *  which fills in the env values) as a worker on the lab server, its output
- *  streamed, the service URL at the end. */
+/** The deploy, run from here - or already run by setup: setup_codelab.sh
+ *  starts vibestudio/deploy.py in the background, so this page usually opens
+ *  on a service that is live, or on a build that is a few minutes in. The
+ *  gcloud command (wrapped by deploy.py, which fills in the env values) runs
+ *  as a worker on the lab server when the button is pressed; the output of
+ *  setup's deploy is read from its log. */
 function DeployRunner() {
   const [lines, setLines] = useState<string[]>([]);
   const [running, setRunning] = useState(false);
@@ -112,25 +115,31 @@ function DeployRunner() {
   useRunEvents((verb, line) => {
     if (verb === "deploy") setLines((l) => [...l.slice(-299), line]);
   });
-  const refresh = useCallback(() => api.deployStatus().then(setStatus).catch(() => {}), []);
+  const refresh = useCallback(() => api.deployStatus(true).then(setStatus).catch(() => {}), []);
   useEffect(() => {
-    refresh().then(() => {});
-    api.deployStatus().then((st) => {
+    api.deployStatus(true).then((st) => {
+      setStatus(st);
       if (st.running) {
         setRunning(true);
-        setLines(["a deploy is already running on this server; its remaining output appears here"]);
+        setLines(st.by === "setup" && !st.worker
+          ? ["setup started this deploy in the background; the tail of runs/deploy_setup.log appears here", ...st.log_tail]
+          : ["a deploy is already running on this server; its remaining output appears here"]);
       }
-    });
-  }, [refresh]);
+    }).catch(() => {});
+  }, []);
   useEffect(() => {
     if (!running) return;
     const t = setInterval(async () => {
-      const st = await api.deployStatus();
+      const st = await api.deployStatus(!running);
       setStatus(st);
-      if (!st.running) setRunning(false);
-    }, 2000);
+      if (st.by === "setup" && !st.worker && st.log_tail.length) setLines((l) => (l.length && l[0].startsWith("setup started") ? [l[0], ...st.log_tail] : l));
+      if (!st.running) {
+        setRunning(false);
+        refresh();
+      }
+    }, 3000);
     return () => clearInterval(t);
-  }, [running]);
+  }, [running, refresh]);
   const run = async () => {
     setLines([]);
     let r: { ok: boolean; detail: string };
@@ -151,16 +160,37 @@ function DeployRunner() {
   };
   const url = status?.url || "";
   const exit = status?.last_exit?.code ?? null;
+  const bySetup = status?.by === "setup";
+  const since = status?.started_at ? Math.max(0, Math.round((Date.now() / 1000 - status.started_at) / 60)) : null;
+  const deployedAgo = status?.at ? Math.max(0, Math.round((Date.now() / 1000 - status.at) / 60)) : null;
   return (
     <section className="rounded-3xl border p-6" style={{ borderColor: tint(GREEN, 0.33), background: tint(GREEN, 0.04) }}>
+      {status && (status.running || url || status.status === "failed" || status.status === "interrupted") ? (
+        <div className="mb-4 flex flex-wrap items-center gap-3 rounded-2xl border px-4 py-2.5 font-mono text-xs" style={{ borderColor: tint(status.running ? AMBER : url && status.reachable !== false ? GREEN : RED, 0.4), background: tint(status.running ? AMBER : url && status.reachable !== false ? GREEN : RED, 0.06) }}>
+          <span className={`h-2 w-2 rounded-full ${status.running ? "animate-pulse" : ""}`} style={{ background: status.running ? AMBER : url && status.reachable !== false ? GREEN : RED }} />
+          {status.running ? (
+            <span>
+              {bySetup && !status.worker ? "Setup is deploying VibeStudio in the background" : "Deploying"}
+              {since !== null ? ` · ${since} min so far` : ""} · Cloud Build takes four or five minutes; nothing to do here but read
+            </span>
+          ) : url ? (
+            <span>
+              Already live{bySetup ? ", deployed by setup" : ""}{deployedAgo !== null ? ` ${deployedAgo} min ago` : ""}{status.seconds ? ` in ${status.seconds}s` : ""}
+              {status.reachable === false ? " · not answering right now" : status.reachable ? " · answers /api/health" : ""}
+            </span>
+          ) : (
+            <span>The deploy {status.status === "interrupted" ? "was interrupted" : "failed"}{status.detail ? ` · ${status.detail}` : ""} · the log below says why; press the button to try again</span>
+          )}
+        </div>
+      ) : null}
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="font-mono text-[11px] uppercase tracking-[0.3em]" style={{ color: GREEN }}>
             Deployment
           </p>
-          <h2 className="font-display mt-2 text-2xl">Deploying to Cloud Run.</h2>
+          <h2 className="font-display mt-2 text-2xl">{url && !status?.running ? "On Cloud Run since setup." : "Deploying to Cloud Run."}</h2>
           <p className="mt-2 max-w-2xl text-sm text-fg-muted">
-            Triggering deployment executes the gcloud deployment command via a background subshell and streams stdout directly to the console. Cloud Build parses the multi-stage Dockerfile, compiles the frontend bundle and FastAPI server into a unified container image, and deploys it to Cloud Run. Initial container builds require several minutes for dependency resolution and layer caching.
+            <code className="font-mono text-fg">setup_codelab.sh</code> started this deploy in the background alongside Memory Bank and RAG Engine provisioning, so the service is usually live before step 9 — and the <b>Post my video</b> button in the top bar uses it to run or publish your videos directly to VibeTube. Because <code className="font-mono text-fg">vibestudio/</code> carries its own complete copy of the workflow, there is nothing you need to redeploy now unless you changed <code className="font-mono text-fg">.env</code> or want a fresh revision via <code className="font-mono text-fg">vibestudio/deploy.py</code>.
             {status?.gcloud_project ? (
               <>
                 {" "}
@@ -169,10 +199,26 @@ function DeployRunner() {
             ) : null}
           </p>
         </div>
-        <button onClick={run} disabled={running} className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white transition-transform hover:scale-[1.03] disabled:opacity-50" style={{ background: GREEN }}>
-          {running ? <RefreshCw size={16} className="animate-spin" /> : <Rocket size={16} />}
-          {running ? "Deploying…" : url ? "Deploy again" : "Deploy to Cloud Run"}
-        </button>
+        <div className="flex flex-col items-stretch gap-2 md:items-end">
+          {url && !running ? (
+            <>
+              <a href={url} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white transition-transform hover:scale-[1.03]" style={{ background: GREEN }}>
+                Open Vibe Studio <ExternalLink size={15} />
+              </a>
+              <button onClick={run} title="Deploy a new revision of the service after changing .env, or if the service stops answering." className="flex items-center justify-center gap-2 rounded-xl border px-4 py-2 font-mono text-xs transition-colors hover:bg-overlay" style={{ borderColor: tint(GREEN, 0.45), color: GREEN }}>
+                <Rocket size={13} /> Deploy again
+              </button>
+              <span className="max-w-[260px] text-right font-mono text-[10px] leading-snug text-fg-muted">
+                nothing to deploy now · again only after a change to <code className="text-fg">.env</code>, or if the app stops answering
+              </span>
+            </>
+          ) : (
+            <button onClick={run} disabled={running} className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white transition-transform hover:scale-[1.03] disabled:opacity-50" style={{ background: GREEN }}>
+              {running ? <RefreshCw size={16} className="animate-spin" /> : <Rocket size={16} />}
+              {running ? (bySetup && !status?.worker ? "Setup is deploying…" : "Deploying…") : "Deploy to Cloud Run"}
+            </button>
+          )}
+        </div>
       </div>
       <div className="mt-4 grid gap-3 md:grid-cols-2">
         <div>
@@ -196,7 +242,7 @@ function DeployRunner() {
       {(lines.length > 0 || running) && (
         <div className="mt-4 overflow-hidden rounded-2xl border border-hairline bg-input">
           <div className="flex items-center justify-between border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">
-            <span>gcloud run deploy · output</span>
+            <span>gcloud run deploy · output{bySetup && !status?.worker ? " · runs/deploy_setup.log" : ""}</span>
             <span>{running ? "running…" : exit === 0 ? "done" : exit === null ? "" : `exit ${exit}`}</span>
           </div>
           <pre className="max-h-72 overflow-auto whitespace-pre-wrap px-4 py-3 font-mono text-[11px] leading-relaxed text-fg">{lines.filter((l) => !/Warning|warn\(/.test(l)).join("\n") || "starting…"}</pre>

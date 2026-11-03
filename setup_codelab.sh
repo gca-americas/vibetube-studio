@@ -16,8 +16,11 @@
 # next time. With no terminal attached both take the default, so the script
 # also runs from another script or a container.
 #
-# What it does NOT do: create the Memory Bank or the RAG corpus. Those are
-# steps 6 and 7 of the lab; you press the button yourself.
+# The Memory Bank and the RAG corpus (steps 6 and 7 of the lab) are started
+# in the background at the end, so the pages find them ready - and so is the
+# deploy of VibeStudio to Cloud Run (step 9), so the app is live while you
+# read and the page's Post my video button has somewhere to send the night.
+# VIBE_STUDIO_SKIP_DEPLOY=1 leaves the deploy to step 9's button.
 # `sh scripts/restart.sh` runs a bash script under another shell. Re-enter under
 # bash rather than fail somewhere later on a construct sh does not have.
 [ -n "${BASH_VERSION:-}" ] || exec bash "$0" "$@"
@@ -298,12 +301,15 @@ else
     warn "Veo did not confirm in us-central1 (HTTP $VEO_STATUS). Renders may fail; STUDIO_REAL_VIDEO=0 in .env runs cost-free."
 fi
 
-ROOM_STATUS="$(curl -s -o /dev/null -w '%{http_code}' --max-time 5 "https://vibetube.dev/api/events/$VIBETUBE_EVENT" 2>/dev/null || echo 000)"
-if [ "$ROOM_STATUS" = "200" ]; then
-    tick "room reachable: https://vibetube.dev/api/events/$VIBETUBE_EVENT"
-else
-    warn "the room did not answer (HTTP $ROOM_STATUS). Everything but publishing works without it."
-fi
+# A room only accepts uploads inside its window; say now whether this one is open,
+# so step 9 is not the first place that finds out.
+ROOM_JSON="$(curl -s --max-time 5 "https://vibetube.dev/api/events/$VIBETUBE_EVENT" 2>/dev/null || true)"
+case "$ROOM_JSON" in
+    *'"uploadOpen":true'*)  tick "room $VIBETUBE_EVENT: uploads open (https://vibetube.dev/e/$VIBETUBE_EVENT)" ;;
+    *'"uploadOpen":false'*) warn "room $VIBETUBE_EVENT exists, but its upload window is closed: step 9 can publish only to an open room (sandbox always is)."
+                            warn "change VIBETUBE_EVENT in .env, or type another code in the Post my video drawer" ;;
+    *)                      warn "no room answers to \"$VIBETUBE_EVENT\" (codes are case-sensitive). Everything but publishing works without it." ;;
+esac
 
 # ── 5 · prove the model answers ─────────────────────────────────────────────
 say "4 · Live model call"
@@ -368,19 +374,71 @@ else
         "Read runs/lab.log, then start it by hand:  scripts/start.sh"
 fi
 
-# ── 8 · the two cloud resources, created while you read ─────────────────────
+# ── 8 · the cloud resources and the studio, created while you read ──────────
 # A corpus takes a minute or two to come up and the bank about twenty seconds.
 # Both commands create once and connect ever after, so starting them here costs
 # nothing and steps 6 and 7 find them ready. A creation lock in agent/platform
 # keeps a click in the lab from creating a second one while these run.
-say "7 · Memory Bank and RAG Engine"
+say "7 · Memory Bank, RAG Engine, and VibeStudio on Cloud Run"
+mkdir -p runs
+PROJECT_NUMBER="$(gcloud projects describe "$PROJECT" --format='value(projectNumber)' 2>/dev/null || true)"
+PROJECT="$PROJECT" PROJECT_NUMBER="$PROJECT_NUMBER" .venv/bin/python - <<'PY' 2>/dev/null || true
+import json, os, pathlib
+proj = os.environ.get("PROJECT", "")
+num = os.environ.get("PROJECT_NUMBER", "")
+for name in ("memorybank.json", "ragcorpus.json"):
+    p = pathlib.Path("runs") / name
+    if not p.exists():
+        continue
+    try:
+        res = json.loads(p.read_text()).get("name", "")
+    except Exception:
+        continue
+    parts = res.split("/")
+    owner = parts[1] if len(parts) > 2 and parts[0] == "projects" else ""
+    if owner and owner not in {proj, num}:
+        stale = p.with_name(f"{name}.stale-{owner}")
+        p.replace(stale)
+        print(f"  · set aside runs/{name} from project {owner}")
+PY
 if [ -f runs/memorybank.json ] && [ -f runs/ragcorpus.json ]; then
-    tick "both are already connected"
+    tick "Memory Bank and RAG corpus are already connected"
 else
     [ -f runs/memorybank.json ] || nohup .venv/bin/python -m agent.platform.bank > runs/bank_setup.log 2>&1 &
     [ -f runs/ragcorpus.json ] || nohup .venv/bin/python -m agent.platform.rag > runs/rag_setup.log 2>&1 &
-    info "creating them in the background; steps 6 and 7 will find them ready"
+    info "creating Memory Bank and RAG corpus in the background; steps 6 and 7 will find them ready"
     info "logs: runs/bank_setup.log · runs/rag_setup.log"
+fi
+
+# The app of step 9, built and deployed in the background too. Cloud Build
+# takes four or five minutes; deploy.py first waits for the bank and the corpus
+# above (their names travel with the deploy), so the service is live a few
+# minutes into the lab. The page's Post my video button hands it the night from
+# then on, and step 9 opens on an app that is already running. One deploy at a
+# time (runs/.deploy.lock); a service already deployed from this project is
+# kept and not rebuilt.
+DEPLOY_URL=""
+DEPLOY_STATE="$(.venv/bin/python - <<'PY' 2>/dev/null || true
+import json, pathlib
+try:
+    rec = json.loads(pathlib.Path("runs/deploy.json").read_text())
+except Exception:
+    rec = {}
+print(rec.get("status", "done" if rec.get("url") else ""), rec.get("url", ""), rec.get("project", ""))
+PY
+)"
+set -- $DEPLOY_STATE; DEPLOY_STATUS="${1:-}"; DEPLOY_URL="${2:-}"; DEPLOY_PROJECT="${3:-}"; set --
+if [ "${VIBE_STUDIO_SKIP_DEPLOY:-0}" = "1" ]; then
+    info "VibeStudio: not deployed now (VIBE_STUDIO_SKIP_DEPLOY=1); step 9's Deploy button does it"
+elif [ "$DEPLOY_STATUS" = "done" ] && [ "$DEPLOY_PROJECT" = "$PROJECT" ] && [ -n "$DEPLOY_URL" ] \
+     && curl -s -o /dev/null --max-time 8 "$DEPLOY_URL/api/health"; then
+    tick "VibeStudio already on Cloud Run: $DEPLOY_URL"
+elif .venv/bin/python -c 'import sys; from agent.platform.memory import creation_in_progress as p; sys.exit(0 if p("deploy") else 1)' 2>/dev/null; then
+    info "VibeStudio: a deploy is already running in the background (log: runs/deploy_setup.log)"
+else
+    nohup .venv/bin/python vibestudio/deploy.py --by setup > runs/deploy_setup.log 2>&1 &
+    info "deploying VibeStudio to Cloud Run in the background: five minutes or so after the bank and the corpus are up"
+    info "log: runs/deploy_setup.log · the page's top bar says when it is live"
 fi
 
 # ── 9 · preflight, run for you: nothing else to type ────────────────────────
@@ -408,7 +466,7 @@ printf '      stop     scripts/stop.sh\n'
 printf '      start    scripts/start.sh\n'
 printf '      restart  scripts/restart.sh   after a git pull\n\n'
 printf '  Already run for you, and repeatable at any time:\n'
-printf '      python scripts/preflight.py     re-check the environment\n'
+printf '      python scripts/preflight.py     re-check the environment (and whether VibeStudio is live yet)\n'
 printf '      ./setup_codelab.sh              re-run this script; your files are kept\n\n'
 [ "$UV_WAS_INSTALLED" -eq 1 ] && printf '  uv was just installed. Run this to get it in this shell:  source ~/.local/bin/env\n\n'
 [ -n "${WEB_HOST:-}" ] || printf '  In Cloud Shell the link is also under Web Preview → Change port → %s.\n\n' "$PORT"

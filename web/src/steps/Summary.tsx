@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { In, StepHeader } from "../components/shared";
+import { PostCta } from "../components/PostDock";
 import { COLORS, tint } from "./colors";
 import { SnakeGraph } from "./Overview";
 
@@ -497,11 +498,16 @@ export function Summary() {
 
       <In delay={0.35}>
         <section className="rounded-3xl border border-hairline bg-card p-6">
-          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">Share it</p>
-          <h2 className="font-display mt-2 text-2xl">Post your video.</h2>
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-fg-muted">Share it</p>
+              <h2 className="font-display mt-2 text-2xl">Post your video.</h2>
+            </div>
+            <PostCta color={GREEN}>Post my video</PostCta>
+          </div>
           <ol className="mt-3 max-w-3xl list-decimal space-y-2 pl-5 text-sm text-fg-muted">
             <li>
-              Go to{" "}
+              Open <b>Post my video</b> in the top bar (or click the button on the right) to publish directly through your deployed VibeStudio, then go to{" "}
               <a href="https://vibetube.dev" target="_blank" rel="noreferrer" className="font-mono text-fg underline decoration-hairline underline-offset-4">
                 vibetube.dev
               </a>{" "}

@@ -5,6 +5,7 @@ import { ArrowRight, Download, RefreshCw } from "lucide-react";
 import { In, StepHeader } from "../components/shared";
 import { DoneBanner } from "../components/DoneBanner";
 import { LoadCheck } from "../components/LoadCheck";
+import { PostCta } from "../components/PostDock";
 import { api, useRunEvents } from "../lib/api";
 import type { Stage6Status } from "../lib/types";
 import { COLORS, tint } from "./colors";
@@ -908,11 +909,14 @@ function TheDesk() {
           </CheckRow>
           {status?.render_url ? (
             <li className="md:col-span-2 overflow-hidden rounded-2xl border border-hairline bg-overlay">
-              <div className="flex items-center justify-between gap-3 border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-hairline px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">
                 <span className="truncate">{status.render_url}</span>
-                <a href={status.render_url} download={status.render_url.split("/").pop() || "render.mp4"} className="flex shrink-0 items-center gap-1.5 rounded-md border border-hairline bg-card px-2.5 py-1 normal-case tracking-normal text-fg hover:border-vibe-amber/60">
-                  <Download size={12} /> Download the clip
-                </a>
+                <div className="flex shrink-0 items-center gap-2 normal-case tracking-normal">
+                  <PostCta color={COLORS.green}>Post it to VibeTube</PostCta>
+                  <a href={status.render_url} download={status.render_url.split("/").pop() || "render.mp4"} className="flex shrink-0 items-center gap-1.5 rounded-md border border-hairline bg-card px-2.5 py-1 text-fg hover:border-vibe-amber/60">
+                    <Download size={12} /> Download the clip
+                  </a>
+                </div>
               </div>
               <video src={status.render_url} controls className="max-h-[420px] w-full bg-black" />
             </li>

@@ -11,7 +11,20 @@ places the lab uses, so nothing is copied by hand:
     runs/ragcorpus.json      -> STUDIO_RAG_CORPUS
 
 Prints the service URL at the end and keeps it in runs/deploy.json.
-Options: --project, --region (default us-central1), --service (default vibestudio).
+Options: --project, --region (default us-central1), --service (default vibestudio),
+--without memory,rag (deploy the app without Memory Bank and/or the RAG corpus:
+the memory callbacks skip, read_feedback returns no passages, and neither
+resource is looked up or created), --by setup|page|terminal (who started it,
+for the record).
+
+setup_codelab.sh runs this in the background at the end of setup, so the app
+is live by the time the lab reaches step 9 (and the page's Post my video button
+has somewhere to send the night). One deploy at a time: the whole run holds
+runs/.deploy.lock, the same lock the Memory Bank and the corpus use, so the
+preflight and the page can say "still being deployed" instead of guessing,
+and a second deploy started under a live one says so and leaves. While it
+runs, runs/deploy.json says {"status": "deploying", ...}; at the end
+{"status": "done", "url": ...} or {"status": "failed", "detail": ...}.
 """
 from __future__ import annotations
 
@@ -27,7 +40,7 @@ import time
 HERE = pathlib.Path(__file__).resolve().parent            # vibestudio/
 REPO = HERE.parent
 RUNS = REPO / "runs"
-PASS_THROUGH = ["STUDIO_VERTEX", "STUDIO_MODEL", "STUDIO_IMAGE_MODEL", "STUDIO_REAL_VIDEO", "STUDIO_TRACING", "VIBETUBE_PROJECT",
+PASS_THROUGH = ["STUDIO_VERTEX", "STUDIO_MODEL", "STUDIO_REAL_VIDEO", "STUDIO_TRACING", "VIBETUBE_PROJECT",
                 "STUDIO_VEO_MODEL", "STUDIO_VEO_LOCATION", "STUDIO_VIDEO_RETRIES", "STUDIO_VIDEO_INTERVAL",
                 "STUDIO_VIDEO_TIMEOUT", "VIBETUBE_URL", "VIBETUBE_EVENT", "VIBETUBE_NAME"]
 
@@ -58,7 +71,7 @@ def resource(cache: str, what: str, module: str, fn: str) -> str:
     holds its lock, waited for; else created here, the same way setup does
     it. A person who goes straight from setup to this step must not be told
     to run a console command first."""
-    import importlib, time
+    import importlib
     val = cached(cache)
     if val:
         print(f"  {what}: {val}"); return val
@@ -91,15 +104,60 @@ def resource(cache: str, what: str, module: str, fn: str) -> str:
 
 
 def ensure_runtime_account(project: str) -> str | None:
-    """scripts/runtime_account.py: the account found or made, with its roles."""
+    """scripts/runtime_account.py: the account found or made, with its roles.
+    A role granted just now takes a minute or two to reach the data plane;
+    when something was granted here, wait, so the new revision's first calls
+    to Gemini, Memory Bank, RAG Engine and Veo do not answer PERMISSION_DENIED."""
     sys.path.insert(0, str(HERE.parent))
-    from scripts.runtime_account import ensure_roles, resolve
+    from scripts.runtime_account import ensure_roles, held_roles, resolve
     sa = resolve(project)
     if sa:
+        before = set(held_roles(project, sa))
         missing = ensure_roles(project, sa)
         if missing:
             print("  the deploy will fail with PERMISSION_DENIED until those are granted")
+        elif set(held_roles(project, sa)) - before:
+            print("  roles were granted just now; IAM takes a minute or two to apply them. Waiting 90s before the deploy,")
+            print("  so the app's first calls do not answer 403. (Ctrl+C to skip; a 403 in the app's first minutes then clears by itself.)")
+            try:
+                time.sleep(90)
+            except KeyboardInterrupt:
+                print("  skipped the wait")
     return sa
+
+
+def project_of(resource: str) -> str:
+    """The project segment of a Vertex resource name (an id or a number), or ""."""
+    parts = resource.split("/")
+    return parts[1] if len(parts) > 2 and parts[0] == "projects" else ""
+
+
+def same_project(project: str, resource: str) -> bool:
+    """Does `resource` live in `project`? Resource names may carry the project
+    NUMBER where the deploy was given the ID, so both are accepted."""
+    owner = project_of(resource)
+    if not owner or owner == project:
+        return True
+    out = subprocess.run(["gcloud", "projects", "describe", project, "--format=value(projectNumber)"], capture_output=True, text=True)
+    return out.returncode == 0 and out.stdout.strip() == owner
+
+
+RECORD = RUNS / "deploy.json"
+
+
+def record(**fields) -> dict:
+    """runs/deploy.json: what the page and the preflight read. Fields given
+    here replace the ones kept; a new status starts a new record."""
+    try:
+        rec = json.loads(RECORD.read_text())
+    except (OSError, ValueError):
+        rec = {}
+    if fields.get("status") and fields["status"] != rec.get("status"):
+        rec = {k: v for k, v in rec.items() if k in ("service", "project", "region", "url", "at")}
+    rec.update(fields)
+    RUNS.mkdir(exist_ok=True)
+    RECORD.write_text(json.dumps(rec, indent=2))
+    return rec
 
 
 def main() -> int:
@@ -108,18 +166,58 @@ def main() -> int:
     ap.add_argument("--project", default=None)
     ap.add_argument("--region", default=os.environ.get("STUDIO_DEPLOY_REGION", "us-central1"))
     ap.add_argument("--service", default=os.environ.get("STUDIO_DEPLOY_SERVICE", "vibestudio"))
+    ap.add_argument("--without", default=os.environ.get("STUDIO_DEPLOY_WITHOUT", ""),
+                    help="comma list of memory, rag: leave Memory Bank and/or the RAG corpus out of the app")
+    ap.add_argument("--by", default="terminal", choices=("setup", "page", "terminal"), help="who started this deploy, for the record")
     a = ap.parse_args()
+    without = {w.strip().lower() for w in a.without.split(",") if w.strip()}
+    if without - {"memory", "rag"}:
+        print(f"--without takes memory and/or rag, not {', '.join(sorted(without - {'memory', 'rag'}))}"); return 2
     env = {**dotenv(), **{k: v for k, v in os.environ.items() if k in PASS_THROUGH or k.startswith("GOOGLE_CLOUD_PROJECT")}}
     project = a.project or env.get("GOOGLE_CLOUD_PROJECT") or env.get("STUDIO_GCP_PROJECT")
     if not project:
         print("no project: set GOOGLE_CLOUD_PROJECT in .env or pass --project"); return 2
-    bank = os.environ.get("STUDIO_MEMORY_BANK") or resource("memorybank.json", "Memory Bank", "agent.platform.memory", "engine_name")
-    corpus = os.environ.get("STUDIO_RAG_CORPUS") or resource("ragcorpus.json", "RAG corpus", "agent.platform.rag", "corpus_name")
-    if not corpus:
+    sys.path.insert(0, str(REPO))
+    from agent.platform.memory import creation_in_progress, creation_lock
+    if creation_in_progress("deploy"):
+        print("a deploy is already running (setup's, in the background, or the page's). Its log is runs/deploy_setup.log or runs/deploy_run.log;")
+        print("runs/deploy.json and the preflight say when it is done. Nothing started.")
+        return 3
+    with creation_lock("deploy"):
+        return _deploy(a, env, project, without)
+
+
+def _deploy(a, env: dict, project: str, without: set) -> int:
+    record(status="deploying", by=a.by, started_at=time.time(), service=a.service, project=project, region=a.region, detail="")
+    if "memory" in without:
+        print("  Memory Bank: left out (--without memory). The app's two memory callbacks skip: no taste recalled, nothing remembered.")
+        bank = ""
+    else:
+        bank = os.environ.get("STUDIO_MEMORY_BANK") or resource("memorybank.json", "Memory Bank", "agent.platform.memory", "engine_name")
+    if "rag" in without:
+        print("  RAG corpus: left out (--without rag). read_feedback runs and returns no passages; the proposer works from trends and the backlog.")
+        corpus = ""
+    else:
+        corpus = os.environ.get("STUDIO_RAG_CORPUS") or resource("ragcorpus.json", "RAG corpus", "agent.platform.rag", "corpus_name")
+    if not corpus and "rag" not in without:
         print("  RAG corpus: deploying without one. RAG Engine could not provision a corpus for this project right now (capacity and quota limits):")
         print("  the app's read_feedback runs and returns no passages. When a corpus exists, load the comments and deploy again, or set STUDIO_RAG_CORPUS on the service.")
-    if not bank:
+    if not bank and "memory" not in without:
         print("  Memory Bank: deploying without one; the app's memory callbacks skip. Deploy again once it exists.")
+    # The app runs as a service account OF THIS PROJECT. A bank or a corpus that
+    # lives in another project (runs/*.json kept from a run under another
+    # gcloud project, or ~/project_id.txt shared with another lab) is out of
+    # its reach: every call would answer 403 PERMISSION_DENIED, forever.
+    for what, res in (("Memory Bank", bank), ("RAG corpus", corpus)):
+        if res and not same_project(project, res):
+            print(f"  {what} {res}")
+            print(f"  lives in project {project_of(res)}, but the app deploys to {project}, whose runtime account has no access there.")
+            print(f"  Either deploy where the {what} is:   python vibestudio/deploy.py --project {project_of(res)}")
+            cache = "memorybank.json" if what == "Memory Bank" else "ragcorpus.json"
+            make = "python -m agent.platform.bank; python -m agent.platform.bank load" if what == "Memory Bank" else "python -m agent.platform.rag; python -m agent.platform.rag load"
+            print(f"  or make one in {project}:                 rm runs/{cache}; {make}")
+            record(status="failed", detail=f"{what} lives in another project ({project_of(res)})", ended_at=time.time())
+            return 2
     vars_ = {"GOOGLE_CLOUD_PROJECT": project, "STUDIO_GCP_PROJECT": project, "STUDIO_VERTEX": "1",
              "STUDIO_MEMORY_BANK": bank, "STUDIO_RAG_CORPUS": corpus}
     for k in PASS_THROUGH:
@@ -157,14 +255,14 @@ def main() -> int:
         print(f"deploy failed (gcloud exited {code}). Common causes: the Cloud Run and Cloud Build APIs are off "
               f"(gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com --project {project}), "
               "or the account cannot deploy.")
+        record(status="failed", detail=f"gcloud run deploy exited {code}; see the log", ended_at=time.time())
         return code
     if not url:
         out = subprocess.run(["gcloud", "run", "services", "describe", a.service, "--project", project, "--region", a.region,
                               "--format", "value(status.url)"], capture_output=True, text=True)
         url = out.stdout.strip()
-    RUNS.mkdir(exist_ok=True)
-    (RUNS / "deploy.json").write_text(json.dumps({"url": url, "service": a.service, "project": project, "region": a.region,
-                                                  "at": time.time()}, indent=2))
+    record(status="done", url=url, service=a.service, project=project, region=a.region, at=time.time(), ended_at=time.time(), by=a.by,
+           seconds=round(time.time() - t0))
     print(f"── deployed in {round(time.time() - t0)}s ──")
     print(f"SERVICE_URL={url}")
     print("The service account Cloud Run uses needs GEAP access (roles/aiplatform.user) for Gemini, Memory Bank, "
