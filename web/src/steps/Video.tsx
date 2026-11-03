@@ -5,6 +5,7 @@ import { ArrowRight, Download, RefreshCw } from "lucide-react";
 import { In, StepHeader } from "../components/shared";
 import { DoneBanner } from "../components/DoneBanner";
 import { LoadCheck } from "../components/LoadCheck";
+import { PostCta } from "../components/PostDock";
 import { api, useRunEvents } from "../lib/api";
 import type { Stage6Status } from "../lib/types";
 import { COLORS, tint } from "./colors";
@@ -913,6 +914,7 @@ function TheDesk() {
                 <a href={status.render_url} download={status.render_url.split("/").pop() || "render.mp4"} className="flex shrink-0 items-center gap-1.5 rounded-md border border-hairline bg-card px-2.5 py-1 normal-case tracking-normal text-fg hover:border-vibe-amber/60">
                   <Download size={12} /> Download the clip
                 </a>
+                <span className="shrink-0 normal-case tracking-normal"><PostCta color={AMBER}>Post the clip</PostCta></span>
               </div>
               <video src={status.render_url} controls className="max-h-[420px] w-full bg-black" />
             </li>

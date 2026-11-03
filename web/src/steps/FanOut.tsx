@@ -1728,8 +1728,8 @@ function CopyLine({ text }: { text: string }) {
   );
 }
 
-export function CheckRow({ ok, label, children }: { ok: boolean; label: string; children: React.ReactNode }) {
-  const color = ok ? GREEN : "var(--fg-muted)";
+export function CheckRow({ ok, label, tone = "good", children }: { ok: boolean; label: string; tone?: "good" | "warn"; children: React.ReactNode }) {
+  const color = ok ? (tone === "warn" ? AMBER : GREEN) : "var(--fg-muted)";
   return (
     <li className="flex items-start gap-3 rounded-2xl border border-hairline bg-overlay p-3">
       <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border" style={{ borderColor: color, color, background: ok ? tint(color, 0.1) : "transparent" }}>

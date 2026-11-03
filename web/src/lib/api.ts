@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { InspectorStatus, RunEvent, RunSnapshot, Stage0Status, Stage1Status, Stage2Status, Stage3Status, Stage4Status, Stage5Status, Stage6Status, MemoryBank, RagCorpus, DeployStatus } from "./types";
+import type { InspectorStatus, RunEvent, RunSnapshot, Stage0Status, Stage1Status, Stage2Status, Stage3Status, Stage4Status, Stage5Status, Stage6Status, MemoryBank, RagCorpus, DeployStatus, PostStatus } from "./types";
 
 /**
  * The only place the frontend talks to the backend. Everything goes through
@@ -59,14 +59,21 @@ export const api = {
   labStage6Load: () => get<{ ok: boolean; edges?: number; error: string }>("/api/lab/stage6/load"),
   videoRun: (cmd: "deliver" | "status") => post<{ ok: boolean; detail: string; run?: string }>(`/api/lab/video/${cmd}`, {}),
   deployRun: () => post<{ ok: boolean; detail: string }>("/api/lab/deploy", {}),
-  deployStatus: () => get<DeployStatus>("/api/lab/deploy/status"),
+  deployStatus: (probe = false) => get<DeployStatus>(`/api/lab/deploy/status${probe ? "?probe=1" : ""}`),
+  /** Post my video: what there is to post, where the app is, the last post, and (live) the room and the card on VibeTube. */
+  postStatus: (opts: { code?: string; live?: boolean } = {}) =>
+    get<PostStatus>(`/api/lab/post/status?live=${opts.live === false ? 0 : 1}${opts.code ? `&code=${encodeURIComponent(opts.code)}` : ""}`),
+  /** Run scripts/post.py as a worker; its output streams under the verb "post". With `night` (an idea, possibly
+   *  empty) the deployed app runs the whole night and publishes; otherwise the clip there is goes out. */
+  postRun: (body: { night?: string; title?: string; description?: string; event_code?: string; display_name?: string; app?: string }) =>
+    post<{ ok: boolean; detail: string; run: string | null }>("/api/lab/post", body),
   videoStatus: () => get<{ running: boolean; run: string | null; last_exit: { code: number; at: number; run?: string } | null }>("/api/lab/video/status"),
   labStage3Load: () => get<{ ok: boolean; edges?: number; error: string }>("/api/lab/stage3/load"),
   labStage1: () => get<Stage1Status>("/api/lab/stage1"),
   labStage0: () => get<Stage0Status>("/api/lab/stage0"),
   holes: () => get<Record<string, string>>("/api/lab/holes"),
   version: () => get<{ running: string; head: string; stale: boolean; subject: string }>("/api/lab/version"),
-  workerLog: (verb: "bank" | "rag" | "deliver" | "deploy") => get<{ verb: string; lines: string[] }>(`/api/lab/worker/${verb}/log`),
+  workerLog: (verb: "bank" | "rag" | "deliver" | "deploy" | "post") => get<{ verb: string; lines: string[] }>(`/api/lab/worker/${verb}/log`),
   holesPlan: () => get<{ name: string; page: string; label: string; state: string }[]>("/api/lab/holes/plan"),
   /** Write a hint's answer into the file over the symbol's current text, and reload the agent. */
   answer: (body: { path: string; symbol: string; text: string }) =>

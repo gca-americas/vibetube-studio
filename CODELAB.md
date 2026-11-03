@@ -89,7 +89,7 @@ Run the two setup scripts in order:
 ```
 
 - `setup_project.sh`: Creates or reuses a Google Cloud project with active billing, saves the project ID to `~/project_id.txt`, and configures the active `gcloud` context.
-- `setup_codelab.sh`: Installs `uv` and Python dependencies into `.venv`, enables required Google Cloud APIs, configures your channel settings in `.env`, verifies model access with Gemini, provisions Memory Bank and RAG resources, builds the workbench interface, and starts the VibeStudio Workbench.
+- `setup_codelab.sh`: Installs `uv` and Python dependencies into `.venv`, enables required Google Cloud APIs, configures your channel settings in `.env`, verifies model access with Gemini, provisions Memory Bank and RAG resources, builds the workbench interface, starts the VibeStudio Workbench, and deploys the finished VibeStudio application to Cloud Run in the background (so the **Post my video** button, top right on every workbench page, can publish a video to your VibeTube room long before Step 9).
 
 The script runs the preflight check and starts the VibeStudio Workbench in the background. Its last lines display the link to open.
 
@@ -1059,7 +1059,9 @@ gcloud run deploy vibestudio --source vibestudio \
 
 The build and the service run as the project's default compute service account. Setup granted it the roles it needs (`roles/aiplatform.user`, `roles/cloudbuild.builds.builder`, `roles/storage.objectUser`, `roles/artifactregistry.writer`, `roles/logging.logWriter`, `roles/cloudtrace.agent`); in a project managed by an organisation that account starts with none, and without them the deploy fails with `PERMISSION_DENIED`. If it does, a project Owner runs `./setup_codelab.sh` again, or the `gcloud projects add-iam-policy-binding` lines it prints.
 
-Click the **Deploy** button in the workbench to execute the deployment script. When the build completes, the terminal displays the live service URL.
+`setup_codelab.sh` already ran this deployment in the background (`vibestudio/deploy.py --by setup`, one deploy at a time behind `runs/.deploy.lock`, its log in `runs/deploy_setup.log`, its state in `runs/deploy.json`), so this page usually opens on a service that is already live: **Open Vibe Studio** is the action, and **Deploy again** is for a new revision only (after you change the room or your name in `.env`, or if the service stops answering). The **Post my video** button in the workbench's top bar has been publishing through that same service since Step 3: it has the deployed app run the whole night from one idea (`POST /api/night/auto` - the gate takes the first direction) or hands it the clip Step 8 delivered (`POST /api/night/import`), and presses publish there, so the app makes the one request to the room exactly as described above. `python scripts/post.py --night "an idea"` is the same from the terminal; `runs/post.json` is its record.
+
+If the service is not live yet, click the **Deploy** button in the workbench to execute the deployment script. When the build completes, the terminal displays the live service URL.
 
 ## Summary
 Duration: 0:03:00

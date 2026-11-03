@@ -875,38 +875,155 @@ async def video_status():
 
 
 # ── step 9 · deploy the app ──────────────────────────────────────────────────
+# Setup starts the deploy in the background (nohup vibestudio/deploy.py --by
+# setup), so by the time the page asks, the app is usually being built or
+# already live. deploy.py holds runs/.deploy.lock for its whole run and keeps
+# runs/deploy.json current (deploying · done · failed), whoever started it.
 
 DEPLOY_SCRIPT = ROOT / "vibestudio" / "deploy.py"
 DEPLOY_RECORD = config.RUNS / "deploy.json"
+DEPLOY_SETUP_LOG = config.RUNS / "deploy_setup.log"
+
+
+def _read_json(path) -> dict:
+    try:
+        return json.loads(path.read_text())
+    except (OSError, ValueError):
+        return {}
+
+
+def _deploying() -> bool:
+    try:
+        from agent.platform.memory import creation_in_progress
+        return creation_in_progress("deploy")
+    except Exception:
+        return False
 
 
 @router.post("/deploy")
 async def deploy_run():
-    """Run `python vibestudio/deploy.py` as a worker; its output streams on the
-    event bus with verb "deploy". The service URL lands in runs/deploy.json."""
+    """Run `python vibestudio/deploy.py --by page` as a worker; its output
+    streams on the event bus with verb "deploy". The service URL lands in
+    runs/deploy.json. One deploy at a time: setup's, in the background, counts."""
     from ..services.workers import workers
     if "deploy" in workers.running():
         return {"ok": False, "detail": "a deploy is still running"}
-    ok, detail = await workers.start_script("deploy", str(DEPLOY_SCRIPT))
+    if _deploying():
+        return {"ok": False, "detail": "setup's deploy is still running in the background (runs/deploy_setup.log); wait for it"}
+    ok, detail = await workers.start_script("deploy", str(DEPLOY_SCRIPT), "--by", "page")
     return {"ok": ok, "detail": detail}
 
 
+def _tail(path, n: int = 12) -> list[str]:
+    import re
+    try:
+        lines = [l for l in path.read_text(errors="replace").splitlines() if l.strip() and not re.search(r"Warning|warn\(", l)]
+    except OSError:
+        return []
+    return lines[-n:]
+
+
 @router.get("/deploy/status")
-async def deploy_status():
+async def deploy_status(probe: bool = False):
+    """Where the deploy stands, whoever started it: the record, the lock, the
+    log's tail; with probe=1, whether the service answers /api/health."""
     from ..services.workers import workers
     last = workers.last_exit() or {}
-    record = {}
-    if DEPLOY_RECORD.exists():
+    record = _read_json(DEPLOY_RECORD)
+    worker_live = "deploy" in workers.running()
+    in_progress = worker_live or _deploying()
+    status = record.get("status") or ("done" if record.get("url") else "")
+    if in_progress:
+        status = "deploying"
+    elif status == "deploying":
+        status = "interrupted"                 # the record never ended and nothing holds the lock: the process died
+    by = record.get("by", "") or ("page" if worker_live else "")
+    log = DEPLOY_SETUP_LOG if by == "setup" else config.RUNS / "deploy_run.log"
+    reachable = None
+    if probe and record.get("url"):
+        import httpx
         try:
-            record = json.loads(DEPLOY_RECORD.read_text())
-        except ValueError:
-            record = {}
-    return {"running": "deploy" in workers.running(),
+            async with httpx.AsyncClient(timeout=6, follow_redirects=True) as c:
+                reachable = (await c.get(f"{record['url']}/api/health")).status_code == 200
+        except Exception:
+            reachable = False
+    return {"running": in_progress, "worker": worker_live, "status": status, "by": by,
+            "started_at": record.get("started_at"), "detail": record.get("detail", ""), "seconds": record.get("seconds"),
             "last_exit": last if last.get("verb") == "deploy" else None,
             "url": record.get("url", ""), "service": record.get("service", ""), "project": record.get("project", ""),
-            "region": record.get("region", ""), "at": record.get("at"),
+            "region": record.get("region", ""), "at": record.get("at"), "reachable": reachable,
+            "log_tail": _tail(log) if (in_progress or status in ("failed", "interrupted")) else [],
             "gcloud_project": os.environ.get("GOOGLE_CLOUD_PROJECT", ""),
             "app_built": (ROOT / "vibestudio" / "web" / "dist" / "index.html").exists()}
+
+
+# ── Post my video · tonight, as far as it has got, through the studio ────────
+# The button on every page (web/src/components/PostDock.tsx). Setup deployed
+# VibeStudio in the background; from then on scripts/post.py either has the
+# deployed app run a whole night from one idea and publish it, or hands the
+# app the clip step 8 delivered as a finished night and presses publish
+# there - the app makes the one request to the room, as step 9 teaches. This
+# server says what there is to post and where the app is, runs the script as
+# a worker so its output streams, and reads VibeTube back for the verify rows.
+# server/services/night.py has the reading; the record is runs/post.json.
+
+POST_SCRIPT = ROOT / "scripts" / "post.py"
+
+
+@router.get("/post/status")
+async def post_status(code: str | None = None, live: bool = True):
+    """What would go out (the clip, the title, the idea), who posts where,
+    the studio (the deploy's state, and - live - whether it answers and
+    where its run stands), the last post's record, and - live - the room's
+    window now and the card VibeTube lists."""
+    import asyncio
+    from ..services import night
+    from ..services.workers import workers
+    n = await night.night()
+    prof = night.profile()
+    rec = night.record()
+    stu = night.studio()
+    stu["deploying"] = stu["status"] == "deploying"
+    stu["reachable"] = None
+    out: dict = {"night": n, "profile": prof, "studio": stu, "last": rec, "posting": "post" in workers.running(),
+                 "run": workers.run_id("post"), "room": None, "video": None}
+    if not live:
+        return out
+    if stu["url"]:
+        state = await asyncio.to_thread(night.app_state, stu["url"], 8)
+        stu["reachable"] = state is not None
+        stu["run_status"] = (state or {}).get("status", "")
+        stu["active"] = (state or {}).get("active") or ""
+        stu["nodes_seen"] = (state or {}).get("nodes_seen") or []
+        stu["render_checks"] = ((state or {}).get("render") or {}).get("checks") or 0
+        stu["publish"] = {k: ((state or {}).get("publish") or {}).get(k) for k in ("status", "video_id", "url", "detail", "attempts")}
+    probe = (code or prof["event_code"] or "").strip()
+    if probe:
+        out["room"] = await asyncio.to_thread(night.room, probe, prof["platform_url"])
+    if rec.get("video_id") and rec.get("event_code"):
+        out["video"] = await asyncio.to_thread(night.video, rec["event_code"], rec["video_id"], rec.get("platform_url") or prof["platform_url"])
+    return out
+
+
+@router.post("/post")
+async def post_run(body: dict | None = None):
+    """Run `python scripts/post.py` as a worker (verb "post"); its output
+    streams on the event bus and the result lands in runs/post.json. With
+    "night" in the body (an idea, possibly empty), the whole night runs in
+    the app; otherwise the clip there is goes out."""
+    from ..services.workers import workers
+    body = body or {}
+    if "post" in workers.running():
+        return {"ok": False, "detail": "a post is still going out"}
+    args: list[str] = []
+    if "night" in body and isinstance(body["night"], str):
+        args += ["--night", body["night"].strip()]
+    for key, flag in (("title", "--title"), ("description", "--description"), ("event_code", "--event"), ("display_name", "--name"), ("app", "--app")):
+        val = body.get(key)
+        if isinstance(val, str) and val.strip():
+            args += [flag, val.strip()]
+    ok, detail = await workers.start_script("post", str(POST_SCRIPT), *args)
+    return {"ok": ok, "detail": detail, "run": workers.run_id("post")}
 
 
 # ── jumping between steps: the registry, from the page ──────────────────────
@@ -986,7 +1103,7 @@ async def version():
             "subject": _git("log", "-1", "--format=%s")}
 
 
-WORKER_VERBS = ("bank", "rag", "deliver", "deploy")
+WORKER_VERBS = ("bank", "rag", "deliver", "deploy", "post")
 
 
 @router.get("/worker/{verb}/log")

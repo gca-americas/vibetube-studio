@@ -6,6 +6,7 @@ import { CodeEditor } from "../components/CodeEditor";
 import { In, StepHeader } from "../components/shared";
 import { LoadCheck } from "../components/LoadCheck";
 import { LoadedBadge } from "../components/LoadedBadge";
+import { PostCta } from "../components/PostDock";
 import { api, useRunEvents } from "../lib/api";
 import type { InspectorStatus, Stage0Status } from "../lib/types";
 import { AdkGlance } from "./AdkGlance";
@@ -561,6 +562,12 @@ function ToolsEditRun() {
             <div className="mt-5 rounded-2xl border border-hairline bg-overlay p-4">
               <p className="font-mono text-[10px] uppercase tracking-wider text-fg-muted">Latest reply</p>
               <p className="mt-2 whitespace-pre-wrap text-sm text-fg-muted">{status.last_reply}</p>
+              <div className="mt-3 flex flex-wrap items-center gap-3">
+                <PostCta color={GREEN}>Post my video</PostCta>
+                <span className="text-xs text-fg-muted">
+                  A description is as far as one prompt gets. The finished pipeline is already live on Cloud Run: give it this idea and it runs the whole night and puts the video on the wall.
+                </span>
+              </div>
             </div>
           )}
 
