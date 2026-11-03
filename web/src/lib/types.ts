@@ -182,7 +182,20 @@ export interface Stage6Status {
 }
 
 export interface DeployStatus {
+  /** A deploy is going on: the page's worker, or setup's in the background (runs/.deploy.lock). */
   running: boolean;
+  /** The page's own worker is the one running. */
+  worker: boolean;
+  /** "" · deploying · done · failed · interrupted */
+  status: string;
+  /** setup · page · terminal */
+  by: string;
+  started_at: number | null;
+  detail: string;
+  seconds: number | null;
+  /** With probe=1: does the service answer /api/health. */
+  reachable: boolean | null;
+  log_tail: string[];
   last_exit: { code: number; at: number } | null;
   url: string;
   service: string;
@@ -191,4 +204,64 @@ export interface DeployStatus {
   at: number | null;
   gcloud_project: string;
   app_built: boolean;
+}
+
+/** Post my video: tonight, as far as it has got, and what VibeTube says (server/api/lab.py · post). */
+export interface PostNight {
+  clip: { path: string; url: string; prebaked: boolean; duration_ms: number; at: number; source: string } | null;
+  title: string;
+  description: string;
+  words_source: string;
+  /** The idea the student gave the step-3 agent, the default for a whole night in the app. */
+  idea: string;
+  real_video: boolean;
+}
+
+export interface PostRecord {
+  status?: "posting" | "done" | "failed";
+  at?: number;
+  done_at?: number;
+  title?: string;
+  idea?: string;
+  /** "app" when the deployed app ran the whole night; absent when a clip was handed over. */
+  night?: string;
+  event_code?: string;
+  display_name?: string;
+  platform_url?: string;
+  project_id?: string;
+  clip?: string;
+  attempts?: number;
+  video_id?: string;
+  url?: string;
+  detail?: string;
+}
+
+/** Where the app is: the deploy's record, and (live) whether it answers and where its run stands. */
+export interface StudioStatus {
+  url: string;
+  status: string;
+  by: string;
+  started_at: number | null;
+  at: number | null;
+  detail: string;
+  project: string;
+  region: string;
+  deploying: boolean;
+  reachable: boolean | null;
+  run_status?: string;
+  active?: string;
+  nodes_seen?: string[];
+  render_checks?: number;
+  publish?: { status?: string | null; video_id?: string | null; url?: string | null; detail?: string | null; attempts?: number | null };
+}
+
+export interface PostStatus {
+  night: PostNight;
+  profile: { platform_url: string; event_code: string; display_name: string; project_id: string };
+  studio: StudioStatus;
+  last: PostRecord & { app_url?: string };
+  posting: boolean;
+  run: string | null;
+  room: { code: string; name: string; open: boolean; state: string; reason: string; url: string } | null;
+  video: { id: string; status: string; title: string; channel: string; thumbnail_url: string; watch_url: string; project_id: string } | null;
 }

@@ -131,6 +131,33 @@ try:
 except Exception:
     pass
 
+# VibeStudio on Cloud Run: setup deploys it in the background, so "still being
+# deployed" is a normal answer for seven minutes or so after setup. When a URL
+# is known, the service is asked whether it answers.
+_dep = {}
+try:
+    _dep = json.loads((ROOT / "runs" / "deploy.json").read_text())
+except Exception:
+    pass
+_dep_status = _dep.get("status") or ("done" if _dep.get("url") else "")
+if _dep_status == "done" and _dep.get("url"):
+    try:
+        with urllib.request.urlopen(f"{_dep['url']}/api/health", timeout=8) as r:
+            _live = r.status == 200
+    except Exception:
+        _live = False
+    _age = f", {int((__import__('time').time() - _dep['at']) // 60)} min ago" if _dep.get("at") else ""
+    _who = f"deployed by {_dep['by']}{_age}" if _dep.get("by") else f"deployed{_age}"
+    tick(f"VibeStudio on Cloud Run answers at {_dep['url']} ({_who})", _live,
+         "the service is not answering; python vibestudio/deploy.py deploys it again")
+elif _in_progress("deploy"):
+    _since = f" since {int((__import__('time').time() - _dep['started_at']) // 60)} min" if _dep.get("started_at") else ""
+    print(f"  - VibeStudio: still being deployed in the background{_since} (log: runs/deploy_setup.log); the page's top bar says when it is live")
+elif _dep_status == "failed":
+    print(f"  ! VibeStudio: the deploy failed: {(_dep.get('detail') or '')[:100]} · see runs/deploy_setup.log; step 9's Deploy button, or python vibestudio/deploy.py, tries again")
+else:
+    print("  - VibeStudio: not deployed yet (./setup_codelab.sh starts it in the background; step 9's Deploy button does it too)")
+
 port = os.environ.get("PORT", "4600")
 try:
     with urllib.request.urlopen(f"http://localhost:{port}/api/lab/inspector", timeout=3) as r:

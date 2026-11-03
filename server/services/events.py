@@ -19,7 +19,7 @@ from agent.platform import config
 
 WATCHED = [config.STATE, config.RUNS / "sessions.db",
            config.RUNS / "ui_last.json", config.RUNS / "memorybank.json",
-           config.RUNS / "ragcorpus.json", config.RUNS / "deploy.json"]
+           config.RUNS / "ragcorpus.json", config.RUNS / "deploy.json", config.RUNS / "post.json"]
 POLL_S = 0.5
 HEARTBEAT_S = 10.0
 

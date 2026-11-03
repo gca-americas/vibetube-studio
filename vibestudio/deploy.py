@@ -11,7 +11,17 @@ places the lab uses, so nothing is copied by hand:
     runs/ragcorpus.json      -> STUDIO_RAG_CORPUS
 
 Prints the service URL at the end and keeps it in runs/deploy.json.
-Options: --project, --region (default us-central1), --service (default vibestudio).
+Options: --project, --region (default us-central1), --service (default vibestudio),
+--by setup|page|terminal (who started it, for the record).
+
+setup_codelab.sh runs this in the background at the end of setup, so the app
+is live by the time the lab reaches it (and the page's Post my video button
+has somewhere to send the night). One deploy at a time: the whole run holds
+runs/.deploy.lock, the same lock the Memory Bank and the corpus use, so the
+preflight and the page can say "still being deployed" instead of guessing,
+and a second deploy started under a live one says so and leaves. While it
+runs, runs/deploy.json says {"status": "deploying", ...}; at the end
+{"status": "done", "url": ...} or {"status": "failed", "detail": ...}.
 """
 from __future__ import annotations
 
@@ -102,17 +112,48 @@ def ensure_runtime_account(project: str) -> str | None:
     return sa
 
 
+RECORD = RUNS / "deploy.json"
+
+
+def record(**fields) -> dict:
+    """runs/deploy.json: what the page and the preflight read. Fields given
+    here replace the ones kept; a new status starts a new record."""
+    try:
+        rec = json.loads(RECORD.read_text())
+    except (OSError, ValueError):
+        rec = {}
+    if fields.get("status") and fields["status"] != rec.get("status"):
+        rec = {k: v for k, v in rec.items() if k in ("service", "project", "region", "url", "at")}
+    rec.update(fields)
+    RUNS.mkdir(exist_ok=True)
+    RECORD.write_text(json.dumps(rec, indent=2))
+    return rec
+
+
 def main() -> int:
     sys.stdout.reconfigure(line_buffering=True)      # the page streams this output
     ap = argparse.ArgumentParser(description="deploy the Vibe Studio app to Cloud Run")
     ap.add_argument("--project", default=None)
     ap.add_argument("--region", default=os.environ.get("STUDIO_DEPLOY_REGION", "us-central1"))
     ap.add_argument("--service", default=os.environ.get("STUDIO_DEPLOY_SERVICE", "vibestudio"))
+    ap.add_argument("--by", default="terminal", choices=("setup", "page", "terminal"), help="who started this deploy, for the record")
     a = ap.parse_args()
     env = {**dotenv(), **{k: v for k, v in os.environ.items() if k in PASS_THROUGH or k.startswith("GOOGLE_CLOUD_PROJECT")}}
     project = a.project or env.get("GOOGLE_CLOUD_PROJECT") or env.get("STUDIO_GCP_PROJECT")
     if not project:
         print("no project: set GOOGLE_CLOUD_PROJECT in .env or pass --project"); return 2
+    sys.path.insert(0, str(REPO))
+    from agent.platform.memory import creation_in_progress, creation_lock
+    if creation_in_progress("deploy"):
+        print("a deploy is already running (setup's, in the background, or the page's). Its log is runs/deploy_setup.log or runs/deploy_run.log;")
+        print("runs/deploy.json and the preflight say when it is done. Nothing started.")
+        return 3
+    with creation_lock("deploy"):
+        return _deploy(a, env, project)
+
+
+def _deploy(a, env: dict, project: str) -> int:
+    record(status="deploying", by=a.by, started_at=time.time(), service=a.service, project=project, region=a.region, detail="")
     bank = os.environ.get("STUDIO_MEMORY_BANK") or resource("memorybank.json", "Memory Bank", "agent.platform.memory", "engine_name")
     corpus = os.environ.get("STUDIO_RAG_CORPUS") or resource("ragcorpus.json", "RAG corpus", "agent.platform.rag", "corpus_name")
     if not corpus:
@@ -157,14 +198,14 @@ def main() -> int:
         print(f"deploy failed (gcloud exited {code}). Common causes: the Cloud Run and Cloud Build APIs are off "
               f"(gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com --project {project}), "
               "or the account cannot deploy.")
+        record(status="failed", by=a.by, detail=f"gcloud run deploy exited {code}; see the log", ended_at=time.time())
         return code
     if not url:
         out = subprocess.run(["gcloud", "run", "services", "describe", a.service, "--project", project, "--region", a.region,
                               "--format", "value(status.url)"], capture_output=True, text=True)
         url = out.stdout.strip()
-    RUNS.mkdir(exist_ok=True)
-    (RUNS / "deploy.json").write_text(json.dumps({"url": url, "service": a.service, "project": project, "region": a.region,
-                                                  "at": time.time()}, indent=2))
+    record(status="done", url=url, service=a.service, project=project, region=a.region, at=time.time(), ended_at=time.time(), by=a.by,
+           seconds=round(time.time() - t0))
     print(f"── deployed in {round(time.time() - t0)}s ──")
     print(f"SERVICE_URL={url}")
     print("The service account Cloud Run uses needs GEAP access (roles/aiplatform.user) for Gemini, Memory Bank, "

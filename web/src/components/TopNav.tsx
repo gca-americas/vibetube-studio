@@ -5,11 +5,13 @@ import { STEPS } from "../steps/registry";
 import { tint } from "../steps/colors";
 import { useTheme } from "./ThemeProvider";
 import { LiveRunPill } from "./LiveRunPill";
+import { PostButton } from "./PostDock";
 
 /**
  * Brand bar plus the step roadmap. Every step is a link, the current one is
  * expanded with its label, completed ones are filled. Mirrors the two-row
- * header used across the Vibetube labs.
+ * header used across the Vibetube labs. On the right, Post my video: the
+ * wall is one click away from any page (components/PostDock.tsx).
  */
 export function TopNav({ activeSlug }: { activeSlug: string }) {
   const { theme, toggle } = useTheme();
@@ -35,6 +37,7 @@ export function TopNav({ activeSlug }: { activeSlug: string }) {
           </span>
         </Link>
         <div className="flex items-center gap-3">
+          <PostButton />
           <LiveRunPill />
           <button
             onClick={toggle}

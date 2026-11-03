@@ -31,12 +31,55 @@ cd vibe-studio-lab
 ./setup_codelab.sh              # uv + deps, the APIs, .env, one model call, then the VibeStudio Workbench in the background on :4600
 ```
 
-Both scripts can be run again; the second keeps the answers you gave before. It ends with `python scripts/preflight.py`, whose last line is the link to step 1. `scripts/stop.sh` stops the workbench, `scripts/start.sh` starts it again, and `scripts/restart.sh --pull` does both around a pull.
+Both scripts can be run again; the second keeps the answers you gave before. It starts the Memory Bank, the RAG corpus **and the deploy of VibeStudio to Cloud Run** in the background (`VIBE_STUDIO_SKIP_DEPLOY=1` leaves the deploy to step 9's button), and ends with `python scripts/preflight.py`, whose last line is the link to step 1. `scripts/stop.sh` stops the workbench, `scripts/start.sh` starts it again, and `scripts/restart.sh --pull` does both around a pull.
 
 Steps 6 to 9 need a Google Cloud project with GEAP enabled (Cloud Shell
 already has credentials): Memory Bank, RAG Engine, Veo, and Cloud Run.
 `STUDIO_REAL_VIDEO=0` in `.env` replaces the Veo render with a stand-in that
 finishes in five seconds, at no cost.
+
+## Post my video
+
+Setup deploys VibeStudio, the app of step 9, in the background, the way it
+starts the corpus and the bank: `vibestudio/deploy.py --by setup`, one deploy
+at a time behind `runs/.deploy.lock`, its log in `runs/deploy_setup.log`, its
+state in `runs/deploy.json` (`deploying` · `done` · `failed`). Cloud Build
+takes four or five minutes after the bank and the corpus are up, so the app
+is live during step 1 or 2; the preflight and the page's top bar say when.
+
+From then on **Post my video**, top right on every page, puts a video on the
+VibeTube room **through the app**, long before step 9:
+
+- **Run the night & post** - one idea in (pre-filled with what you told the
+  step-3 agent), the card on the wall out. The deployed app runs the whole
+  graph from it (`POST /api/night/auto`): the readers, the gate (the first
+  direction is taken for you), the policy, the script, the Veo render, and
+  publish is pressed as soon as the night is released. The drawer follows it
+  node by node.
+- **Post the clip** - from step 8 on, the clip the delivery brought back
+  (`runs/state.json`, else the newest mp4 under `runs/media/renders`) goes into
+  the app as a finished night (`POST /api/night/import`) and publish is
+  pressed there.
+
+The app makes the one request to the room either way, exactly as step 9
+teaches; the room keeps one video per project, so every post replaces the
+last. The drawer shows where the studio stands (being built · live · failed,
+with a Deploy now button), takes the room and your name, and reads the app and
+VibeTube back: the app answers, the id came back, the card is on the wall.
+
+It is one command, which the buttons run:
+
+```bash
+uv run python scripts/post.py --night "an idea"   # the whole night in the app, then the wall
+uv run python scripts/post.py                     # the clip there is, into the app, publish pressed there
+uv run python scripts/post.py --dry-run           # say what would go out, and whether the app answers
+uv run python scripts/post.py --status            # the last post, and what VibeTube says now
+uv run python scripts/post.py --app http://localhost:4700   # through a VibeStudio of your own
+```
+
+The record is `runs/post.json`; `server/services/night.py` does the reading
+and the relay. Step 9 opens on an app that is already live and keeps its
+Deploy button for a new revision.
 
 ## Updating a running lab
 
@@ -93,23 +136,27 @@ vibe-studio-lab/
 ├── starter/                        # The nine student files with their TODO holes; the live copies are not in git
 ├── server/ & web/                  # VibeStudio Workbench (developer UI on port 4600)
 │   ├── server/                     # FastAPI server: code edit API, verifiers, and adk web mount
+│   │   └── services/night.py       # Post my video: tonight's clip, title and idea; the whole night in the app, the hand-over, the publish there
 │   └── web/                        # React + TypeScript frontend: step guides, editor, graph view
+│       └── src/components/PostDock.tsx   # the Post my video button on every page and its drawer (and the studio's state)
 ├── vibestudio/                     # Completed standalone application (deployed in Step 9)
-│   ├── server/                     # FastAPI backend driving the finished agent workflow
+│   ├── server/                     # FastAPI backend driving the finished agent workflow; /api/night/import and /api/night/auto for the workbench
 │   │   ├── agent/                  # Fully completed agent (isolated copy, works independently)
 │   │   └── platform/               # Event bus, avatar generator, publishing client, telemetry
 │   ├── web/                        # End-user React production interface
 │   ├── run.sh                      # Run production app locally on port 4700
-│   └── deploy.py                   # Automated Cloud Run container build and deployment script
+│   └── deploy.py                   # Automated Cloud Run container build and deployment script; setup runs it in the background
 ├── checks/                         # Verification suite and test registries
 │   ├── holes.py                    # Registry of all 17 hands-on student code edits
 │   ├── verify_holes.py             # Validates that all holes round-trip and starter/ is in sync
 │   ├── verify_pastes.py            # Validates that codelab code snippets match the registry
-│   └── verify_app.py               # Validates that vibestudio/ has the complete finished agent
+│   ├── verify_app.py               # Validates that vibestudio/ has the complete finished agent
+│   └── verify_post.py              # Post my video: the hand-over into a VibeStudio of its own, the publish it makes, the whole night followed, the read-back
 └── scripts/                        # Operational scripts for instructors and students
     ├── setup_project.sh            # One-shot Google Cloud project and billing configuration
-    ├── setup_codelab.sh            # Automated dependencies, APIs, .env, and workbench startup
-    ├── preflight.py                # Environment and credential diagnostic check
+    ├── setup_codelab.sh            # Automated dependencies, APIs, .env, workbench startup, and the background deploy
+    ├── preflight.py                # Environment and credential diagnostic check (and whether VibeStudio is live yet)
+    ├── post.py                     # Post my video from the terminal: the whole night in the app, or the clip there is
     ├── start.sh / stop.sh          # Foreground workbench server lifecycle management
     ├── restart.sh                  # Background server restart with automated rebuilds
     ├── starter.sh                  # Resets student files from starter/ and clears session state
@@ -137,22 +184,25 @@ The scripts around the registry:
 | `python scripts/carve.py` | Puts the shipped `TODO` lines back (the inverse of rescue). | After a rescue, to return to the student state. |
 | `python scripts/reset.py` | Wipes local run state only: `runs/state.json`, the session store, and worker logs. Keeps the `user:` keys unless `--all`. | Between runs, when the session store is confused. |
 | `scripts/restart.sh [--pull]` | Restarts the VibeStudio Workbench in the background, rebuilding the page if its sources changed. | After a `git pull`, or after editing workbench code. |
-| `python scripts/preflight.py` | Checks the environment: the SDK, the credentials, and stage app imports. | Setup, and whenever something stops loading. |
+| `python scripts/preflight.py` | Checks the environment: the SDK, the credentials, and stage app imports, and whether VibeStudio is live on Cloud Run yet. | Setup, and whenever something stops loading. |
+| `python scripts/post.py --night "an idea"` | Has the deployed VibeStudio run the whole night from the idea and publish it; without `--night`, hands it the clip step 8 delivered and presses publish there. `--dry-run` says what would go out, `--status` reads the last post back. The page's Post my video button. | From step 3 on, whenever you want the wall to show where you are. |
+| `python vibestudio/deploy.py` | Deploys the app to Cloud Run (setup runs it in the background; step 9's button runs it again). One at a time: `runs/.deploy.lock`. | Setup; a new revision after a change. |
 
 Note that the app in `vibestudio/` carries its own complete copy of the agent, so it works whether or not the holes in the lab are filled.
 
 ## For authors
 
-Three checks keep the registry, the pages, the codelab, and the app in agreement. Run them after any change to a hole, a stage app, `agent/`, or a code block in `CODELAB.md`:
+Four checks keep the registry, the pages, the codelab, and the app in agreement. Run them after any change to a hole, a stage app, `agent/`, or a code block in `CODELAB.md`:
 
 ```bash
 python checks/verify_holes.py    # every hole round-trips (carve then fill) and starter/ is in sync
 python checks/verify_reload.py   # a save-time reload keeps every schema class and stage app as it was
 python checks/verify_pastes.py   # every <!-- code: HOLE --> block in CODELAB.md equals the registry's answer
 python checks/verify_app.py      # vibestudio/server/agent/ equals the finished lab agent (--sync to copy)
+python checks/verify_post.py     # Post my video: the hand-over into a VibeStudio of its own, the publish it makes, a whole night followed to the wall, the read-back
 ```
 
-When a hole changes: update `checks/holes.py`, update the codelab block, run `scripts/carve.py`, copy the carved file into `starter/`, run `checks/verify_app.py --sync`, then run all three checks.
+When a hole changes: update `checks/holes.py`, update the codelab block, run `scripts/carve.py`, copy the carved file into `starter/`, run `checks/verify_app.py --sync`, then run all four checks.
 
 The nine files students edit (`agent/graph.py`, `agent/deliver.py`, `stage*/agent.py`) are listed in `.gitignore` and never committed: setup and `scripts/start.sh` copy them from `starter/` when they are missing and leave existing ones alone, so a tree filled in while testing cannot reach a commit. `starter/` is the file that ships.
 
